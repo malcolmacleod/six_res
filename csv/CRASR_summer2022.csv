@@ -1,0 +1,430 @@
+,system,site,lat,lon,datetime,bottlecode,datecollect,variable,value,unit,sampledepth_m,variable_system,groupname,timecollect,datatype,matrix
+1,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1500-98,8/12/2022,chl a,9.83,ugL-1,0.25,chl aLake Arrowhead,flame,9:48,water,water
+2,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1501-98,8/12/2022,chl a,26.1,ugL-1,0.25,chl aLake Arrowhead,flame,9:48,water,water
+3,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1502-98,8/12/2022,chl a,14.6,ugL-1,0.25,chl aLake Arrowhead,flame,9:48,water,water
+4,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1503-98,8/12/2022,chl a,13.7,ugL-1,0.25,chl aLake Arrowhead,flame,10:17,water,water
+5,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1504-98,8/12/2022,chl a,9.08,ugL-1,0.25,chl aLake Arrowhead,flame,10:17,water,water
+6,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1505-98,8/12/2022,chl a,6.58,ugL-1,0.25,chl aLake Arrowhead,flame,10:17,water,water
+7,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1506-98,8/12/2022,chl a,64.3,ugL-1,0.25,chl aLake Arrowhead,flame,11:08,water,water
+8,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1507-98,8/12/2022,chl a,58,ugL-1,0.25,chl aLake Arrowhead,flame,11:08,water,water
+9,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1508-98,8/12/2022,chl a,40.9,ugL-1,0.25,chl aLake Arrowhead,flame,11:08,water,water
+10,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1509-98,8/12/2022,chl a,18.4,ugL-1,0.25,chl aLake Arrowhead,flame,11:41,water,water
+11,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1510-98,8/12/2022,chl a,5.81,ugL-1,0.25,chl aLake Arrowhead,flame,11:41,water,water
+12,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1511-98,8/12/2022,chl a,4.65,ugL-1,0.25,chl aLake Arrowhead,flame,11:41,water,water
+13,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1512-98,8/12/2022,chl a,20.1,ugL-1,0.25,chl aLake Arrowhead,flame,12:05,water,water
+14,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1513-98,8/12/2022,chl a,25.3,ugL-1,0.25,chl aLake Arrowhead,flame,12:05,water,water
+15,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1514-98,8/12/2022,chl a,33.2,ugL-1,0.25,chl aLake Arrowhead,flame,12:05,water,water
+16,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1190-16,8/12/2022,afdm,6.5,mg/L,0.25,afdmLake Arrowhead,flame,9:48,water,water
+17,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0707-04,8/12/2022,tn,1.2,mgL-1,0.25,tnLake Arrowhead,flame,9:48,water,water
+18,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0711-04,8/12/2022,tn,1.18,mgL-1,0.25,tnLake Arrowhead,flame,9:48,water,water
+19,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0720-04,8/12/2022,tn,1.19,mgL-1,0.25,tnLake Arrowhead,flame,9:48,water,water
+20,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0707-04,8/12/2022,tp,0.0874,mgL-1,0.25,tpLake Arrowhead,flame,9:48,water,water
+21,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0707-04,8/12/2022,tp,0.091,mgL-1,0.25,tpLake Arrowhead,flame,9:48,water,water
+22,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0711-04,8/12/2022,tp,0.0935,mgL-1,0.25,tpLake Arrowhead,flame,9:48,water,water
+23,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,0720-04,8/12/2022,tp,0.0968,mgL-1,0.25,tpLake Arrowhead,flame,9:48,water,water
+24,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1190-16,8/12/2022,tss,15.5,mg/L,0.25,tssLake Arrowhead,flame,9:48,water,water
+25,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1190-16,8/12/2022,turbidity,15.6,NTU,0.25,turbidityLake Arrowhead,flame,9:48,water,water
+26,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1191-16,8/12/2022,afdm,8.5,mg/L,0.25,afdmLake Arrowhead,flame,10:17,water,water
+27,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0710-04,8/12/2022,tn,0.949,mgL-1,0.25,tnLake Arrowhead,flame,10:17,water,water
+28,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0764-02,8/12/2022,tn,0.951,mgL-1,0.25,tnLake Arrowhead,flame,10:17,water,water
+29,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0765-02,8/12/2022,tn,0.933,mgL-1,0.25,tnLake Arrowhead,flame,10:17,water,water
+30,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0710-04,8/12/2022,tp,0.168,mgL-1,0.25,tpLake Arrowhead,flame,10:17,water,water
+31,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0764-02,8/12/2022,tp,0.18,mgL-1,0.25,tpLake Arrowhead,flame,10:17,water,water
+32,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,0765-02,8/12/2022,tp,0.173,mgL-1,0.25,tpLake Arrowhead,flame,10:17,water,water
+33,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1191-16,8/12/2022,tss,34.5,mg/L,0.25,tssLake Arrowhead,flame,10:17,water,water
+34,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1191-16,8/12/2022,turbidity,67.3,NTU,0.25,turbidityLake Arrowhead,flame,10:17,water,water
+35,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1188-16,8/12/2022,afdm,4,mg/L,0.25,afdmLake Arrowhead,flame,11:08,water,water
+36,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,0718-04,8/12/2022,tn,1.12,mgL-1,0.25,tnLake Arrowhead,flame,11:08,water,water
+37,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,0726-04,8/12/2022,tn,1.1,mgL-1,0.25,tnLake Arrowhead,flame,11:08,water,water
+38,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,0718-04,8/12/2022,tp,0.107,mgL-1,0.25,tpLake Arrowhead,flame,11:08,water,water
+39,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,0726-04,8/12/2022,tp,0.112,mgL-1,0.25,tpLake Arrowhead,flame,11:08,water,water
+40,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,0726-04,8/12/2022,tp,0.115,mgL-1,0.25,tpLake Arrowhead,flame,11:08,water,water
+41,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1188-16,8/12/2022,tss,9,mg/L,0.25,tssLake Arrowhead,flame,11:08,water,water
+42,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1188-16,8/12/2022,turbidity,11.8,NTU,0.25,turbidityLake Arrowhead,flame,11:08,water,water
+43,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1194-16,8/12/2022,afdm,3.5,mg/L,0.25,afdmLake Arrowhead,flame,11:41,water,water
+44,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,0712-04,8/12/2022,tn,0.998,mgL-1,0.25,tnLake Arrowhead,flame,11:41,water,water
+45,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,0724-04,8/12/2022,tn,1.02,mgL-1,0.25,tnLake Arrowhead,flame,11:41,water,water
+46,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,0712-04,8/12/2022,tp,0.138,mgL-1,0.25,tpLake Arrowhead,flame,11:41,water,water
+47,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,0724-04,8/12/2022,tp,0.143,mgL-1,0.25,tpLake Arrowhead,flame,11:41,water,water
+48,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1194-16,8/12/2022,tss,18.5,mg/L,0.25,tssLake Arrowhead,flame,11:41,water,water
+49,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1194-16,8/12/2022,turbidity,27.2,NTU,0.25,turbidityLake Arrowhead,flame,11:41,water,water
+50,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1193-16,8/12/2022,afdm,5.5,mg/L,0.25,afdmLake Arrowhead,flame,12:05,water,water
+51,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0732-04,8/12/2022,tn,1.05,mgL-1,0.25,tnLake Arrowhead,flame,12:05,water,water
+52,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0733-04,8/12/2022,tn,1.08,mgL-1,0.25,tnLake Arrowhead,flame,12:05,water,water
+53,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0767-02,8/12/2022,tn,1.08,mgL-1,0.25,tnLake Arrowhead,flame,12:05,water,water
+54,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0732-04,8/12/2022,tp,0.169,mgL-1,0.25,tpLake Arrowhead,flame,12:05,water,water
+55,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0733-04,8/12/2022,tp,0.171,mgL-1,0.25,tpLake Arrowhead,flame,12:05,water,water
+56,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,0767-02,8/12/2022,tp,0.173,mgL-1,0.25,tpLake Arrowhead,flame,12:05,water,water
+57,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1193-16,8/12/2022,tss,25,mg/L,0.25,tssLake Arrowhead,flame,12:05,water,water
+58,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1193-16,8/12/2022,turbidity,33.8,NTU,0.25,turbidityLake Arrowhead,flame,12:05,water,water
+59,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1482-98,8/8/2022,chl a,19.2,ugL-1,0.25,chl aLake Red Bluff,flame,10:38,water,water
+60,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1483-98,8/8/2022,chl a,10.2,ugL-1,0.25,chl aLake Red Bluff,flame,10:38,water,water
+61,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1484-98,8/8/2022,chl a,10.8,ugL-1,0.25,chl aLake Red Bluff,flame,10:38,water,water
+62,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1485-98,8/8/2022,chl a,49.7,ugL-1,0.25,chl aLake Red Bluff,flame,11:35,water,water
+63,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1486-98,8/8/2022,chl a,39.1,ugL-1,0.25,chl aLake Red Bluff,flame,11:35,water,water
+64,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1487-98,8/8/2022,chl a,74.3,ugL-1,0.25,chl aLake Red Bluff,flame,11:35,water,water
+65,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1488-98,8/8/2022,chl a,54.5,ugL-1,0.25,chl aLake Red Bluff,flame,11:52,water,water
+66,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1489-98,8/8/2022,chl a,71.8,ugL-1,0.25,chl aLake Red Bluff,flame,11:52,water,water
+67,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1490-98,8/8/2022,chl a,50.2,ugL-1,0.25,chl aLake Red Bluff,flame,11:52,water,water
+68,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1491-98,8/8/2022,chl a,23.2,ugL-1,0.25,chl aLake Red Bluff,flame,12:12,water,water
+69,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1492-98,8/8/2022,chl a,13,ugL-1,0.25,chl aLake Red Bluff,flame,12:12,water,water
+70,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1493-98,8/8/2022,chl a,16.8,ugL-1,0.25,chl aLake Red Bluff,flame,12:12,water,water
+71,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1494-98,8/8/2022,chl a,19.1,ugL-1,0.25,chl aLake Red Bluff,flame,12:25,water,water
+72,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1495-98,8/8/2022,chl a,23.9,ugL-1,0.25,chl aLake Red Bluff,flame,12:25,water,water
+73,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1496-98,8/8/2022,chl a,19.3,ugL-1,0.25,chl aLake Red Bluff,flame,12:25,water,water
+74,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1497-98,8/8/2022,chl a,13.3,ugL-1,0.25,chl aLake Red Bluff,flame,12:38,water,water
+75,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1498-98,8/8/2022,chl a,8.32,ugL-1,0.25,chl aLake Red Bluff,flame,12:38,water,water
+76,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1499-98,8/8/2022,chl a,17.5,ugL-1,0.25,chl aLake Red Bluff,flame,12:38,water,water
+77,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1189-16,8/8/2022,afdm,7.5,mg/L,0.25,afdmRed Bluff Reservoir,flame,10:38,water,water
+78,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0708-04,8/8/2022,tn,1.08,mgL-1,0.25,tnRed Bluff Reservoir,flame,10:38,water,water
+79,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0716-04,8/8/2022,tn,1.1,mgL-1,0.25,tnRed Bluff Reservoir,flame,10:38,water,water
+80,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0719-04,8/8/2022,tn,1.35,mgL-1,0.25,tnRed Bluff Reservoir,flame,10:38,water,water
+81,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0708-04,8/8/2022,tp,0.0221,mgL-1,0.25,tpRed Bluff Reservoir,flame,10:38,water,water
+82,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0716-04,8/8/2022,tp,0.0321,mgL-1,0.25,tpRed Bluff Reservoir,flame,10:38,water,water
+83,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0716-04,8/8/2022,tp,0.0407,mgL-1,0.25,tpRed Bluff Reservoir,flame,10:38,water,water
+84,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,0719-04,8/8/2022,tp,0.0358,mgL-1,0.25,tpRed Bluff Reservoir,flame,10:38,water,water
+85,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1189-16,8/8/2022,tss,13.5,mg/L,0.25,tssRed Bluff Reservoir,flame,10:38,water,water
+86,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1189-16,8/8/2022,turbidity,3.57,NTU,0.25,turbidityRed Bluff Reservoir,flame,10:38,water,water
+87,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1186-16,8/8/2022,afdm,8.75,mg/L,0.25,afdmRed Bluff Reservoir,flame,11:35,water,water
+88,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,0706-04,8/8/2022,tn,1.48,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:35,water,water
+89,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,0728-04,8/8/2022,tn,1.63,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:35,water,water
+90,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1022-02,8/8/2022,tn,1.59,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:35,water,water
+91,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,0706-04,8/8/2022,tp,0.0669,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:35,water,water
+92,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,0728-04,8/8/2022,tp,0.0659,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:35,water,water
+93,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1022-02,8/8/2022,tp,0.077,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:35,water,water
+94,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1186-16,8/8/2022,tss,14.8,mg/L,0.25,tssRed Bluff Reservoir,flame,11:35,water,water
+95,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1186-16,8/8/2022,turbidity,16.6,NTU,0.25,turbidityRed Bluff Reservoir,flame,11:35,water,water
+96,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1196-16,8/8/2022,afdm,11.2,mg/L,0.25,afdmRed Bluff Reservoir,flame,11:52,water,water
+97,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0727-04,8/8/2022,tn,1.47,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:52,water,water
+98,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0727-04,8/8/2022,tn,1.47,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:52,water,water
+99,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0734-04,8/8/2022,tn,1.67,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:52,water,water
+100,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0768-02,8/8/2022,tn,1.3,mgL-1,0.25,tnRed Bluff Reservoir,flame,11:52,water,water
+101,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0727-04,8/8/2022,tp,0.0572,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:52,water,water
+102,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0734-04,8/8/2022,tp,0.0606,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:52,water,water
+103,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,0768-02,8/8/2022,tp,0.063,mgL-1,0.25,tpRed Bluff Reservoir,flame,11:52,water,water
+104,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1196-16,8/8/2022,tss,21.2,mg/L,0.25,tssRed Bluff Reservoir,flame,11:52,water,water
+105,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1196-16,8/8/2022,turbidity,11.4,NTU,0.25,turbidityRed Bluff Reservoir,flame,11:52,water,water
+106,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1187-16,8/8/2022,afdm,7.25,mg/L,0.25,afdmRed Bluff Reservoir,flame,12:12,water,water
+107,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0287-15,8/8/2022,tn,1.38,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:12,water,water
+108,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0723-04,8/8/2022,tn,1.3,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:12,water,water
+109,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0731-04,8/8/2022,tn,1.28,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:12,water,water
+110,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0287-15,8/8/2022,tp,0.0212,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:12,water,water
+111,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0287-15,8/8/2022,tp,0.0167,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:12,water,water
+112,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0723-04,8/8/2022,tp,0.0323,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:12,water,water
+113,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,0731-04,8/8/2022,tp,0.0325,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:12,water,water
+114,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1187-16,8/8/2022,tss,12.5,mg/L,0.25,tssRed Bluff Reservoir,flame,12:12,water,water
+115,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1187-16,8/8/2022,turbidity,4.99,NTU,0.25,turbidityRed Bluff Reservoir,flame,12:12,water,water
+116,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1204-16,8/8/2022,afdm,3.75,mg/L,0.25,afdmRed Bluff Reservoir,flame,12:25,water,water
+117,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1029-02,8/8/2022,tn,1.31,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:25,water,water
+118,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1030-02,8/8/2022,tn,1.3,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:25,water,water
+119,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1031-02,8/8/2022,tn,1.34,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:25,water,water
+120,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1029-02,8/8/2022,tp,0.0327,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:25,water,water
+121,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1030-02,8/8/2022,tp,0.0262,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:25,water,water
+122,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1031-02,8/8/2022,tp,0.028,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:25,water,water
+123,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1204-16,8/8/2022,tss,5.25,mg/L,0.25,tssRed Bluff Reservoir,flame,12:25,water,water
+124,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1204-16,8/8/2022,turbidity,4.33,NTU,0.25,turbidityRed Bluff Reservoir,flame,12:25,water,water
+125,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1182-16,8/8/2022,afdm,5.5,mg/L,0.25,afdmRed Bluff Reservoir,flame,12:38,water,water
+126,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0762-02,8/8/2022,tn,1.25,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:38,water,water
+127,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0763-02,8/8/2022,tn,1.27,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:38,water,water
+128,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0766-02,8/8/2022,tn,1.43,mgL-1,0.25,tnRed Bluff Reservoir,flame,12:38,water,water
+129,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0762-02,8/8/2022,tp,0.0291,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:38,water,water
+130,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0763-02,8/8/2022,tp,0.0334,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:38,water,water
+131,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0763-02,8/8/2022,tp,0.0316,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:38,water,water
+132,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,0766-02,8/8/2022,tp,0.0332,mgL-1,0.25,tpRed Bluff Reservoir,flame,12:38,water,water
+133,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1182-16,8/8/2022,tss,4.5,mg/L,0.25,tssRed Bluff Reservoir,flame,12:38,water,water
+134,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1182-16,8/8/2022,turbidity,3.36,NTU,0.25,turbidityRed Bluff Reservoir,flame,12:38,water,water
+135,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,1470-98,8/7/2022,chl a,12.5,ugL-1,0.25,chl aLake OH Ivie,flame,10:32,water,water
+136,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,1471-98,8/7/2022,chl a,10.4,ugL-1,0.25,chl aLake OH Ivie,flame,10:32,water,water
+137,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,1472-98,8/7/2022,chl a,6.21,ugL-1,0.25,chl aLake OH Ivie,flame,10:32,water,water
+138,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,1473-98,8/7/2022,chl a,8.99,ugL-1,0.25,chl aLake OH Ivie,flame,12:05,water,water
+139,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,1474-98,8/7/2022,chl a,7.84,ugL-1,0.25,chl aLake OH Ivie,flame,12:05,water,water
+140,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,1475-98,8/7/2022,chl a,9.17,ugL-1,0.25,chl aLake OH Ivie,flame,12:05,water,water
+141,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1476-98,8/7/2022,chl a,4.63,ugL-1,0.25,chl aLake OH Ivie,flame,12:18,water,water
+142,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1477-98,8/7/2022,chl a,6.37,ugL-1,0.25,chl aLake OH Ivie,flame,12:18,water,water
+143,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1478-98,8/7/2022,chl a,5.45,ugL-1,0.25,chl aLake OH Ivie,flame,12:18,water,water
+144,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,1479-98,8/7/2022,chl a,5.97,ugL-1,0.25,chl aLake OH Ivie,flame,12:55,water,water
+145,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,1480-98,8/7/2022,chl a,5.83,ugL-1,0.25,chl aLake OH Ivie,flame,12:55,water,water
+146,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,1481-98,8/7/2022,chl a,6.71,ugL-1,0.25,chl aLake OH Ivie,flame,12:55,water,water
+147,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0572-04,8/7/2022,tn,1.2,mgL-1,0.25,tnLake OH Ivie,flame,10:32,water,water
+148,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0574-04,8/7/2022,tn,1.16,mgL-1,0.25,tnLake OH Ivie,flame,10:32,water,water
+149,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0709-04,8/7/2022,tn,1.26,mgL-1,0.25,tnLake OH Ivie,flame,10:32,water,water
+150,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0572-04,8/7/2022,tp,0.0285,mgL-1,0.25,tpLake OH Ivie,flame,10:32,water,water
+151,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0574-04,8/7/2022,tp,0.036,mgL-1,0.25,tpLake OH Ivie,flame,10:32,water,water
+152,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,0709-04,8/7/2022,tp,0.0279,mgL-1,0.25,tpLake OH Ivie,flame,10:32,water,water
+153,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,1184-16,8/7/2022,turbidity,2.36,NTU,0.25,turbidityLake OH Ivie,flame,10:32,water,water
+154,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0721-04,8/7/2022,tn,0.743,mgL-1,0.25,tnLake OH Ivie,flame,12:05,water,water
+155,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0722-04,8/7/2022,tn,0.896,mgL-1,0.25,tnLake OH Ivie,flame,12:05,water,water
+156,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0735-04,8/7/2022,tn,0.712,mgL-1,0.25,tnLake OH Ivie,flame,12:05,water,water
+157,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0721-04,8/7/2022,tp,0.0173,mgL-1,0.25,tpLake OH Ivie,flame,12:05,water,water
+158,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0722-04,8/7/2022,tp,0.0234,mgL-1,0.25,tpLake OH Ivie,flame,12:05,water,water
+159,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,0735-04,8/7/2022,tp,0.0179,mgL-1,0.25,tpLake OH Ivie,flame,12:05,water,water
+160,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,1192-16,8/7/2022,turbidity,2.55,NTU,0.25,turbidityLake OH Ivie,flame,12:05,water,water
+161,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1032-02,8/7/2022,tn,0.963,mgL-1,0.25,tnLake OH Ivie,flame,12:18,water,water
+162,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1033-02,8/7/2022,tn,0.978,mgL-1,0.25,tnLake OH Ivie,flame,12:18,water,water
+163,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1034-02,8/7/2022,tn,0.98,mgL-1,0.25,tnLake OH Ivie,flame,12:18,water,water
+164,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1032-02,8/7/2022,tp,0.0301,mgL-1,0.25,tpLake OH Ivie,flame,12:18,water,water
+165,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1033-02,8/7/2022,tp,0.0133,mgL-1,0.25,tpLake OH Ivie,flame,12:18,water,water
+166,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1033-02,8/7/2022,tp,0.0121,mgL-1,0.25,tpLake OH Ivie,flame,12:18,water,water
+167,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1034-02,8/7/2022,tp,0.0177,mgL-1,0.25,tpLake OH Ivie,flame,12:18,water,water
+168,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1198-16,8/7/2022,turbidity,1.13,NTU,0.25,turbidityLake OH Ivie,flame,12:18,water,water
+169,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,0729-04,8/7/2022,tn,1.11,mgL-1,0.25,tnLake OH Ivie,flame,12:55,water,water
+170,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,0730-04,8/7/2022,tn,0.822,mgL-1,0.25,tnLake OH Ivie,flame,12:55,water,water
+171,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,0730-04,8/7/2022,tn,0.821,mgL-1,0.25,tnLake OH Ivie,flame,12:55,water,water
+172,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,0729-04,8/7/2022,tp,0.0131,mgL-1,0.25,tpLake OH Ivie,flame,12:55,water,water
+173,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,0730-04,8/7/2022,tp,0.0212,mgL-1,0.25,tpLake OH Ivie,flame,12:55,water,water
+174,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,1185-16,8/7/2022,turbidity,2.78,NTU,0.25,turbidityLake OH Ivie,flame,12:55,water,water
+175,Lake OH Ivie,IV1,31.554717,-99.713467,8/7/2022 10:32,1192-00,8/7/2022,secchi,0.95,m,,secchiLake OH Ivie,flame,10:32,water,water
+176,Lake OH Ivie,IV2,31.492633,-99.694383,8/7/2022 12:05,1184-00,8/7/2022,secchi,1.15,m,,secchiLake OH Ivie,flame,12:05,water,water
+177,Lake OH Ivie,IV3,31.502617,-99.66905,8/7/2022 12:18,1198-00,8/7/2022,secchi,1.5,m,,secchiLake OH Ivie,flame,12:18,water,water
+178,Lake OH Ivie,IV4,31.58,-99.684533,8/7/2022 12:55,1185-00,8/7/2022,secchi,1.18,m,,secchiLake OH Ivie,flame,12:55,water,water
+179,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 12:58,1458-98,8/6/2022,chl a,1,ugL-1,0.25,chl aLake Brownwood,flame,12:58,water,water
+180,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1459-98,8/6/2022,chl a,13.5,ugL-1,0.25,chl aLake Brownwood,flame,13:26,water,water
+181,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1460-98,8/6/2022,chl a,6.23,ugL-1,0.25,chl aLake Brownwood,flame,13:26,water,water
+182,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1461-98,8/6/2022,chl a,9.36,ugL-1,0.25,chl aLake Brownwood,flame,13:52,water,water
+183,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1462-98,8/6/2022,chl a,6.72,ugL-1,0.25,chl aLake Brownwood,flame,13:52,water,water
+184,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1463-98,8/6/2022,chl a,4.64,ugL-1,0.25,chl aLake Brownwood,flame,13:52,water,water
+185,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1464-98,8/6/2022,chl a,9.67,ugL-1,0.25,chl aLake Brownwood,flame,14:20,water,water
+186,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1465-98,8/6/2022,chl a,9.97,ugL-1,0.25,chl aLake Brownwood,flame,14:20,water,water
+187,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1466-98,8/6/2022,chl a,9.82,ugL-1,0.25,chl aLake Brownwood,flame,14:20,water,water
+188,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1467-98,8/6/2022,chl a,10.2,ugL-1,0.25,chl aLake Brownwood,flame,15:00,water,water
+189,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1468-98,8/6/2022,chl a,6.7,ugL-1,0.25,chl aLake Brownwood,flame,15:00,water,water
+190,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1469-98,8/6/2022,chl a,11.2,ugL-1,0.25,chl aLake Brownwood,flame,15:00,water,water
+191,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1197-16,8/6/2022,afdm,6.3,mg/L,0.25,afdmLake Brownwood,flame,13:26,water,water
+192,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1041-02,8/6/2022,tn,0.955,mgL-1,0.25,tnLake Brownwood,flame,13:26,water,water
+193,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1042-02,8/6/2022,tn,0.952,mgL-1,0.25,tnLake Brownwood,flame,13:26,water,water
+194,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1042-02,8/6/2022,tn,0.952,mgL-1,0.25,tnLake Brownwood,flame,13:26,water,water
+195,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1043-02,8/6/2022,tn,0.958,mgL-1,0.25,tnLake Brownwood,flame,13:26,water,water
+196,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1041-02,8/6/2022,tp,0.053,mgL-1,0.25,tpLake Brownwood,flame,13:26,water,water
+197,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1042-02,8/6/2022,tp,0.0571,mgL-1,0.25,tpLake Brownwood,flame,13:26,water,water
+198,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1043-02,8/6/2022,tp,0.0509,mgL-1,0.25,tpLake Brownwood,flame,13:26,water,water
+199,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1197-16,8/6/2022,tss,20.3,mg/L,0.25,tssLake Brownwood,flame,13:26,water,water
+200,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1197-16,8/6/2022,turbidity,14.4,NTU,0.25,turbidityLake Brownwood,flame,13:26,water,water
+201,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1199-16,8/6/2022,afdm,6.3,mg/L,0.25,afdmLake Brownwood,flame,13:52,water,water
+202,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1038-02,8/6/2022,tn,0.754,mgL-1,0.25,tnLake Brownwood,flame,13:52,water,water
+203,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1040-02,8/6/2022,tn,0.79,mgL-1,0.25,tnLake Brownwood,flame,13:52,water,water
+204,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1038-02,8/6/2022,tp,0.0385,mgL-1,0.25,tpLake Brownwood,flame,13:52,water,water
+205,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1040-02,8/6/2022,tp,0.0367,mgL-1,0.25,tpLake Brownwood,flame,13:52,water,water
+206,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1199-16,8/6/2022,tss,-2.3,mg/L,0.25,tssLake Brownwood,flame,13:52,water,water
+207,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1199-16,8/6/2022,turbidity,5.42,NTU,0.25,turbidityLake Brownwood,flame,13:52,water,water
+208,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1202-16,8/6/2022,afdm,1.3,mg/L,0.25,afdmLake Brownwood,flame,14:20,water,water
+209,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1026-02,8/6/2022,tn,0.742,mgL-1,0.25,tnLake Brownwood,flame,14:20,water,water
+210,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1027-02,8/6/2022,tn,0.802,mgL-1,0.25,tnLake Brownwood,flame,14:20,water,water
+211,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1027-02,8/6/2022,tn,0.801,mgL-1,0.25,tnLake Brownwood,flame,14:20,water,water
+212,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1028-02,8/6/2022,tn,0.7,mgL-1,0.25,tnLake Brownwood,flame,14:20,water,water
+213,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1026-02,8/6/2022,tp,0.0306,mgL-1,0.25,tpLake Brownwood,flame,14:20,water,water
+214,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1027-02,8/6/2022,tp,0.0262,mgL-1,0.25,tpLake Brownwood,flame,14:20,water,water
+215,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1027-02,8/6/2022,tp,0.0238,mgL-1,0.25,tpLake Brownwood,flame,14:20,water,water
+216,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1028-02,8/6/2022,tp,0.0224,mgL-1,0.25,tpLake Brownwood,flame,14:20,water,water
+217,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1202-16,8/6/2022,tss,1.3,mg/L,0.25,tssLake Brownwood,flame,14:20,water,water
+218,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1202-16,8/6/2022,turbidity,2.66,NTU,0.25,turbidityLake Brownwood,flame,14:20,water,water
+219,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1183-16,8/6/2022,afdm,3,mg/L,0.25,afdmLake Brownwood,flame,15:00,water,water
+220,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,0713-04,8/6/2022,tn,0.897,mgL-1,0.25,tnLake Brownwood,flame,15:00,water,water
+221,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,0715-04,8/6/2022,tn,0.84,mgL-1,0.25,tnLake Brownwood,flame,15:00,water,water
+222,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,0713-04,8/6/2022,tp,0.0442,mgL-1,0.25,tpLake Brownwood,flame,15:00,water,water
+223,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,0715-04,8/6/2022,tp,0.036,mgL-1,0.25,tpLake Brownwood,flame,15:00,water,water
+224,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1183-16,8/6/2022,tss,9.3,mg/L,0.25,tssLake Brownwood,flame,15:00,water,water
+225,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1183-16,8/6/2022,turbidity,12.6,NTU,0.25,turbidityLake Brownwood,flame,15:00,water,water
+226,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0651-16,7/23/2022,afdm,12.7,mg/L,0.25,afdmLake Waco,flame,10:15,water,water
+227,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,1410-98,7/23/2022,chl a,83,ugL-1,0.25,chl aLake Waco,flame,10:15,water,water
+228,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,1411-98,7/23/2022,chl a,29.3,ugL-1,0.25,chl aLake Waco,flame,10:15,water,water
+229,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,1412-98,7/23/2022,chl a,24.1,ugL-1,0.25,chl aLake Waco,flame,10:15,water,water
+230,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0757-02,7/23/2022,tn,0.935,mgL-1,0.25,tnLake Waco,flame,10:15,water,water
+231,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0760-02,7/23/2022,tn,0.836,mgL-1,0.25,tnLake Waco,flame,10:15,water,water
+232,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0761-02,7/23/2022,tn,0.898,mgL-1,0.25,tnLake Waco,flame,10:15,water,water
+233,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0757-02,7/23/2022,tp,0.0603,mgL-1,0.25,tpLake Waco,flame,10:15,water,water
+234,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0760-02,7/23/2022,tp,0.0538,mgL-1,0.25,tpLake Waco,flame,10:15,water,water
+235,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0761-02,7/23/2022,tp,0.0483,mgL-1,0.25,tpLake Waco,flame,10:15,water,water
+236,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0651-16,7/23/2022,tss,21.3,mg/L,0.25,tssLake Waco,flame,10:15,water,water
+237,Lake Waco,1,31.59051667,-97.2623,7/23/2022 10:15,0651-16,7/23/2022,turbidity,20,NTU,0.25,turbidityLake Waco,flame,10:15,water,water
+238,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0585-16,7/23/2022,afdm,12,mg/L,0.25,afdmLake Waco,flame,11:35,water,water
+239,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,1413-98,7/23/2022,chl a,76,ugL-1,0.25,chl aLake Waco,flame,11:35,water,water
+240,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,1414-98,7/23/2022,chl a,66.5,ugL-1,0.25,chl aLake Waco,flame,11:35,water,water
+241,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,1415-98,7/23/2022,chl a,76.1,ugL-1,0.25,chl aLake Waco,flame,11:35,water,water
+242,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0747-02,7/23/2022,tn,0.628,mgL-1,0.25,tnLake Waco,flame,11:35,water,water
+243,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0748-02,7/23/2022,tn,0.776,mgL-1,0.25,tnLake Waco,flame,11:35,water,water
+244,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0750-02,7/23/2022,tn,0.752,mgL-1,0.25,tnLake Waco,flame,11:35,water,water
+245,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0750-02,7/23/2022,tn,0.756,mgL-1,0.25,tnLake Waco,flame,11:35,water,water
+246,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0747-02,7/23/2022,tp,0.0481,mgL-1,0.25,tpLake Waco,flame,11:35,water,water
+247,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0748-02,7/23/2022,tp,0.0574,mgL-1,0.25,tpLake Waco,flame,11:35,water,water
+248,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0750-02,7/23/2022,tp,0.0596,mgL-1,0.25,tpLake Waco,flame,11:35,water,water
+249,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0585-16,7/23/2022,tss,17.3,mg/L,0.25,tssLake Waco,flame,11:35,water,water
+250,Lake Waco,2,31.52821667,-97.23906667,7/23/2022 11:35,0585-16,7/23/2022,turbidity,15.5,NTU,0.25,turbidityLake Waco,flame,11:35,water,water
+251,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0652-16,7/23/2022,afdm,12.7,mg/L,0.25,afdmLake Waco,flame,12:11,water,water
+252,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,1416-98,7/23/2022,chl a,83.5,ugL-1,0.25,chl aLake Waco,flame,12:11,water,water
+253,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,1417-98,7/23/2022,chl a,72.9,ugL-1,0.25,chl aLake Waco,flame,12:11,water,water
+254,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,1418-98,7/23/2022,chl a,36.1,ugL-1,0.25,chl aLake Waco,flame,12:11,water,water
+255,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0751-02,7/23/2022,tn,0.736,mgL-1,0.25,tnLake Waco,flame,12:11,water,water
+256,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0758-02,7/23/2022,tn,0.95,mgL-1,0.25,tnLake Waco,flame,12:11,water,water
+257,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0759-02,7/23/2022,tn,0.808,mgL-1,0.25,tnLake Waco,flame,12:11,water,water
+258,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0751-02,7/23/2022,tp,0.0468,mgL-1,0.25,tpLake Waco,flame,12:11,water,water
+259,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0758-02,7/23/2022,tp,0.0521,mgL-1,0.25,tpLake Waco,flame,12:11,water,water
+260,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0759-02,7/23/2022,tp,0.0482,mgL-1,0.25,tpLake Waco,flame,12:11,water,water
+261,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0652-16,7/23/2022,tss,17.3,mg/L,0.25,tssLake Waco,flame,12:11,water,water
+262,Lake Waco,3,31.59436667,-97.25435,7/23/2022 12:11,0652-16,7/23/2022,turbidity,14.3,NTU,0.25,turbidityLake Waco,flame,12:11,water,water
+263,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0582-16,7/23/2022,afdm,12,mg/L,0.25,afdmLake Waco,flame,12:38,water,water
+264,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,1419-98,7/23/2022,chl a,40.1,ugL-1,0.25,chl aLake Waco,flame,12:38,water,water
+265,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,1420-98,7/23/2022,chl a,81.3,ugL-1,0.25,chl aLake Waco,flame,12:38,water,water
+266,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,1421-98,7/23/2022,chl a,67.7,ugL-1,0.25,chl aLake Waco,flame,12:38,water,water
+267,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0753-02,7/23/2022,tn,0.785,mgL-1,0.25,tnLake Waco,flame,12:38,water,water
+268,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0755-02,7/23/2022,tn,0.786,mgL-1,0.25,tnLake Waco,flame,12:38,water,water
+269,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0756-02,7/23/2022,tn,0.607,mgL-1,0.25,tnLake Waco,flame,12:38,water,water
+270,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0753-02,7/23/2022,tp,0.0518,mgL-1,0.25,tpLake Waco,flame,12:38,water,water
+271,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0755-02,7/23/2022,tp,0.0523,mgL-1,0.25,tpLake Waco,flame,12:38,water,water
+272,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0756-02,7/23/2022,tp,0.0478,mgL-1,0.25,tpLake Waco,flame,12:38,water,water
+273,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0582-16,7/23/2022,tss,9.3,mg/L,0.25,tssLake Waco,flame,12:38,water,water
+274,Lake Waco,4,31.58223333,-97.2046,7/23/2022 12:38,0582-16,7/23/2022,turbidity,6.54,NTU,0.25,turbidityLake Waco,flame,12:38,water,water
+275,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0584-16,7/23/2022,afdm,10.7,mg/L,0.25,afdmLake Waco,flame,12:52,water,water
+276,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,1422-98,7/23/2022,chl a,67.6,ugL-1,0.25,chl aLake Waco,flame,12:52,water,water
+277,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,1423-98,7/23/2022,chl a,35.1,ugL-1,0.25,chl aLake Waco,flame,12:52,water,water
+278,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,1424-98,7/23/2022,chl a,31.8,ugL-1,0.25,chl aLake Waco,flame,12:52,water,water
+279,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0744-02,7/23/2022,tn,0.764,mgL-1,0.25,tnLake Waco,flame,12:52,water,water
+280,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0744-02,7/23/2022,tn,0.764,mgL-1,0.25,tnLake Waco,flame,12:52,water,water
+281,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0749-02,7/23/2022,tn,0.742,mgL-1,0.25,tnLake Waco,flame,12:52,water,water
+282,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0752-02,7/23/2022,tn,0.701,mgL-1,0.25,tnLake Waco,flame,12:52,water,water
+283,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0744-02,7/23/2022,tp,0.0473,mgL-1,0.25,tpLake Waco,flame,12:52,water,water
+284,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0749-02,7/23/2022,tp,0.0524,mgL-1,0.25,tpLake Waco,flame,12:52,water,water
+285,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0749-02,7/23/2022,tp,0.0514,mgL-1,0.25,tpLake Waco,flame,12:52,water,water
+286,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0752-02,7/23/2022,tp,0.0581,mgL-1,0.25,tpLake Waco,flame,12:52,water,water
+287,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0752-02,7/23/2022,tp,0.0579,mgL-1,0.25,tpLake Waco,flame,12:52,water,water
+288,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0584-16,7/23/2022,tss,8,mg/L,0.25,tssLake Waco,flame,12:52,water,water
+289,Lake Waco,5,31.56626667,-97.21616667,7/23/2022 12:52,0584-16,7/23/2022,turbidity,6.62,NTU,0.25,turbidityLake Waco,flame,12:52,water,water
+290,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0583-16,7/23/2022,afdm,10,mg/L,0.25,afdmLake Waco,flame,13:52,water,water
+291,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,1425-98,7/23/2022,chl a,63.2,ugL-1,0.25,chl aLake Waco,flame,13:52,water,water
+292,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,1426-98,7/23/2022,chl a,31.8,ugL-1,0.25,chl aLake Waco,flame,13:52,water,water
+293,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,1427-98,7/23/2022,chl a,48.4,ugL-1,0.25,chl aLake Waco,flame,13:52,water,water
+294,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0745-02,7/23/2022,tn,0.797,mgL-1,0.25,tnLake Waco,flame,13:52,water,water
+295,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0746-02,7/23/2022,tn,0.713,mgL-1,0.25,tnLake Waco,flame,13:52,water,water
+296,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0754-02,7/23/2022,tn,0.633,mgL-1,0.25,tnLake Waco,flame,13:52,water,water
+297,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0745-02,7/23/2022,tp,0.0563,mgL-1,0.25,tpLake Waco,flame,13:52,water,water
+299,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0746-02,7/23/2022,tp,0.0474,mgL-1,0.25,tpLake Waco,flame,13:52,water,water
+300,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0754-02,7/23/2022,tp,0.0463,mgL-1,0.25,tpLake Waco,flame,13:52,water,water
+301,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0583-16,7/23/2022,tss,10.7,mg/L,0.25,tssLake Waco,flame,13:52,water,water
+302,Lake Waco,6,31.53843333,-97.22306667,7/23/2022 13:52,0583-16,7/23/2022,turbidity,7.86,NTU,0.25,turbidityLake Waco,flame,13:52,water,water
+303,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,1440-98,7/15/2022,chl a,55.4,ugL-1,0.25,chl aLake Bonham,flame,12:00,water,water
+304,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,1441-98,7/15/2022,chl a,33.8,ugL-1,0.25,chl aLake Bonham,flame,12:00,water,water
+305,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,1442-98,7/15/2022,chl a,47.8,ugL-1,0.25,chl aLake Bonham,flame,12:00,water,water
+306,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,1443-98,7/15/2022,chl a,36.2,ugL-1,0.25,chl aLake Bonham,flame,12:32,water,water
+307,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,1444-98,7/15/2022,chl a,31.7,ugL-1,0.25,chl aLake Bonham,flame,12:32,water,water
+308,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,1445-98,7/15/2022,chl a,38.7,ugL-1,0.25,chl aLake Bonham,flame,12:32,water,water
+309,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,1446-98,7/15/2022,chl a,45.4,ugL-1,0.25,chl aLake Bonham,flame,12:44,water,water
+310,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,1447-98,7/15/2022,chl a,40.2,ugL-1,0.25,chl aLake Bonham,flame,12:44,water,water
+311,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,1448-98,7/15/2022,chl a,39.6,ugL-1,0.25,chl aLake Bonham,flame,12:44,water,water
+312,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,1449-98,7/15/2022,chl a,13.4,ugL-1,0.25,chl aLake Bonham,flame,12:58,water,water
+313,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,1450-98,7/15/2022,chl a,39.2,ugL-1,0.25,chl aLake Bonham,flame,12:58,water,water
+314,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,1451-98,7/15/2022,chl a,13.4,ugL-1,0.25,chl aLake Bonham,flame,12:58,water,water
+315,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,1452-98,7/15/2022,chl a,26.4,ugL-1,0.25,chl aLake Bonham,flame,13:10,water,water
+316,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,1453-98,7/15/2022,chl a,9.31,ugL-1,0.25,chl aLake Bonham,flame,13:10,water,water
+317,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,1454-98,7/15/2022,chl a,11.4,ugL-1,0.25,chl aLake Bonham,flame,13:10,water,water
+318,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,1455-98,7/15/2022,chl a,54.8,ugL-1,0.25,chl aLake Bonham,flame,13:25,water,water
+319,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,1456-98,7/15/2022,chl a,17.5,ugL-1,0.25,chl aLake Bonham,flame,13:25,water,water
+320,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,1457-98,7/15/2022,chl a,20.3,ugL-1,0.25,chl aLake Bonham,flame,13:25,water,water
+321,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0627-16,7/15/2022,afdm,11,mg/L,0.25,afdmLake Bonham,flame,12:00,water,water
+322,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0665-13,7/15/2022,tn,1.1,mgL-1,0.25,tnLake Bonham,flame,12:00,water,water
+323,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0666-13,7/15/2022,tn,0.809,mgL-1,0.25,tnLake Bonham,flame,12:00,water,water
+324,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0665-13,7/15/2022,tp,0.0741,mgL-1,0.25,tpLake Bonham,flame,12:00,water,water
+325,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0665-13,7/15/2022,tp,0.0743,mgL-1,0.25,tpLake Bonham,flame,12:00,water,water
+326,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0666-13,7/15/2022,tp,0.0667,mgL-1,0.25,tpLake Bonham,flame,12:00,water,water
+327,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0627-16,7/15/2022,tss,10.5,mg/L,0.25,tssLake Bonham,flame,12:00,water,water
+328,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0627-16,7/15/2022,turbidity,8.6,NTU,0.25,turbidityLake Bonham,flame,12:00,water,water
+329,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0628-16,7/15/2022,afdm,6.47,mg/L,0.25,afdmLake Bonham,flame,12:32,water,water
+330,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0669-13,7/15/2022,tn,0.944,mgL-1,0.25,tnLake Bonham,flame,12:32,water,water
+331,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0670-13,7/15/2022,tn,0.79,mgL-1,0.25,tnLake Bonham,flame,12:32,water,water
+332,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0670-13,7/15/2022,tn,0.789,mgL-1,0.25,tnLake Bonham,flame,12:32,water,water
+333,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0669-13,7/15/2022,tp,0.0603,mgL-1,0.25,tpLake Bonham,flame,12:32,water,water
+334,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0670-13,7/15/2022,tp,0.0566,mgL-1,0.25,tpLake Bonham,flame,12:32,water,water
+335,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0628-16,7/15/2022,tss,6.47,mg/L,0.25,tssLake Bonham,flame,12:32,water,water
+336,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0628-16,7/15/2022,turbidity,5.21,NTU,0.25,turbidityLake Bonham,flame,12:32,water,water
+337,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0629-16,7/15/2022,afdm,6.44,mg/L,0.25,afdmLake Bonham,flame,12:44,water,water
+338,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0671-13,7/15/2022,tn,0.874,mgL-1,0.25,tnLake Bonham,flame,12:44,water,water
+339,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0672-13,7/15/2022,tn,0.921,mgL-1,0.25,tnLake Bonham,flame,12:44,water,water
+340,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0671-13,7/15/2022,tp,0.05,mgL-1,0.25,tpLake Bonham,flame,12:44,water,water
+341,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0672-13,7/15/2022,tp,0.0474,mgL-1,0.25,tpLake Bonham,flame,12:44,water,water
+342,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0629-16,7/15/2022,tss,8.91,mg/L,0.25,tssLake Bonham,flame,12:44,water,water
+343,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0629-16,7/15/2022,turbidity,6.8,NTU,0.25,turbidityLake Bonham,flame,12:44,water,water
+344,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0630-16,7/15/2022,afdm,4.06,mg/L,0.25,afdmLake Bonham,flame,12:58,water,water
+345,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0675-13,7/15/2022,tn,0.65,mgL-1,0.25,tnLake Bonham,flame,12:58,water,water
+346,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0695-13,7/15/2022,tn,0.792,mgL-1,0.25,tnLake Bonham,flame,12:58,water,water
+347,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0675-13,7/15/2022,tp,0.0511,mgL-1,0.25,tpLake Bonham,flame,12:58,water,water
+348,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0695-13,7/15/2022,tp,0.0519,mgL-1,0.25,tpLake Bonham,flame,12:58,water,water
+349,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0630-16,7/15/2022,tss,7.61,mg/L,0.25,tssLake Bonham,flame,12:58,water,water
+350,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0630-16,7/15/2022,turbidity,6.15,NTU,0.25,turbidityLake Bonham,flame,12:58,water,water
+351,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0631-16,7/15/2022,afdm,6.03,mg/L,0.25,afdmLake Bonham,flame,13:10,water,water
+352,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0678-13,7/15/2022,tn,0.792,mgL-1,0.25,tnLake Bonham,flame,13:10,water,water
+353,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0679-13,7/15/2022,tn,0.833,mgL-1,0.25,tnLake Bonham,flame,13:10,water,water
+354,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0678-13,7/15/2022,tp,0.05,mgL-1,0.25,tpLake Bonham,flame,13:10,water,water
+355,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0679-13,7/15/2022,tp,0.0554,mgL-1,0.25,tpLake Bonham,flame,13:10,water,water
+356,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0631-16,7/15/2022,tss,8.04,mg/L,0.25,tssLake Bonham,flame,13:10,water,water
+357,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0631-16,7/15/2022,turbidity,6.5,NTU,0.25,turbidityLake Bonham,flame,13:10,water,water
+358,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0632-16,7/15/2022,afdm,8.46,mg/L,0.25,afdmLake Bonham,flame,13:25,water,water
+359,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0680-13,7/15/2022,tn,0.684,mgL-1,0.25,tnLake Bonham,flame,13:25,water,water
+360,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0681-13,7/15/2022,tn,0.688,mgL-1,0.25,tnLake Bonham,flame,13:25,water,water
+361,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0680-13,7/15/2022,tp,0.0519,mgL-1,0.25,tpLake Bonham,flame,13:25,water,water
+362,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0681-13,7/15/2022,tp,0.0546,mgL-1,0.25,tpLake Bonham,flame,13:25,water,water
+363,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0632-16,7/15/2022,tss,6.97,mg/L,0.25,tssLake Bonham,flame,13:25,water,water
+364,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0632-16,7/15/2022,turbidity,5.17,NTU,0.25,turbidityLake Bonham,flame,13:25,water,water
+365,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,1428-98,7/14/2022,chl a,51.7,ugL-1,0.25,chl aLake Bonham,flame,13:15,water,water
+366,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,1429-98,7/14/2022,chl a,28.4,ugL-1,0.25,chl aLake Bonham,flame,13:15,water,water
+367,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,1430-98,7/14/2022,chl a,15.4,ugL-1,0.25,chl aLake Bonham,flame,13:15,water,water
+368,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,1431-98,7/14/2022,chl a,73.4,ugL-1,0.25,chl aLake Bonham,flame,13:50,water,water
+369,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,1432-98,7/14/2022,chl a,28.8,ugL-1,0.25,chl aLake Bonham,flame,13:50,water,water
+370,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,1433-98,7/14/2022,chl a,74.6,ugL-1,0.25,chl aLake Bonham,flame,13:50,water,water
+371,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,1434-98,7/14/2022,chl a,31.3,ugL-1,0.25,chl aLake Bonham,flame,14:30,water,water
+372,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,1435-98,7/14/2022,chl a,29.4,ugL-1,0.25,chl aLake Bonham,flame,14:30,water,water
+373,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,1436-98,7/14/2022,chl a,19.4,ugL-1,0.25,chl aLake Bonham,flame,14:30,water,water
+374,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,1437-98,7/14/2022,chl a,36.2,ugL-1,0.25,chl aLake Bonham,flame,14:45,water,water
+375,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,1438-98,7/14/2022,chl a,34.9,ugL-1,0.25,chl aLake Bonham,flame,14:45,water,water
+376,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,1439-98,7/14/2022,chl a,25.5,ugL-1,0.25,chl aLake Bonham,flame,14:45,water,water
+377,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0623-16,7/14/2022,afdm,8.57,mg/L,0.25,afdmLake Bonham,flame,13:15,water,water
+378,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0683-13,7/14/2022,tn,1.31,mgL-1,0.25,tnLake Bonham,flame,13:15,water,water
+379,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0685-13,7/14/2022,tn,0.876,mgL-1,0.25,tnLake Bonham,flame,13:15,water,water
+380,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0683-13,7/14/2022,tp,0.0699,mgL-1,0.25,tpLake Bonham,flame,13:15,water,water
+381,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0685-13,7/14/2022,tp,0.0654,mgL-1,0.25,tpLake Bonham,flame,13:15,water,water
+382,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0623-16,7/14/2022,tss,10.3,mg/L,0.25,tssLake Bonham,flame,13:15,water,water
+383,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0623-16,7/14/2022,turbidity,7.8,NTU,0.25,turbidityLake Bonham,flame,13:15,water,water
+384,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0624-16,7/14/2022,afdm,8.57,mg/L,0.25,afdmLake Bonham,flame,13:50,water,water
+385,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0687-13,7/14/2022,tn,0.979,mgL-1,0.25,tnLake Bonham,flame,13:50,water,water
+386,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0688-13,7/14/2022,tn,1.02,mgL-1,0.25,tnLake Bonham,flame,13:50,water,water
+387,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0687-13,7/14/2022,tp,0.054,mgL-1,0.25,tpLake Bonham,flame,13:50,water,water
+388,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0688-13,7/14/2022,tp,0.0555,mgL-1,0.25,tpLake Bonham,flame,13:50,water,water
+389,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0624-16,7/14/2022,tss,8.86,mg/L,0.25,tssLake Bonham,flame,13:50,water,water
+390,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0624-16,7/14/2022,turbidity,7.4,NTU,0.25,turbidityLake Bonham,flame,13:50,water,water
+391,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0625-16,7/14/2022,afdm,7.71,mg/L,0.25,afdmLake Bonham,flame,14:30,water,water
+392,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0689-13,7/14/2022,tn,1.04,mgL-1,0.25,tnLake Bonham,flame,14:30,water,water
+393,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0690-13,7/14/2022,tn,0.979,mgL-1,0.25,tnLake Bonham,flame,14:30,water,water
+394,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0690-13,7/14/2022,tn,0.981,mgL-1,0.25,tnLake Bonham,flame,14:30,water,water
+395,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0694-13,7/14/2022,tn,0.746,mgL-1,0.25,tnLake Bonham,flame,14:30,water,water
+396,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0689-13,7/14/2022,tp,0.0544,mgL-1,0.25,tpLake Bonham,flame,14:30,water,water
+397,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0690-13,7/14/2022,tp,0.0484,mgL-1,0.25,tpLake Bonham,flame,14:30,water,water
+398,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0694-13,7/14/2022,tp,0.0519,mgL-1,0.25,tpLake Bonham,flame,14:30,water,water
+399,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0625-16,7/14/2022,tss,7.71,mg/L,0.25,tssLake Bonham,flame,14:30,water,water
+400,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0625-16,7/14/2022,turbidity,6.06,NTU,0.25,turbidityLake Bonham,flame,14:30,water,water
+401,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0626-16,7/14/2022,afdm,7.58,mg/L,0.25,afdmLake Bonham,flame,14:45,water,water
+402,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0693-13,7/14/2022,tn,0.787,mgL-1,0.25,tnLake Bonham,flame,14:45,water,water
+403,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0693-13,7/14/2022,tp,0.0558,mgL-1,0.25,tpLake Bonham,flame,14:45,water,water
+404,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0626-16,7/14/2022,tss,7.07,mg/L,0.25,tssLake Bonham,flame,14:45,water,water
+405,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0626-16,7/14/2022,turbidity,5.38,NTU,0.25,turbidityLake Bonham,flame,14:45,water,water
+406,Red Bluff Reservoir,RB1,31.901717,-103.913717,8/8/2022 10:38,1189-00,8/8/2022,secchi,1,m,0.25,secchiRed Bluff Reservoir,flame,10:38,water,water
+407,Red Bluff Reservoir,RB2,32.00235,-103.979733,8/8/2022 11:35,1186-00,8/8/2022,secchi,0.375,m,0.25,secchiRed Bluff Reservoir,flame,11:35,water,water
+408,Red Bluff Reservoir,RB3,31.986317,-103.981383,8/8/2022 11:52,1196-00,8/8/2022,secchi,0.4,m,0.25,secchiRed Bluff Reservoir,flame,11:52,water,water
+409,Red Bluff Reservoir,RB4,31.969367,-103.947133,8/8/2022 12:12,1187-00,8/8/2022,secchi,0.88,m,0.25,secchiRed Bluff Reservoir,flame,12:12,water,water
+410,Red Bluff Reservoir,RB5,31.9463,-103.942183,8/8/2022 12:25,1204-00,8/8/2022,secchi,0.93,m,0.25,secchiRed Bluff Reservoir,flame,12:25,water,water
+411,Red Bluff Reservoir,RB6,31.928883,-103.91895,8/8/2022 12:38,1182-00,8/8/2022,secchi,1.13,m,0.25,secchiRed Bluff Reservoir,flame,12:38,water,water
+412,Lake Brownwood,BW1,31.83805,-99.097983,8/6/2022 13:26,1197-00,8/6/2022,secchi,1.1315,m,0.25,secchiLake Brownwood,flame,13:26,water,water
+413,Lake Brownwood,BW2,31.824617,-99.057317,8/6/2022 13:52,1199-00,8/6/2022,secchi,1.065,m,0.25,secchiLake Brownwood,flame,13:52,water,water
+414,Lake Brownwood,BW3,31.8388,-99.004467,8/6/2022 14:20,1188-00,8/6/2022,secchi,1.575,m,0.25,secchiLake Brownwood,flame,14:20,water,water
+415,Lake Brownwood,BW4,31.886317,-99.021583,8/6/2022 15:00,1183-00,8/6/2022,secchi,1.49,m,0.25,secchiLake Brownwood,flame,15:00,water,water
+416,Lake Bonham,1,33.64784958,-96.16458728,7/15/2022 12:00,0627-00,7/15/2022,secchi,0.6,m,0.25,secchiLake Bonham,flame,12:00,water,water
+417,Lake Bonham,2,33.65165,-96.136733,7/15/2022 12:32,0628-00,7/15/2022,secchi,1.4,m,0.25,secchiLake Bonham,flame,12:32,water,water
+418,Lake Bonham,3,33.66265,-96.149,7/15/2022 12:44,0629-00,7/15/2022,secchi,1.2,m,0.25,secchiLake Bonham,flame,12:44,water,water
+419,Lake Bonham,4,33.656033,-96.157833,7/15/2022 12:58,0630-00,7/15/2022,secchi,1.25,m,0.25,secchiLake Bonham,flame,12:58,water,water
+420,Lake Bonham,5,33.653917,-96.161033,7/15/2022 13:10,0631-00,7/15/2022,secchi,1.2,m,0.25,secchiLake Bonham,flame,13:10,water,water
+421,Lake Bonham,6,33.649117,-96.148267,7/15/2022 13:25,0632-00,7/15/2022,secchi,1.1,m,0.25,secchiLake Bonham,flame,13:25,water,water
+422,Lake Bonham,BON1,33.64784958,-96.16458728,7/14/2022 13:15,0623-00,7/14/2022,secchi,0.7,m,0.25,secchiLake Bonham,flame,13:15,water,water
+423,Lake Bonham,BON2,33.65165,-96.136733,7/14/2022 13:50,0624-00,7/14/2022,secchi,1.1,m,0.25,secchiLake Bonham,flame,13:50,water,water
+424,Lake Bonham,BON3,33.656033,-96.157833,7/14/2022 14:30,0625-00,7/14/2022,secchi,1.3,m,0.25,secchiLake Bonham,flame,14:30,water,water
+425,Lake Bonham,BON4,33.649117,-96.148267,7/14/2022 14:45,0626-00,7/14/2022,secchi,1.2,m,0.25,secchiLake Bonham,flame,14:45,water,water
+426,Lake Arrowhead,AH1,33.74623,-98.3876,8/12/2022 9:48,1190-00,8/12/2022,secchi,0.47,m,0.25,secchiLake Arrowhead,flame,9:48,water,water
+427,Lake Arrowhead,AH2,33.68267,-98.4266,8/12/2022 10:17,1191-00,8/12/2022,secchi,0.135,m,0.25,secchiLake Arrowhead,flame,10:17,water,water
+428,Lake Arrowhead,AH3,33.76283,-98.3658,8/12/2022 11:08,1188-00,8/12/2022,secchi,0.65,m,0.25,secchiLake Arrowhead,flame,11:08,water,water
+429,Lake Arrowhead,AH4,33.70428,-98.3622,8/12/2022 11:41,1194-00,8/12/2022,secchi,0.3,m,0.25,secchiLake Arrowhead,flame,11:41,water,water
+430,Lake Arrowhead,AH5,33.67108,-98.3864,8/12/2022 12:05,1193-00,8/12/2022,secchi,0.235,m,0.25,secchiLake Arrowhead,flame,10:15,water,water
