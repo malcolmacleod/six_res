@@ -17,7 +17,7 @@ require(RColorBrewer)
 require(terrainr)
 require(sf)
 library(raster)
-library(rgdal)
+#library(rgdal)
 library(plotly)
 library(tidyverse)
 
@@ -27,6 +27,7 @@ bwdwl_bands <- rast("bw_dwl.tif")
 #plot(bwdwl_bands$dwLehmann)
 
 bw_df <-as.data.frame(bwdwl_bands, xy=TRUE)
+bw_df$ndti<-(bw_df$B4-bw_df$B3)/(bw_df$B4+bw_df$B3)
 bw_df_fui <- bw_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 bw_df_fui$dwlgroup=as.factor(bw_df_fui$dwlgroup)
 bw_df_fui$system="brownwood"
@@ -35,7 +36,7 @@ bwp<-bw_df_fui %>%  ggplot(aes(dwLehmann, fill = dwlgroup)) + geom_histogram()+
   scale_fill_manual(values = c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0","5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
                                "9" = "#7ba654","10" = "#7dae38","11" = "#94b660","12" = "#94b660", "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
                                "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")) + theme_minimal()+ 
-  xlim(540, 583) +
+  xlim(470, 583) +
   labs(title = "Brownwood",
        x = "Dominant Wavelength (nm)",y = "Count",fill = "Forel-Ule Index")+
   theme(plot.title = element_text(size = 15,hjust=0.5),
@@ -52,6 +53,7 @@ ivdwl_bands <- rast("iv_dwl.tif")
 plot(ivdwl_bands$dwLehmann)
 
 iv_df <-as.data.frame(ivdwl_bands, xy=TRUE)
+iv_df$ndti<-(iv_df$B4-iv_df$B3)/(iv_df$B4+iv_df$B3)
 iv_df_fui <- iv_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 iv_df_fui$dwlgroup=as.factor(iv_df_fui$dwlgroup)
 iv_df_fui$system="ivie"
@@ -62,7 +64,7 @@ ivp<-iv_df_fui %>%  ggplot(aes(dwLehmann, fill = dwlgroup)) + geom_histogram()+
                                "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")) + theme_minimal()+ 
   labs(title = "O.H. Ivie",
        x = "Dominant Wavelength (nm)",y = "Count",fill = "Forel-Ule Index")+
-  xlim(540, 583) +
+  xlim(470, 583) +
   theme(plot.title = element_text(size = 15,hjust=0.5),
         axis.title.x = element_text(size = 13),
         axis.title.y = element_text(size = 13),
@@ -79,6 +81,7 @@ rbdwl_bands <- rast("rb_dwl.tif")
 plot(rbdwl_bands$dwLehmann)
 
 rb_df <-as.data.frame(rbdwl_bands, xy=TRUE)
+rb_df$ndti<-(rb_df$B4-rb_df$B3)/(rb_df$B4+rb_df$B3)
 rb_df_fui <- rb_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 rb_df_fui$dwlgroup=as.factor(rb_df_fui$dwlgroup)
 rb_df_fui$system="redbluff"
@@ -89,7 +92,7 @@ rbp<-rb_df_fui %>%  ggplot(aes(dwLehmann, fill = dwlgroup)) + geom_histogram()+
                                "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")) + theme_minimal()+ 
   labs(title = "Red Bluff",
        x = "Dominant Wavelength (nm)",y = "Count",fill = "Forel-Ule Index")+
-  xlim(540, 583) +
+  xlim(470, 583) +
   theme(plot.title = element_text(size = 15,hjust=0.5),
         axis.title.x = element_text(size = 13),
         axis.title.y = element_text(size = 13),
@@ -104,6 +107,7 @@ bndwl_bands <- rast("bon_dwl.tif")
 plot(bndwl_bands$dwLehmann)
 
 bn_df <-as.data.frame(bndwl_bands, xy=TRUE)
+bn_df$ndti<-(bn_df$B4-bn_df$B3)/(bn_df$B4+bn_df$B3)
 bn_df_fui <- bn_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 bn_df_fui$dwlgroup=as.factor(bn_df_fui$dwlgroup)
 bn_df_fui$system="bonham"
@@ -129,6 +133,7 @@ lwdwl_bands <- rast("lw_dwl.tif")
 plot(lwdwl_bands$dwLehmann)
 
 lw_df <-as.data.frame(lwdwl_bands, xy=TRUE)
+lw_df$ndti<-(lw_df$B4-lw_df$B3)/(lw_df$B4+lw_df$B3)
 lw_df_fui <- lw_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 lw_df_fui$dwlgroup=as.factor(lw_df_fui$dwlgroup)
 lw_df_fui$system="waco"
@@ -137,7 +142,7 @@ lwp<-lw_df_fui %>%  ggplot(aes(dwLehmann, fill = dwlgroup)) + geom_histogram()+
   scale_fill_manual(values = c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0","5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
                                "9" = "#7ba654","10" = "#7dae38","11" = "#94b660","12" = "#94b660", "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
                                "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")) + theme_minimal()+ 
-  xlim(555, 577) +
+  xlim(470, 583) +
   labs(title = "Waco",
        x = "Dominant Wavelength (nm)",y = "Count",fill = "Forel-Ule Index")+
   theme(plot.title = element_text(size = 15,hjust=0.5),
@@ -154,6 +159,7 @@ ahdwl_bands <- rast("ah_dwl.tif")
 plot(ahdwl_bands$dwLehmann)
 
 ah_df <-as.data.frame(ahdwl_bands, xy=TRUE)
+ah_df$ndti<-(ah_df$B4-ah_df$B3)/(ah_df$B4+ah_df$B3)
 ah_df_fui <- ah_df %>% mutate(dwlgroup = cut(dwLehmann, breaks =c(470, 475, 480, 485, 489,495, 509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583), right = T, labels = F))
 ah_df_fui$dwlgroup=as.factor(ah_df_fui$dwlgroup)
 ah_df_fui$system="arrowhead"
@@ -182,7 +188,22 @@ dwl_all6<-grid.arrange(ncol=3,
 ggsave(filename = "combo_dwl.png", plot = dwl_all6, , width = 18, height = 11) 
 
 ######################################################################################
-df_bind <- rbind(bn_df_fui,lw_df_fui,ah_df_fui,bw_df_fui,iv_df_fui)
+df_bind <- rbind(bn_df_fui,lw_df_fui,ah_df_fui,bw_df_fui,iv_df_fui,rb_df_fui)
+df_bind$system <- factor(df_bind$system, levels = c("bonham", "waco", "brownwood", "ivie", "redbluff", "arrowhead"),
+                         labels = c("Bonham", "Waco", "Brownwood", "OH Ivie", "Red Bluff", "Arrowhead"))
+
+alldwl_freq<-df_bind %>% ggplot(aes(dwLehmann, fill = dwlgroup)) + geom_histogram()+
+  scale_fill_manual(values = c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0","5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
+                               "9" = "#7ba654","10" = "#7dae38","11" = "#94b660","12" = "#94b660", "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
+                               "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")) + theme_minimal()+ 
+  xlim(470, 583) +
+  labs(x = "Dominant Wavelength (nm)",y = "Count",fill = "Forel-Ule Index")+
+  theme(axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14),
+        legend.title = element_text(size = 13)) + facet_wrap(~system, scales = "free") + theme_minimal()
+
+ggsave("dwl_freq_all.png", alldwl_freq,width = 18, height = 11)
+
 
 # Define the UTM zone and datum (replace with your specific UTM EPSG code)
 # UTM zone 14N, datum WGS84, RedBluff is the only one that is zone 13N
@@ -210,12 +231,12 @@ rb_sf$system<-rbsf_df_latlon$system
 #####################################################################################################################################
 # separating lake data between river arm and main body  
 
-s2_w<-df_latlon %>% filter(system=="waco")
-s2_a<-df_latlon %>% filter(system=="arrowhead")
-s2_bw<-df_latlon %>% filter(system=="brownwood")
-s2_iv<-df_latlon %>% filter(system=="ivie")
-s2_bn<-df_latlon %>% filter(system=="bonham")
-s2_rb<-df_latlon %>% filter(system=="redbluff")
+s2_w<-df_latlon %>% filter(system=="Waco")
+s2_a<-df_latlon %>% filter(system=="Arrowhead")
+s2_bw<-df_latlon %>% filter(system=="Brownwood")
+s2_iv<-df_latlon %>% filter(system=="OH Ivie")
+s2_bn<-df_latlon %>% filter(system=="Bonham")
+s2_rb<-rb_sf 
 
 ## defining bboxes for waco ##
 #wmbbox <- st_bbox(c(xmin = -97.25316, ymin = 31.539846, xmax = -97.1882756, ymax = 31.589283782), crs = st_crs(s2_w))
@@ -297,6 +318,7 @@ bb_nona<-bb_bind %>% drop_na()
 # defining confidence level
 confidence_level <- 0.95
 alpha <- 1-confidence_level
+z<-1.96
 
 # summary stats for them all
 systemstats_dwl<- bb_nona %>% group_by(system) %>% 
@@ -312,14 +334,23 @@ zonestats_dwl<- bb_nona %>% group_by(zone) %>%
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(dwl), max=max(dwl),
-            margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+            margin_of_error = qt(1 - alpha / 2, df = n - 1) * se,
+            moe= z*se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
+# checking and sure enough it still produces a low and very similar SE between the two
+14.84/sqrt(98757)
+
+23.1/sqrt(238372)
 
 
 
 
 
+adz<-aov(dwl~zone + system,bb_nona)
+
+summary(adz)
+TukeyHSD(adz)
 
 
 
