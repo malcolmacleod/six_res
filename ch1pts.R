@@ -435,3 +435,57 @@ rb_bind<-rbind(rmb,rra)
 
 
 all_bind <- rbind(bn_bind,waco_bind,ah_bind,bw_bind,iv_bind,rb_bind)
+
+
+
+
+
+#####
+# set some parameters to pass into ggplot 
+ptsize<-0.9
+ptalpha<-0.5
+
+# setting gps boundaries for each lake-map
+map_ah <- openmap(upperLeft = c(33.78, -98.462), 
+                  lowerRight = c(33.615, -98.312), 
+                  type = 'osm',zoom=12)
+
+map_bon <- openmap(upperLeft = c(33.675,-96.175),
+                   lowerRight = c(33.625,-96.125), 
+                   type = 'osm',zoom=12)
+
+map_bw <- openmap(upperLeft = c(31.93, -99.11),
+                  lowerRight = c(31.74, -98.985), 
+                  type = 'osm',zoom=12)
+
+map_iv <- openmap(upperLeft = c(31.62, -99.84),
+                  lowerRight = c(31.4, -99.6), 
+                  type = 'osm',zoom=12)
+
+map_rb <- openmap(upperLeft = c(32.026, -104.03),
+                  lowerRight = c(31.84, -103.879), 
+                  type = 'osm',zoom=12)
+
+map_lw <- openmap(upperLeft = c(31.625,-97.3),
+                  lowerRight = c(31.47,-97.19),
+                  type = 'osm',zoom=12)
+
+
+####################
+plot_ndtibn<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map_bon)) +
+  geom_point(data = s2flame_znpts %>% filter(system=="bonham"), 
+             size=ptsize,
+             alpha=ptalpha,
+             aes(x = lon, y = lat,color=ndti))+
+  ggtitle(label = "Bonham") +
+  scale_color_viridis_c("fDOM (RFU)",direction=-1)+
+  xlab("")+ylab("")+
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    legend.direction="horizontal",
+    legend.title.align=0.5,
+    legend.key.width = unit(0.75,"cm"),
+    legend.position = c(0.5, 0.03))+
+  guides(col=guide_colorbar(title.position = "top"))+ 
+  theme(plot.title = element_text(hjust = 0.5))
