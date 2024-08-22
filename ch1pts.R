@@ -84,6 +84,7 @@ all6t_r2 <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
   xlab("Sample Turbidity (NTU)")+ theme_bw()
 # code for plots of individual lakes and their stations + all combined are found in "station_ysi.R" 
 
+# plotting SDD to predicted SDD
 
 # NDTI~turbidity from boat path points
 logEstimate <- lm(ndti~log(turb),data=s2flame_znpts)
