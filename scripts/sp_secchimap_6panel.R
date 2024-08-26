@@ -30,7 +30,7 @@ library(sf)
 library(viridis)
 library(raster)
 
-# 2. CRASR data - read in for all lakes -------------------------------------------
+# 2. CRASR data - read in for all lakes --------------------------------------------
 crasr_all <- read_csv("CRASR_summer2022.csv") %>% clean_names()
 
 # separate by lake day
