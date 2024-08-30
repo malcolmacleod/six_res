@@ -30,9 +30,11 @@ library(anytime)
 
 # Reading the combined FLAMe and Sentinel-2 data for pts along boat path with essential data variables:
 # lat, lon, DWL, predicted SD, NDTI, turbidity
-# Criteria for this data was speed >0, unique lat/lon, and "no flag" (as specified by AH paper)
-# Filters dropped obs from 48033 to 28847; see "s2flm_pts.R" for making of sausage
-s2flame_znpts<-read_csv("six4m_zone.csv")
+# re-applying all filters except SCL = 6, and applied the band2 threshold > 300, obs drop to 20013
+# at this point the r2 is about the same (0.59 vs 0.6)
+# applying SCL = 6 has r2 of 0.62 n = 19904 , removing Waco (which should be done) n=18317 and r2=0.71
+# this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
+s2flm_fullfilter<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") %>% filter(!system=="waco")
 
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
@@ -43,8 +45,23 @@ dfd_transect<- read_csv("dfd_transect.csv")
 # refer to "station_YSI.R" for making of sausage
 sample_ysi<-read_csv("sensor_sample_valmeans.csv")
 
+# Reading in sentinel-2 data for the station lat lons
+# note that this calculates dwl/ndti for hi-qual images for AH (7/28) and Waco(7/25)
+s2crasr<-read_csv("s2crasr_merge.csv")
+
 
 # 4. Plotting data
+
+ggplot(s2flame_znpts,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+ggplot(s2flm_fullfilter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
 
 # plotting NDTI x norm DFD
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
@@ -148,6 +165,22 @@ zonestats_dwl<- s2flame_znpts %>% group_by(zone) %>%
             min=min(dwl), max=max(dwl),
             margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+zonestats_tsi<- s2flame_znpts %>% group_by(zone) %>% 
+  summarise(n=n(),mean=mean(tsi_sd),sd=sd(tsi_sd),se=sd/sqrt(n),
+            lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+            upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+            min=min(tsi_sd), max=max(tsi_sd),
+            margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+s2flm_river<- s2flame_znpts %>% filter(zone=="arm")
+s2flm_lacus<- s2flame_znpts %>% filter(zone=="body")
+
+tsi_r<-s2flm_river$tsi_sd
+tsi_l<-s2flm_lacus$tsi_sd
+quantile(tsi_r, c(.05, 0.5, .95))
+quantile(tsi_l, c(.05, 0.5, .95))
 
 # note that results for DWL along boat path are not consistent with full system analysis
 # same summary stats were calculated for the zone designated water pixel data from GEE output
@@ -300,139 +333,3 @@ acf_resid<-acf(aov_ndti_df$resid)
 pacf_resid<-pacf(aov_ndti_df$resid)
 
 
-################################################################################
-# Just to show how some things were determined
-
-# 1. predicted Secchi
-# adding NLA derived TSI to each flame point
-# reading in data (all NLA reservoirs for 2012 + 2017 and CRASR sample data)
-nla_crasr<-read_csv("nla_crasr.csv")
-nla_crasr <- nla_crasr%>% dplyr::rename(secchi = `secchi (m)`, turb = `turb (ntu)`)
-# lm for log(secchi)~log*turb
-tsdlm<-lm(log(secchi)~log(turb), data = nla_crasr)
-# predicting secchi values from EXO turbidity data
-all_bind$secchi <- exp(predict(tsdlm, all_bind))
-# calculating TSI from newly derived secchi
-all_bind$tsi_sd <- 10 * (6-log(all_bind$secchi)/log(2))
-
-# 2. Chromaticity calculation for Dominant Wavelength 
-#Convert R,G, and B spectral reflectance to dwl based on CIE chromaticity color space, see Wang et al 2015.
-fui.hue <- function(R, G, B) {
-  
-  require(colorscience)
-  # chromaticity.diagram.color.fill()
-  Xi <- 2.7689*R + 1.7517*G + 1.1302*B
-  Yi <- 1.0000*R + 4.5907*G + 0.0601*B
-  Zi <- 0.0565*G + 5.5943*B
-  
-  # calculate coordinates on chromaticity diagram
-  x <-  Xi / (Xi + Yi +  Zi)
-  y <-  Yi / (Xi + Yi +  Zi)
-  z <-  Zi / (Xi + Yi +  Zi)
-  
-  # calculate hue angle
-  alpha <- atan2( (x - 0.33), (y - 0.33)) * 180/pi
-  
-  # make look up table for hue angle to wavelength conversion
-  cie <- cccie31 %>%
-    mutate(a = atan2( (x - 0.33), (y - 0.33)) * 180/pi) %>%
-    dplyr::filter(wlnm <= 700) %>%
-    dplyr::filter(wlnm >=380)
-  
-  # find nearest dominant wavelength to hue angle
-  wl <- cie[as.vector(sapply(alpha,function(x) which.min(abs(x - cie$a)))), 'wlnm']
-  #out <- cbind(as.data.frame(alpha), as.data.frame(wl))
-  
-  return(wl)
-}
-
-# assigning bands to R,G,B
-R <-df$B4
-G <-df$B3
-B <-df$B2
-
-# 3. defining zones using bounding boxes, these include entire system
-# separating lake data between river arm and main body  
-s2_df<-read_csv("s2flm_6lakes_datause.csv")
-
-#dm_sf <- st_as_sf(bnras, coords = c("lon", "lat"), crs = 4326)
-#mapview(dm_sf)
-
-s2_w<-s2_df %>% filter(system == "waco")
-s2_a<-s2_df %>% filter(system == "arrowhead")
-s2_bw<-s2_df %>% filter(system == "brownwood")
-s2_iv<-s2_df %>% filter(system == "ivie")
-s2_bn<-s2_df %>% filter(system == "bonham")
-s2_rb<-s2_df %>% filter(system == "redbluff")
-
-## defining bboxes for waco ##
-
-wmb <- s2_w[s2_w$lat >= 31.530244 & s2_w$lat <= 31.6095146 & s2_w$lon >= -97.2520428 & s2_w$lon <= -97.1809749,]
-wna<-s2_w[s2_w$lat >= 31.5821285 & s2_w$lat <= 31.6157569 & s2_w$lon >= -97.308004 & s2_w$lon <= -97.2523861,]
-wsa<-s2_w[s2_w$lat >= 31.4886804 & s2_w$lat <= 31.5311218 & s2_w$lon >= -97.265776 & s2_w$lon <= -97.2266369,]
-
-wmb$zone="body"
-wna$zone="arm"
-wsa$zone="arm"
-
-waco_bind<-rbind(wmb,wna,wsa)
-#write_csv(waco_bind, "waco_zone.csv")
-
-## defining bboxes for ah ##
-amb<-s2_a[s2_a$lat >= 33.6933513 & s2_a$lat <= 33.7744378 & s2_a$lon >= -98.41832729 & s2_a$lon <= -98.3015976,]
-ara<-s2_a[s2_a$lat >= 33.6339153 & s2_a$lat <= 33.6936369 & s2_a$lon >= -98.4667358 & s2_a$lon <= -98.351036,]
-
-amb$zone="body"
-ara$zone="arm"
-
-ah_bind<-rbind(amb,ara)
-
-## defining bboxes for bw ##
-bwmb<-s2_bw[s2_bw$lat >= 31.7955865 & s2_bw$lat <= 31.865884 & s2_bw$lon >= -99.0787206 & s2_bw$lon <= -98.9753804,]
-bwna<-s2_bw[s2_bw$lat >= 31.8661754 & s2_bw$lat <= 31.928552 & s2_bw$lon >= -99.0583197 & s2_bw$lon <= -99.0109412,]
-bwsa<-s2_bw[s2_bw$lat >= 31.8200945 & s2_bw$lat <= 31.857136 & s2_bw$lon >= -99.1343388 & s2_bw$lon <= -99.0787206,]
-
-bwmb$zone="body"
-bwna$zone="arm"
-bwsa$zone="arm"
-
-bw_bind<-rbind(bwmb,bwna,bwsa)
-
-## defining bboxes for iv ##
-imb<-s2_iv[s2_iv$lat >= 31.479319 & s2_iv$lat <= 31.5557074 & s2_iv$lon >= -99.7077124 & s2_iv$lon <= -99.574503,]
-ira<-s2_iv[s2_iv$lat >= 31.5559999 & s2_iv$lat <= 31.6256021 & s2_iv$lon >= -99.8392049 & s2_iv$lon <= -99.659991,]
-
-imb$zone="body"
-ira$zone="arm"
-
-iv_bind<-rbind(imb,ira)
-
-## defining bboxes for bon ##
-bnmb1<-s2_bn[s2_bn$lat >= 33.6512746 & s2_bn$lat <= 33.6556328 & s2_bn$lon >= -96.1523812 & s2_bn$lon <= -96.13573,]
-bnmb2<-s2_bn[s2_bn$lat >= 33.6442593 & s2_bn$lat <= 33.6515473 & s2_bn$lon >= -96.1636449 & s2_bn$lon <= -96.1349774,]
-bnmb1$zone="body"
-bnmb2$zone="body"
-
-
-bnrane<-s2_bn[s2_bn$lat >= 33.6556197 & s2_bn$lat <= 33.67240739 & s2_bn$lon >= -96.15240104 & s2_bn$lon <= -96.13789,]
-bnranw<-s2_bn[s2_bn$lat >= 33.6516187 & s2_bn$lat <= 33.66576413 & s2_bn$lon >= -96.1694813 & s2_bn$lon <= -96.152401,]
-bnraw<-s2_bn[s2_bn$lat >= 33.63775681 & s2_bn$lat <= 33.65047555 & s2_bn$lon >= -96.17806441 & s2_bn$lon <= -96.163731,] 
-bnras<-s2_bn[s2_bn$lat >= 33.6397708 & s2_bn$lat <= 33.644201 & s2_bn$lon >= -96.1537165 & s2_bn$lon <= -96.13637867,]
-bnrane$zone="arm"
-bnranw$zone="arm"
-bnraw$zone="arm"
-bnras$zone="arm"
-
-bn_bind<-rbind(bnmb1,bnmb2,bnrane,bnranw,bnraw,bnras)
-
-## defining bboxes for rb ##
-rmb<-s2_rb[s2_rb$lat >= 31.895208 & s2_rb$lat <= 31.9744585 & s2_rb$lon >= -103.9684497 & s2_rb$lon <= -103.8946353,]
-rra<-s2_rb[s2_rb$lat >= 31.974749 & s2_rb$lat <= 32.0443283 & s2_rb$lon >= -104.01239497 & s2_rb$lon <= -103.9324008,]
-
-rmb$zone="body"
-rra$zone="arm"
-
-rb_bind<-rbind(rmb,rra)
-
-
-all_bind <- rbind(bn_bind,waco_bind,ah_bind,bw_bind,iv_bind,rb_bind)
