@@ -72,7 +72,7 @@ l2w_turb_ndti_plot<-s2flm_l2w %>%  ggplot(aes(log10(turb), ndti)) +
 
 boatpath_turbndti_combo<- s2c_turb_ndti_plot + l2w_turb_ndti_plot +
   plot_annotation(tag_levels = 'A') 
-ggsave("turb_ndti_l2w_s2c.png", boatpath_turbndti_combo, width = 12, height = 5)
+#ggsave("turb_ndti_l2w_s2c.png", boatpath_turbndti_combo, width = 12, height = 5)
 
 # Next we are plotting spatial scale 2 as distance from the dam, colored by lake
 # NDTI x norm DFD
@@ -113,9 +113,10 @@ turb_stations <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") + 
   ylab("Sensor Turbidity (NTU)")+
   xlab("Sample Turbidity (NTU)")+ theme_bw()
+ggsave("turb_stations.png", turb_stations)
 
 # Now it's predicted Secchi to in situ Secchi
-sdd_stations<-sample_ysi_secchi %>% filter(!system =="Lake Brownwood" & !system =="Lake Waco") %>% 
+sdd_stations<-sample_ysi_secchi %>% filter(!system =="Lake Waco") %>% 
   ggplot(aes(y=pred_sdd_m,x=secchi)) + 
   geom_point(aes(color = system)) + 
   geom_smooth(method = "lm", formula = y ~ x, color = "black") +
@@ -127,6 +128,7 @@ sdd_stations<-sample_ysi_secchi %>% filter(!system =="Lake Brownwood" & !system 
   xlab("Secchi (m)")+ theme_bw()
 
 comb_sampsens_plot<- turb_stations + sdd_stations + plot_layout(guides = "collect") & theme(legend.position = "right")
+ggsave("sdd_turb_stations.png", comb_sampsens_plot, width = 15, height = 7)
 
 # Predicted Sechi to YSI turb
 ggplot(sample_ysi_secchi,aes(y=pred_sdd_m,x=turb_ysi_m)) +
@@ -143,6 +145,9 @@ ggplot(sample_ysi_secchi,aes(y=secchi,x=turb_lab)) +
                aes(label = paste(after_stat(rr.label))),
                parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("Secchi (m)")+
   xlab("Sample Turbidity (NTU)")+ theme_bw()
+
+# testing out AFDM relationships
+s2crasr %>% ggplot(aes(afdm, dwl)) + geom_point()
 
 
 ## 4. Running linear models and preparing summary tables
@@ -166,8 +171,6 @@ summary(cars)
 
 ## Visualizing Plots
 
-First we want to see the relationship between sensor turbidity and NDTI calculated along the boat path.
-
 ```{r turb_ndti, echo=FALSE, flag=FALSE}
 
 boatpath_turbndti_combo
@@ -189,25 +192,53 @@ comb_linedfd_plot
 
 ```{r testing plots, echo=FALSE, flag=FALSE}
 comb_sampsens_plot
+ggsave("sdd_turb_stations.png", comb_sampsens_plot, width = 15, height = 7)
 
-sdd_stations
+#sdd_stations
 
-ggplot(sample_ysi_secchi,aes(y=pred_sdd_m,x=turb_ysi_m)) +
-  geom_point(aes(color = system)) +
-  stat_poly_eq(formula = y ~ x,
-               aes(label = paste(after_stat(rr.label))),
-               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("Predicted Secchi (m)")+
-  xlab("Sensor Turbidity (NTU)")+ theme_bw()
+# ggplot(sample_ysi_secchi,aes(y=pred_sdd_m,x=turb_ysi_m)) +
+#   geom_point(aes(color = system)) +
+#   stat_poly_eq(formula = y ~ x,
+#                aes(label = paste(after_stat(rr.label))),
+#                parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("Predicted Secchi (m)")+
+#   xlab("Sensor Turbidity (NTU)")+ theme_bw()
 ```
 
 ```{r test_plots_s2crasr, echo = FALSE}
-s2crasr %>% filter(dwl>500) %>% ggplot(aes(y=dwl,x=ndti)) +
+dwl_ndti_allstations<-s2crasr %>% filter(dwl>500) %>% ggplot(aes(y=dwl,x=ndti)) +
   geom_point(aes(color = system)) +
   #geom_smooth(method = "lm", formula = y ~ x, color = "black") +
   stat_poly_eq(formula = y ~ x,
                aes(label = paste(after_stat(rr.label))),
                parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("dwl")+
   xlab("ndti")+ theme_bw()
+#ggsave("dwl_ndti_rmoutlier.png", dwl_ndti_allstations)
+
+s2crasr %>% ggplot(aes(y=dwl,x=afdm)) +
+  geom_point(aes(color = system)) +
+  #geom_smooth(method = "lm", formula = y ~ x, color = "black") +
+  stat_poly_eq(formula = y ~ x,
+               aes(label = paste(after_stat(rr.label))),
+               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("dwl")+
+  xlab("afdm")+ theme_bw()
+
+```
+``` {r testplots_afdm, echo = FALSE}
+afdm_dwl_stations<-s2crasr %>% ggplot(aes(y=dwl,x=ndti, color=system))+ geom_point()+
+  # geom_smooth(method="lm")+
+  ylab("Dominant Wavelength (nm)")+
+  xlab("Ash Free Dry Mass (mg/L)")+
+  theme_bw()
+#ggsave("afdm_dwl_stations_noline.png", afdm_dwl_stations)
+
+s2crasr %>% ggplot(aes(y=dwl,x=afdm, color=system))+ geom_point()+
+  stat_poly_eq(formula = y ~ x,
+               aes(label = paste(after_stat(rr.label))),
+               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3)+
+  # geom_smooth(method="lm")+
+  # ylab("Dominant Wavelength (nm)")+
+  # xlab("Ash Free Dry Mass (mg/L)")+
+  theme_bw()
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
