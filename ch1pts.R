@@ -30,9 +30,11 @@ library(anytime)
 
 # Reading the combined FLAMe and Sentinel-2 data for pts along boat path with essential data variables:
 # lat, lon, DWL, predicted SD, NDTI, turbidity
-# Criteria for this data was speed >0, unique lat/lon, and "no flag" (as specified by AH paper)
-# Filters dropped obs from 48033 to 28847; see "s2flm_pts.R" for making of sausage
-s2flame_znpts<-read_csv("six4m_zone.csv")
+# re-applying all filters except SCL = 6, and applied the band2 threshold > 300, obs drop to 20013
+# at this point the r2 is about the same (0.59 vs 0.6)
+# applying SCL = 6 has r2 of 0.62 n = 19904 , removing Waco (which should be done) n=18317 and r2=0.71
+# this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
+s2flm_fullfilter<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") %>% filter(!system=="waco")
 
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
@@ -43,8 +45,23 @@ dfd_transect<- read_csv("dfd_transect.csv")
 # refer to "station_YSI.R" for making of sausage
 sample_ysi<-read_csv("sensor_sample_valmeans.csv")
 
+# Reading in sentinel-2 data for the station lat lons
+# note that this calculates dwl/ndti for hi-qual images for AH (7/28) and Waco(7/25)
+s2crasr<-read_csv("s2crasr_merge.csv")
+
 
 # 4. Plotting data
+
+ggplot(s2flame_znpts,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+ggplot(s2flm_fullfilter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
 
 # plotting NDTI x norm DFD
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
@@ -148,6 +165,22 @@ zonestats_dwl<- s2flame_znpts %>% group_by(zone) %>%
             min=min(dwl), max=max(dwl),
             margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+zonestats_tsi<- s2flame_znpts %>% group_by(zone) %>% 
+  summarise(n=n(),mean=mean(tsi_sd),sd=sd(tsi_sd),se=sd/sqrt(n),
+            lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+            upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+            min=min(tsi_sd), max=max(tsi_sd),
+            margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+s2flm_river<- s2flame_znpts %>% filter(zone=="arm")
+s2flm_lacus<- s2flame_znpts %>% filter(zone=="body")
+
+tsi_r<-s2flm_river$tsi_sd
+tsi_l<-s2flm_lacus$tsi_sd
+quantile(tsi_r, c(.05, 0.5, .95))
+quantile(tsi_l, c(.05, 0.5, .95))
 
 # note that results for DWL along boat path are not consistent with full system analysis
 # same summary stats were calculated for the zone designated water pixel data from GEE output
@@ -300,6 +333,7 @@ acf_resid<-acf(aov_ndti_df$resid)
 pacf_resid<-pacf(aov_ndti_df$resid)
 
 
+<<<<<<< HEAD
 ################################################################################
 # Just to show how some things were determined
 
@@ -490,3 +524,5 @@ plot_ndtibn<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map_b
     legend.position = c(0.5, 0.03))+
   guides(col=guide_colorbar(title.position = "top"))+ 
   theme(plot.title = element_text(hjust = 0.5))
+=======
+>>>>>>> 98b081e1963515582a17c6dc946fbd558747b6a1
