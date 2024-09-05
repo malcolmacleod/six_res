@@ -7,6 +7,7 @@
 # clear workspace
 rm(list=ls())
 
+
 # 1. load essential packages
 
 library(tidyverse)
@@ -34,7 +35,7 @@ library(anytime)
 # at this point the r2 is about the same (0.59 vs 0.6)
 # applying SCL = 6 has r2 of 0.62 n = 19904 , removing Waco (which should be done) n=18317 and r2=0.71
 # this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
-s2flm_fullfilter<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") %>% filter(!system=="waco")
+s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") %>% filter(!system=="waco")
 
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
@@ -199,13 +200,40 @@ s2flame_znpts$index<-1:length(s2flame_znpts[,1])
 # use a random subset of data to avoid autocorrelation and speed up processing
 # see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
 set.seed(1) # makes the subsetting reproducible
-sampled <- sample(1:length(s2flame_znpts[,1]),size=2884) #2528) #200) # adjust subset size as needed #total is 28728
+sampled <- sample(1:length(s2flame_znpts[,1]),size=1984) #2528) #200) # adjust subset size as needed #total is 28728
 data_sampled<-s2flame_znpts[sampled,]
 
 # fit new anova on random subset for turb
-aov_turb <- aov(turb~zone+system,data_sampled)
-posthoc <- TukeyHSD(aov_turb)
-posthoc
+aov_turb <- aov(turb~zone*system,data_sampled)
+saovt<-summary(aov_turb)
+aovt_posthoc <- TukeyHSD(aov_turb)
+aovt_posthoc
+
+interaction.plot(
+  x.factor = data_sampled$zone,
+  trace.factor = data_sampled$system,
+  response = data_sampled$turb,
+  fun = median,
+  ylab = "turbidity",
+  xlab = "zone",
+  trace.label = "system",
+  col = c("#0198f9", "#f95801", "forestgreen", "yellow", "violet", "black"),
+  lyt = 1,
+  lwd = 3
+)
+
+interaction.plot(
+  x.factor = data_sampled$system,
+  trace.factor = data_sampled$zone,
+  response = data_sampled$turb,
+  fun = median,
+  ylab = "turbidity",
+  xlab = "system",
+  trace.label = "zone",
+  col = c("#0198f9", "#f95801"),
+  lyt = 1,
+  lwd = 3
+)
 
 # do diagnostics
 plot(aov_turb,which=1)
@@ -244,7 +272,7 @@ pacf_resid<-pacf(aov1_df$resid)
 dev.off()
 
 # fit anova on random subset for predicted Secchi
-aov_secchi <- aov(secchi~zone+system,data_sampled)
+aov_secchi <- aov(secchi~zone*system,data_sampled)
 summary(aov_secchi)
 secchi_posthoc <- TukeyHSD(aov_secchi)
 secchi_posthoc
@@ -273,7 +301,7 @@ acf_resid<-acf(aov_secchi_df$resid)
 pacf_resid<-pacf(aov_secchi_df$resid)
 
 # fit anova on random subset for predicted DWL
-aov_dwl <- aov(dwl~zone+system,data_sampled)
+aov_dwl <- aov(dwl~zone*system,data_sampled)
 summary(aov_dwl)
 dwl_posthoc <- TukeyHSD(aov_dwl)
 dwl_posthoc
@@ -303,7 +331,7 @@ acf_resid<-acf(aov_dwl_df$resid)
 pacf_resid<-pacf(aov_dwl_df$resid)
 
 
-aov_ndti <- aov(ndti~zone+system,data_sampled)
+aov_ndti <- aov(ndti~zone*system,data_sampled)
 summary(aov_ndti)
 ndti_posthoc <- TukeyHSD(aov_ndti)
 ndti_posthoc
@@ -332,8 +360,17 @@ pacf_fitted<-pacf(aov_ndti_df$fitted)
 acf_resid<-acf(aov_ndti_df$resid)
 pacf_resid<-pacf(aov_ndti_df$resid)
 
+################################################################################
+# testing interaction for whole data
+aov_turb_all <- aov(turb~zone*system,s2flame_znpts)
+summary(aov_turb_all)
+aov_turb_all_posthoc <- TukeyHSD(aov_turb_all)
+aov_turb_all_posthoc
 
-<<<<<<< HEAD
+aov_secchi_all <- aov(secchi~zone*system,s2flame_znpts)
+summary(aov_secchi_all)
+aov_secchi_all_posthoc <- TukeyHSD(aov_secchi_all)
+aov_secchi_all_posthoc
 ################################################################################
 # Just to show how some things were determined
 
