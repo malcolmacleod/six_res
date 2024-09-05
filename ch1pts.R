@@ -35,7 +35,7 @@ library(anytime)
 # at this point the r2 is about the same (0.59 vs 0.6)
 # applying SCL = 6 has r2 of 0.62 n = 19904 , removing Waco (which should be done) n=18317 and r2=0.71
 # this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
-s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") %>% filter(!system=="waco")
+s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") #%>% filter(!system=="waco")
 
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
@@ -50,6 +50,10 @@ sample_ysi<-read_csv("sensor_sample_valmeans.csv")
 # note that this calculates dwl/ndti for hi-qual images for AH (7/28) and Waco(7/25)
 s2crasr<-read_csv("s2crasr_merge.csv")
 
+# Reading full system Sen2Cor data for DWL and NDTI
+dwl6lake_all_nozone<-read_csv("dwl6lake.csv")
+
+dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
 
 # 4. Plotting data
 
@@ -58,7 +62,7 @@ ggplot(s2flame_znpts,aes(log10(turb), ndti)) +
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 
-ggplot(s2flm_fullfilter,aes(log10(turb), ndti)) + 
+ggplot(s2flame_znpts,aes(log10(turb), ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -135,7 +139,7 @@ alpha <- 1-confidence_level
 # calculating means, CI, and range for variables by zone, can also specify group_by(system)
 
 zonestats_turb<- s2flame_znpts %>% group_by(zone) %>% 
-  summarise(n=n(),mean=mean(turb),sd=sd(turb),se=sd/sqrt(n),
+  dplyr::summarise(n=n(),mean=mean(turb),sd=sd(turb),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(turb), max=max(turb),
@@ -144,7 +148,7 @@ zonestats_turb<- s2flame_znpts %>% group_by(zone) %>%
 
 
 zonestats_secchi<- s2flame_znpts %>% group_by(zone) %>% 
-  summarise(n=n(),mean=mean(secchi),sd=sd(secchi),se=sd/sqrt(n),
+  dplyr::summarise(n=n(),mean=mean(secchi),sd=sd(secchi),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(secchi), max=max(secchi),
@@ -152,7 +156,7 @@ zonestats_secchi<- s2flame_znpts %>% group_by(zone) %>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
 zonestats_ndti<- s2flame_znpts %>% group_by(zone) %>% 
-  summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
+  dplyr::summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(dwl), max=max(dwl),
@@ -160,7 +164,7 @@ zonestats_ndti<- s2flame_znpts %>% group_by(zone) %>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
 zonestats_dwl<- s2flame_znpts %>% group_by(zone) %>% 
-  summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
+  dplyr::summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(dwl), max=max(dwl),
@@ -168,7 +172,7 @@ zonestats_dwl<- s2flame_znpts %>% group_by(zone) %>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
 zonestats_tsi<- s2flame_znpts %>% group_by(zone) %>% 
-  summarise(n=n(),mean=mean(tsi_sd),sd=sd(tsi_sd),se=sd/sqrt(n),
+  dplyr::summarise(n=n(),mean=mean(tsi_sd),sd=sd(tsi_sd),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
             min=min(tsi_sd), max=max(tsi_sd),
@@ -202,6 +206,11 @@ s2flame_znpts$index<-1:length(s2flame_znpts[,1])
 set.seed(1) # makes the subsetting reproducible
 sampled <- sample(1:length(s2flame_znpts[,1]),size=1984) #2528) #200) # adjust subset size as needed #total is 28728
 data_sampled<-s2flame_znpts[sampled,]
+
+noivorbon_aov<-s2flame_znpts %>% filter(!system=="bonham") 
+noivorbon_aov<-s2flame_znpts %>% filter(!system=="ivie") 
+baov<-aov(dwl~zone, noivorbon_aov)
+bonaov_posthoc <- TukeyHSD(baov)
 
 # fit new anova on random subset for turb
 aov_turb <- aov(turb~zone*system,data_sampled)
@@ -371,6 +380,50 @@ aov_secchi_all <- aov(secchi~zone*system,s2flame_znpts)
 summary(aov_secchi_all)
 aov_secchi_all_posthoc <- TukeyHSD(aov_secchi_all)
 aov_secchi_all_posthoc
+################################################################################
+# summary stats for full system 
+# summary stats for them all
+systemstats_dwl<- dwl6lake_zone %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(dwl), max=max(dwl),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+zonestats_dwl<- dwl6lake_zone %>% group_by(zone) %>% 
+  dplyr::summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(dwl), max=max(dwl),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se,
+                   moe= z*se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+systemstats_ndti<- dwl6lake_zone %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(ndti), max=max(ndti),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+zonestats_ndti<- dwl6lake_zone %>% group_by(zone) %>% 
+  dplyr::summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(ndti), max=max(ndti),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+
+aov_dwl_zn<-aov(dwl~zone*system,bb_nona)
+
+summary(aov_dwl_zn)
+TukeyHSD(aov_dwl_zn)
+
+
+
 ################################################################################
 # Just to show how some things were determined
 
