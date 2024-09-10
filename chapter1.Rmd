@@ -100,7 +100,8 @@ line_dwl<- dfd_transect %>% ggplot(aes(norm_dist, dwl, color = system)) + geom_l
         legend.title = element_text(size = 12))
 
 #combining the two plots
-comb_linedfd_plot<- line_ndti + line_dwl + plot_layout(guides = "collect") & theme(legend.position = "right")
+comb_linedfd_plot<-  line_dwl + line_ndti + plot_layout(guides = "collect") & theme(legend.position = "right")+
+  plot_annotation(tag_levels = 'A') 
 
 # Now let's make plots for relationships between mean YSI values and lab measurements
 # First we have YSI turb to lab turb
@@ -127,7 +128,8 @@ sdd_stations<-sample_ysi_secchi %>% filter(!system =="Lake Waco") %>%
   ylab("Predicted Secchi (m)")+
   xlab("Secchi (m)")+ theme_bw()
 
-comb_sampsens_plot<- turb_stations + sdd_stations + plot_layout(guides = "collect") & theme(legend.position = "right")
+comb_sampsens_plot<- turb_stations + sdd_stations + plot_layout(guides = "collect") & theme(legend.position = "right")+
+  plot_annotation(tag_levels = 'A') 
 ggsave("sdd_turb_stations.png", comb_sampsens_plot, width = 15, height = 7)
 
 # Predicted Sechi to YSI turb
@@ -188,6 +190,7 @@ s2flm_l2w %>%  ggplot(aes(turb, ndti)) +
 
 ```{r dfd_lines, echo=FALSE, flag=FALSE}
 comb_linedfd_plot
+ggsave("combo_line_plasma.png", comb_linedfd_plot, width = 15, height = 7)
 ```
 
 ```{r testing plots, echo=FALSE, flag=FALSE}

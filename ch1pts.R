@@ -37,7 +37,7 @@ library(anytime)
 # this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
 s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") #%>% filter(!system=="waco")
 
-
+s2flm_withwaco725<-read_csv("s2flm_includes725waco.csv") %>% filter(speed>0) %>% filter(SCL=="6")
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
 dfd_transect<- read_csv("dfd_transect.csv")
@@ -147,7 +147,7 @@ zonestats_turb<- s2flame_znpts %>% group_by(zone) %>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
 
-zonestats_secchi<- s2flame_znpts %>% group_by(zone) %>% 
+zonestats_secchi<- s2flame_znpts %>% #group_by(zone) %>% 
   dplyr::summarise(n=n(),mean=mean(secchi),sd=sd(secchi),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
@@ -159,7 +159,7 @@ zonestats_ndti<- s2flame_znpts %>% group_by(zone) %>%
   dplyr::summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
             lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
             upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
-            min=min(dwl), max=max(dwl),
+            min=min(ndti), max=max(ndti),
             margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
@@ -187,9 +187,69 @@ tsi_l<-s2flm_lacus$tsi_sd
 quantile(tsi_r, c(.05, 0.5, .95))
 quantile(tsi_l, c(.05, 0.5, .95))
 
+confidence_level <- 0.95
+alpha <- 1-confidence_level
+
+# calculating means, CI, and range for variables by zone, can also specify group_by(system)
+
+syststats_turb<- s2flame_znpts %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(turb),sd=sd(turb),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(turb), max=max(turb),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+
+syststats_secchi<- s2flame_znpts %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(secchi),sd=sd(secchi),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(secchi), max=max(secchi),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+syststats_ndti<- s2flame_znpts %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(ndti),sd=sd(ndti),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(ndti), max=max(ndti),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+syststats_dwl<- s2flame_znpts %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(dwl), max=max(dwl),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+syststats_tsi<- s2flame_znpts %>% group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(tsi_sd),sd=sd(tsi_sd),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(tsi_sd), max=max(tsi_sd),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
 # note that results for DWL along boat path are not consistent with full system analysis
 # same summary stats were calculated for the zone designated water pixel data from GEE output
 ## see "dwl5lakes.R" for processing of GEE output - histogram creation, zone designation, and stats ##
+s2flame_znpts$system<- str_to_title(s2flame_znpts$system)
+
+dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+ggsave("dwl_system_boxplot.png",dwl_system_boxplot, width = 10, height = 7)
+
+s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
 
 # 4b. AOV and Tukeys HSD post-hoc
 
@@ -208,8 +268,9 @@ sampled <- sample(1:length(s2flame_znpts[,1]),size=1984) #2528) #200) # adjust s
 data_sampled<-s2flame_znpts[sampled,]
 
 noivorbon_aov<-s2flame_znpts %>% filter(!system=="bonham") 
-noivorbon_aov<-s2flame_znpts %>% filter(!system=="ivie") 
-baov<-aov(dwl~zone, noivorbon_aov)
+noivorbon_aov<-noivorbon_aov %>% filter(!system=="ivie") 
+baov<-aov(turb~zone*system, noivorbon_aov)
+summary(baov)
 bonaov_posthoc <- TukeyHSD(baov)
 
 # fit new anova on random subset for turb
@@ -309,8 +370,21 @@ pacf_fitted<-pacf(aov_secchi_df$fitted)
 acf_resid<-acf(aov_secchi_df$resid)
 pacf_resid<-pacf(aov_secchi_df$resid)
 
+## doing the same as above but with sat variables including 7/25 waco
+# concatenate lat/lon and remove duplicated lat/lon pairs
+s2flm_withwaco725$latlon<-paste(s2flm_withwaco725$lat,s2flm_withwaco725$lon)
+s2flm_withwaco725 <- s2flm_withwaco725[!duplicated(s2flm_withwaco725$latlon),]
+
+total_rows <- nrow(s2flm_withwaco725)
+# use a random subset of data to avoid autocorrelation and speed up processing
+# see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
+set.seed(1) # makes the subsetting reproducible
+sampled <- sample(1:total_rows,size=3055) #2528) #200) # adjust subset size as needed #total is 28728
+data_sampled725<-s2flm_withwaco725[sampled,]
+
+
 # fit anova on random subset for predicted DWL
-aov_dwl <- aov(dwl~zone*system,data_sampled)
+aov_dwl <- aov(dwl~zone*system,data_sampled725)
 summary(aov_dwl)
 dwl_posthoc <- TukeyHSD(aov_dwl)
 dwl_posthoc
@@ -340,7 +414,7 @@ acf_resid<-acf(aov_dwl_df$resid)
 pacf_resid<-pacf(aov_dwl_df$resid)
 
 
-aov_ndti <- aov(ndti~zone*system,data_sampled)
+aov_ndti <- aov(ndti~zone*system,data_sampled725)
 summary(aov_ndti)
 ndti_posthoc <- TukeyHSD(aov_ndti)
 ndti_posthoc
