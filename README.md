@@ -30,4 +30,6 @@ In the "csv" folder there are some other files such as all the CRASR data for th
 
 Within the "scripts" folder you will find "acolite6lakes.R" used for analysis of ACOLITE corrected L2W data, "dwl6lakes.R" is used for whole system calculations of dominant wavelength such as the histograms and DWL maps, "s2flm_pts.R" is the primary exploratory script for everything related to points along the boat path and distance from dam, "sdd_turb_model.R" shows how NLA reservoir data was used to predict Secchi along boat path and preliminary code for making 6panel Secchi map, "sp_secchimap_6panel.R" is SP's revision of the Secchi map plot to add scale bars, common scale, and the dam locations, "station_ysi.R" is the script used to create the validation data frames for CRASR to YSI data along with CRASR to S2
 
-### NOTES<br>
+### PLOTS<br>
+
+"ch1results" is the folder with all the plots with the "main_plots" subfolder containing all the plots that will be included in the manuscript, as figures are revised, this folder will be updated. "exploratory" folder has a lot of the additional plots that did not make it to "main_plots" and "practice_plots" has various iterations from the process
