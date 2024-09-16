@@ -37,7 +37,44 @@ library(anytime)
 # this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
 s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") #%>% filter(!system=="waco")
 
+s2flm_nfunq<-read_csv("s2flm6lakes_nf_unique_update.csv") %>% filter(!system=="waco")%>% 
+  filter(SCL=="6") %>% filter(dwl<=583 & dwl>=475)
+
+iv_s2f<-s2flm_nfunq %>% filter(system=="ivie") #%>% filter(ndti<0.05)
+
+ivb2<-ggplot(iv_s2f, aes(B2,ndti)) +geom_point()
+ggplotly(ivb2)
+
+map0 <- openmap(upperLeft = c(31.62, -99.84),
+                lowerRight = c(31.4, -99.6),
+                type = 'osm',zoom=14)
+
+ndti_map_iv<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map0)) +
+  geom_point(data = iv_s2f %>% filter(system=="ivie"), 
+             #             size=ptsize,
+             #             alpha=ptalpha,
+             aes(x = lon, y = lat,color=ndti))+
+  scale_color_viridis_c("ndti",direction=)+
+  xlab("")+ylab("")+
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    legend.direction="horizontal",
+    legend.title.align=0.5,
+    legend.key.width = unit(0.6,"cm"),
+    legend.position = c(0.28, 0.8))+
+  guides(col=guide_colorbar(title.position = "top"))
+ndti_map_iv
+
+ggplotly(ndti_map_iv)
+
+
 s2flm_withwaco725<-read_csv("s2flm_includes725waco.csv") %>% filter(speed>0) %>% filter(SCL=="6")
+
+
+# Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
+s2flm_l2w<-read_csv("l2w6lakes.csv")
+
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
 dfd_transect<- read_csv("dfd_transect.csv")
@@ -62,11 +99,28 @@ ggplot(s2flame_znpts,aes(log10(turb), ndti)) +
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 
-ggplot(s2flame_znpts,aes(log10(turb), ndti)) + 
+ggplot(s2flm_l2w,aes(log10(turb), ndti, color=system)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+s2flm_l2w %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
+s2flm_nfunq %>% 
+  ggplot(aes(turb, ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + 
+  coord_cartesian(ylim = range(s2flm_nfunq$ndti))+theme_bw()
+
+
+sysndti<-ggplot(s2flm_nfunq,aes(turb, ndti, color=system)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + 
+  coord_cartesian(ylim = range(s2flm_nfunq$ndti))+ theme_bw()
+ggplotly(sysndti)
+
+s2flm_nfunq %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 # plotting NDTI x norm DFD
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
@@ -106,7 +160,50 @@ all6t_r2 <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
   xlab("Sample Turbidity (NTU)")+ theme_bw()
 # code for plots of individual lakes and their stations + all combined are found in "station_ysi.R" 
 
-# plotting SDD to predicted SDD
+# verifying ndti pts
+map0 <- openmap(upperLeft = c(33.672, -96.18538), 
+                lowerRight = c(33.63142, -96.12549),
+                #                type = 'stamen-terrain',zoom=12) # stamen-terrain is deprecated
+                type = 'osm',zoom=14)
+
+ndti_map_bonham<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map0)) +
+  geom_point(data = s2flame_znpts %>% filter(system=="bonham"), 
+             #             size=ptsize,
+             #             alpha=ptalpha,
+             aes(x = lon, y = lat,color=ndti))+
+  scale_color_viridis_c("ndti",direction=)+
+  xlab("")+ylab("")+
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    legend.direction="horizontal",
+    legend.title.align=0.5,
+    legend.key.width = unit(0.6,"cm"),
+    legend.position = c(0.28, 0.8))+
+  guides(col=guide_colorbar(title.position = "top"))
+ndti_map_bonham
+
+map0 <- openmap(upperLeft = c(31.61010, -99.8149), 
+                lowerRight = c(31.45884, -99.58825),
+                #                type = 'stamen-terrain',zoom=12) # stamen-terrain is deprecated
+                type = 'osm',zoom=12)
+
+ndti_map_ivie<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map0)) +
+  geom_point(data = s2flame_znpts %>% filter(system=="ivie"), 
+             #             size=ptsize,
+             #             alpha=ptalpha,
+             aes(x = lon, y = lat,color=ndti))+
+  scale_color_viridis_c("ndti",direction=)+
+  xlab("")+ylab("")+
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    legend.direction="horizontal",
+    legend.title.align=0.5,
+    legend.key.width = unit(0.6,"cm"),
+    legend.position = c(0.28, 0.1))+
+  guides(col=guide_colorbar(title.position = "top"))
+ndti_map_ivie
 
 # NDTI~turbidity from boat path points
 logEstimate <- lm(ndti~log(turb),data=s2flame_znpts)
