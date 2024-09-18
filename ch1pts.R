@@ -26,6 +26,7 @@ require(rstac)
 require(terra)
 library(nlme)
 library(anytime)
+library(patchwork)
 
 # 2. Reading in data
 
@@ -60,7 +61,7 @@ dfd_transect<- read_csv("dfd_transect.csv")
 
 # Reading in sample to sensor validation data (using method from AH paper) 
 # refer to "station_YSI.R" for making of sausage
-sample_ysi<-read_csv("sensor_sample_valmeans.csv")
+sample_ysi<-read_csv("valmeans_secchi.csv")
 
 # Reading in sentinel-2 data for the station lat lons
 # note that this calculates dwl/ndti for hi-qual images for AH (7/28) and Waco(7/25)
@@ -246,6 +247,37 @@ turb_ndti_plot<-ggplot(s2flame_znpts,aes(x=turb,y=ndti)) +
   xlab("In-lake Turbidity (NTU)")+
   ylab("Satellite Turbidity (NDTI)")+
   theme_bw()
+
+# plotting out YSI to sample
+turb_stations <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) + 
+  geom_point(aes(color = system)) + 
+  geom_smooth(method = "lm", formula = y ~ x, color = "black") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label = paste(after_stat(rr.label))), 
+               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") + 
+  ylab("Sensor Turbidity (NTU)")+
+  xlab("Sample Turbidity (NTU)")+
+  labs(color = "System") + theme_bw()
+
+
+# Now it's predicted Secchi to in situ Secchi
+sdd_stations<-sample_ysi %>% #filter(!system =="Lake Waco") %>% 
+  ggplot(aes(y=pred_sdd_m,x=secchi)) + 
+  geom_point(aes(color = system)) + 
+  geom_smooth(method = "lm", formula = y ~ x, color = "black") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label = paste(after_stat(rr.label))), 
+               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  ylab("Predicted Secchi (m)")+
+  xlab("Secchi (m)")+
+  labs(color = "System")+ theme_bw()
+
+comb_sampsens_plot<- turb_stations + sdd_stations + plot_layout(guides = "collect") +
+  plot_annotation(tag_levels = 'A') & theme(legend.position = "right")
+ggsave("sdd_turb_stations.png", comb_sampsens_plot, width = 15, height = 7)
+
 
 # 4a. Summary statistics
 
