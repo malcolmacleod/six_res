@@ -31,45 +31,24 @@ library(anytime)
 
 # Reading the combined FLAMe and Sentinel-2 data for pts along boat path with essential data variables:
 # lat, lon, DWL, predicted SD, NDTI, turbidity
-# re-applying all filters except SCL = 6, and applied the band2 threshold > 300, obs drop to 20013
-# at this point the r2 is about the same (0.59 vs 0.6)
-# applying SCL = 6 has r2 of 0.62 n = 19904 , removing Waco (which should be done) n=18317 and r2=0.71
-# this is with log10 turb~ndti, turb~ndti has r2 = 0.73 but bonham and ivie show even larger ndti spread
-s2flame_znpts<-read_csv("six4m_zone_b2thresh.csv") %>% filter(SCL=="6") #%>% filter(!system=="waco")
+# this file for "s2flame_znpts" is all the points filtered to "no flag" and unique lat/lons (r2=0.59, n = 28328)
+# applying SCL = 6 (r2 = 0.6, n = 28227), after removing Waco (which should be done) r2=0.68, n =26639
+# filtering to within visible range (r2=0.7, n=26593 or r2 = 0.72 not log10 transformed)
+# applied the band2 threshold > 300 (r2 = 0.75, n=18677)
 
-s2flm_nfunq<-read_csv("s2flm6lakes_nf_unique_update.csv") %>% filter(!system=="waco")%>% 
-  filter(SCL=="6") %>% filter(dwl<=583 & dwl>=475)
+s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
 
-iv_s2f<-s2flm_nfunq %>% filter(system=="ivie") #%>% filter(ndti<0.05)
-
-ivb2<-ggplot(iv_s2f, aes(B2,ndti)) +geom_point()
-ggplotly(ivb2)
-
-map0 <- openmap(upperLeft = c(31.62, -99.84),
-                lowerRight = c(31.4, -99.6),
-                type = 'osm',zoom=14)
-
-ndti_map_iv<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map0)) +
-  geom_point(data = iv_s2f %>% filter(system=="ivie"), 
-             #             size=ptsize,
-             #             alpha=ptalpha,
-             aes(x = lon, y = lat,color=ndti))+
-  scale_color_viridis_c("ndti",direction=)+
-  xlab("")+ylab("")+
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    legend.direction="horizontal",
-    legend.title.align=0.5,
-    legend.key.width = unit(0.6,"cm"),
-    legend.position = c(0.28, 0.8))+
-  guides(col=guide_colorbar(title.position = "top"))
-ndti_map_iv
-
-ggplotly(ndti_map_iv)
+s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
+  filter(!system=="waco")%>%
+  filter(dwl<=583 & dwl>=475) #%>% 
+  #filter(B2>300) 
 
 
-s2flm_withwaco725<-read_csv("s2flm_includes725waco.csv") %>% filter(speed>0) %>% filter(SCL=="6")
+ggplot(s2flm_allfilter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 
 # Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
@@ -92,26 +71,33 @@ dwl6lake_all_nozone<-read_csv("dwl6lake.csv")
 
 dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
 
+# reading in full system sen2cor using the ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY") approach
+# this is MUCH more effective cloud mask than the previous approach "masks2clouds". dwlgroup is factored to viz
+dwl_cloudmask<-read_csv("dwl6lake_truecloudmask.csv")
+dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
+
+
 # 4. Plotting data
 
-ggplot(s2flame_znpts,aes(log10(turb), ndti)) + 
+ggplot(s2flame_znpts,aes(log10(turb), ndti,color=system)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+s2flame_znpts %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
-ggplot(s2flm_l2w,aes(log10(turb), ndti, color=system)) + 
+ggplot(s2flm_l2w,aes(log10(turb), ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 s2flm_l2w %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 s2flm_nfunq %>% 
-  ggplot(aes(turb, ndti)) + 
+  ggplot(aes(turb, ndti, color=system)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + 
   coord_cartesian(ylim = range(s2flm_nfunq$ndti))+theme_bw()
-
+s2flm_nfunq %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 sysndti<-ggplot(s2flm_nfunq,aes(turb, ndti, color=system)) + 
   geom_point() + 
@@ -159,6 +145,40 @@ all6t_r2 <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
                parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + ylab("Sensor Turbidity (NTU)")+
   xlab("Sample Turbidity (NTU)")+ theme_bw()
 # code for plots of individual lakes and their stations + all combined are found in "station_ysi.R" 
+
+# plotting DWL histograms and maps
+# making a FUI palette
+fui_palette<-c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0",
+               "5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
+               "9" = "#7ba654","10" = "#7dae38","11" = "#94b660","12" = "#94b660", 
+               "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
+               "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")
+
+fui_palette_cont<-c("#2158bc","#316dc5","#327cbb", "#4b80a0",
+                    "#568f96", "#6d9298", "#698c86","#759e72",
+                    "#7ba654", "#7dae38", "#94b660", "#94b660", 
+                    "#a5bc76", "#aab86d","#adb55f", "#a8a965",
+                    "#ae9f5c","#b3a053", "#af8a44","#a46905", "#9f4d04")
+
+dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
+  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..), 
+                 color = "black", bins = 21) +  # Normalize bin heights within each facet
+  scale_fill_gradientn(colors = fui_palette,
+                       values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583))) +  # Apply the palette to the fill aesthetic
+  scale_x_continuous(breaks = c(475, 500, 525, 550, 575)) +  # Custom x-axis tick labels
+  facet_wrap(~system) + 
+  ylab("Proportion of surface area") + 
+  xlab("Dominant wavelength (nm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(shape=15, size=0.35)+
+  scale_color_manual(values = c(fui_palette)) +guides(color = guide_legend(override.aes = list(size = 6))) +
+  ylab("Latitude") + 
+  xlab("Longitude") +
+  labs(color = "Forel-Ule Scale") +
+  theme_classic() +facet_wrap(~system, scales = "free")
+
 
 # verifying ndti pts
 map0 <- openmap(upperLeft = c(33.672, -96.18538), 
