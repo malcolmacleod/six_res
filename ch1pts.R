@@ -41,19 +41,49 @@ s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")
 
 s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
   filter(!system=="waco")%>%
-  filter(dwl<=583 & dwl>=475) #%>% 
-  #filter(B2>300) 
+  #filter(dwl<=583 & dwl>=475)
+  filter(B2>300) 
 
 
-ggplot(s2flm_allfilter,aes(log10(turb), ndti)) + 
+ggplot(s2flame_znpts,aes(turb, ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+s2flame_znpts %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
+# reading in the Sentinel-2 Cloud Probability masked sen2cor data along boat paths. n = 27620
+s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv")
+
+s2flm_ncfilter<-s2flm_nc  %>%
+  filter(!system=="waco")
+
+ggplot(s2flm_nc,aes(turb, ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+s2flm_nc %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 # Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
 s2flm_l2w<-read_csv("l2w6lakes.csv")
+
+s2flm_l2w_nona<-s2flm_l2w %>% drop_na() # n = 14727
+
+excluded_na <- s2flm_l2w %>%
+  filter(is.na(ndti))
+
+ggplot(s2flm_l2w,aes(turb, ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+s2flm_l2w %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+s2flm_l2w_nona %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+
+# excluding the 10647 pts from 
+small_sf <- st_as_sf(small_data, coords = c("lon", "lat"), crs = 4326)
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
@@ -386,8 +416,9 @@ syststats_tsi<- s2flame_znpts %>% group_by(system) %>%
 # same summary stats were calculated for the zone designated water pixel data from GEE output
 ## see "dwl5lakes.R" for processing of GEE output - histogram creation, zone designation, and stats ##
 s2flame_znpts$system<- str_to_title(s2flame_znpts$system)
+s2flm_allfilter$system<- str_to_title(s2flm_allfilter$system)
 
-dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
+dwl_system_boxplot<-s2flm_allfilter %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Dominant Wavelength (nm)") +
@@ -395,7 +426,7 @@ dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>%
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
-ggsave("dwl_system_boxplot.png",dwl_system_boxplot, width = 10, height = 7)
+ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
 
 s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
