@@ -40,12 +40,12 @@ library(patchwork)
 s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
 
 s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
-  filter(!system=="waco")%>%
+  filter(!system=="waco")#%>%
   #filter(dwl<=583 & dwl>=475)
-  filter(B2>300) 
+  #filter(B2>300) 
 
 
-ggplot(s2flame_znpts,aes(turb, ndti)) + 
+ggplot(s2flm_allfilter,aes(turb, ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -59,7 +59,7 @@ s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv")
 s2flm_ncfilter<-s2flm_nc  %>%
   filter(!system=="waco")
 
-ggplot(s2flm_nc,aes(turb, ndti)) + 
+ggplot(s2flm_ncfilter,aes(turb, ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -74,7 +74,7 @@ s2flm_l2w_nona<-s2flm_l2w %>% drop_na() # n = 14727
 excluded_na <- s2flm_l2w %>%
   filter(is.na(ndti))
 
-ggplot(s2flm_l2w,aes(turb, ndti)) + 
+ggplot(s2flm_l2w_nona,aes(turb, ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -107,6 +107,17 @@ dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
 dwl_cloudmask<-read_csv("dwl6lake_truecloudmask.csv")
 dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
 
+# reading in 2022 NLA water chem data
+nla2022<-read_csv("nla22_waterchem_wide.csv") %>% clean_names()
+nla_ourlakes<-nla2022 %>% filter(site_id %in% c("NLA22_TX-10002","NLA22_TX-10038",
+                                             "NLA22_TX-10030", "NLA22_TX-10001","NLA22_TX-10054"))
+
+# Arrowhead: site_id = NLA22_TX-10002, unique_id =NLA_TX-10216, gnis_name = `Lake Arrowhead`
+# Bonham: site_id = NLA22_TX-10038, unique_id = NLA_TX-10332, gnis_name = 'Lake Bonham'
+# Waco: site_id = NLA22_TX-10030, unique_id = NLA_TX-10324, gnis_name = 'Waco Lake'
+# Red Bluff: site_id = NLA22_TX-10001, unique_id = NLA_TX-10215, gnis_name = 'Red Bluff Reservoir'
+# O.H. Ivie: not listed by name but by process of elimination from county I think it is site_id = NLA22_TX-10054, unique_id=NLA_TX-10243
+# Brownwood: not found
 
 # 4. Plotting data
 
@@ -444,8 +455,22 @@ s2flame_znpts$index<-1:length(s2flame_znpts[,1])
 # use a random subset of data to avoid autocorrelation and speed up processing
 # see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
 set.seed(1) # makes the subsetting reproducible
-sampled <- sample(1:length(s2flame_znpts[,1]),size=1984) #2528) #200) # adjust subset size as needed #total is 28728
+sampled <- sample(1:length(s2flame_znpts[,1]),size=2537) #2528) #200) # adjust subset size as needed #total is 28728
 data_sampled<-s2flame_znpts[sampled,]
+
+# repeating for s2flmnc
+# concatenate lat/lon and remove duplicated lat/lon pairs
+s2flm_nc$latlon<-paste(s2flm_nc$latitude,s2flm_nc$longitude)
+s2flm_nc<-s2flm_nc[-which(duplicated(s2flm_nc$latlon)==TRUE),]
+s2flm_nc<-data.frame(s2flm_nc)
+s2flm_nc$index<-1:length(s2flm_nc[,1])
+
+# use a random subset of data to avoid autocorrelation and speed up processing
+# see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
+set.seed(1) # makes the subsetting reproducible
+sampled <- sample(1:length(s2flm_nc[,1]),size=2537) #2528) #200) # adjust subset size as needed #total is 28728
+data_sampled_nc<-s2flm_nc[sampled,]
+
 
 noivorbon_aov<-s2flame_znpts %>% filter(!system=="bonham") 
 noivorbon_aov<-noivorbon_aov %>% filter(!system=="ivie") 
@@ -454,8 +479,8 @@ summary(baov)
 bonaov_posthoc <- TukeyHSD(baov)
 
 # fit new anova on random subset for turb
-aov_turb <- aov(turb~zone*system,data_sampled)
-saovt<-summary(aov_turb)
+aov_turb <- aov(turb~zone*system,data_sampled_nc)
+summary(aov_turb)
 aovt_posthoc <- TukeyHSD(aov_turb)
 aovt_posthoc
 
@@ -564,7 +589,7 @@ data_sampled725<-s2flm_withwaco725[sampled,]
 
 
 # fit anova on random subset for predicted DWL
-aov_dwl <- aov(dwl~zone*system,data_sampled725)
+aov_dwl <- aov(dwl~zone*system,data_sampled)
 summary(aov_dwl)
 dwl_posthoc <- TukeyHSD(aov_dwl)
 dwl_posthoc
@@ -594,7 +619,7 @@ acf_resid<-acf(aov_dwl_df$resid)
 pacf_resid<-pacf(aov_dwl_df$resid)
 
 
-aov_ndti <- aov(ndti~zone*system,data_sampled725)
+aov_ndti <- aov(ndti~zone*system,data_sampled)
 summary(aov_ndti)
 ndti_posthoc <- TukeyHSD(aov_ndti)
 ndti_posthoc
@@ -675,6 +700,14 @@ aov_dwl_zn<-aov(dwl~zone*system,bb_nona)
 
 summary(aov_dwl_zn)
 TukeyHSD(aov_dwl_zn)
+
+# # checking quantiles for each lake
+# quantile(ah_df_fui$dwLehmann, c(.05, .1, 0.2, .25, 0.3, 0.5, .75, .95))
+# quantile(bn_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .75, .98))
+# quantile(bw_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .8, 0.85, 0.9, .95), na.rm=TRUE)
+# quantile(iv_df_fui$dwLehmann, c(.05, .1, .25, 0.29,0.5, .78, 0.89, .95), na.rm=TRUE)
+# quantile(lw_df_fui$dwLehmann, c(.02, .1, .25, 0.5, .75, 0.9, .975), na.rm=TRUE)
+# quantile(rb_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .8, 0.84, 0.9, .95), na.rm=TRUE)
 
 
 
