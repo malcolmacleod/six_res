@@ -255,6 +255,8 @@ all6t_r2 <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
 # code for plots of individual lakes and their stations + all combined are found in "station_ysi.R" 
 
 # plotting DWL histograms and maps
+dwl_cloudmask$system <- factor(dwl_cloudmask$system, levels = 
+                           c("Red Bluff","OH Ivie","Brownwood","Arrowhead","Waco","Bonham"))
 # making a FUI palette
 fui_palette<-c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0",
                "5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
@@ -284,8 +286,7 @@ dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
 ggsave("dwl_histo_xlim.png", dwl_hist)
 
 dwl_hist_att2<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
-  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..),
-                 color = "black") +  # Normalize bin heights within each facet , bins = 21 
+  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..)) +  # Normalize bin heights within each facet                  color = "black", bins = 21 
   scale_fill_gradientn(colors = fui_palette,
                        values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583)))+ # Custom x-axis tick labels
   coord_cartesian(xlim = c(520, 583))+
@@ -294,7 +295,7 @@ dwl_hist_att2<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
   xlab("Dominant wavelength (nm)") +
   theme_bw() +
   theme(legend.position = "none")
-ggsave("dwl_histo_nobin_outline.png",dwl_hist_att2)
+ggsave("dwl_histo_nobin.png",dwl_hist_att2)
 
 ggplotly(dwl_hist)
 
