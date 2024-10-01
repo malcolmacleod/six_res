@@ -27,6 +27,7 @@ require(terra)
 library(nlme)
 library(anytime)
 library(patchwork)
+library(ggforce)
 
 # 2. Reading in data
 
@@ -37,24 +38,66 @@ library(patchwork)
 # filtering to within visible range (r2=0.7, n=26593 or r2 = 0.72 not log10 transformed)
 # applied the band2 threshold > 300 (r2 = 0.75, n=18677)
 
-s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
+# first reading in no flag unique data with zones specified (narm etc)
+s2flame_znpts<-read_csv("znspcf_s2flm.csv")%>% 
+  dplyr::rename(group=zone)%>%
+  mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ 
+                          "arm",group == "body" ~ "body"))
 
-s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
-  filter(!system=="waco")#%>%
-  #filter(dwl<=583 & dwl>=475)
-  #filter(B2>300) 
+s2f_znspc_filter<- s2flame_znpts%>%
+  filter(SCL == "6")%>% 
+  filter(!system=="waco")%>% filter(dwl<=583 & dwl>=475)
 
+s2f_avg<-s2flame_znpts%>% group_by(system, group) %>% dplyr::summarise(mean_turb = mean(turb),
+                                                                   mean_secchi = mean(secchi),
+                                                                   mean_dwl = mean(dwl),
+                                                                   mean_ndti = mean(ndti),
+                                                                   mean_tsi=mean(tsi_sd),
+                                                                   mean_fdom = mean(fdom),
+                                                                   mean_chla = mean(chl_rfu))
 
-ggplot(s2flm_allfilter,aes(turb, ndti)) + 
+s2f_avg_zn<- s2f_avg %>% mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ "arm",
+                                               group == "body" ~ "body"))
+
+ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 
-s2flame_znpts %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
-s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+
+# # reading in boat path points with only 2 zones - mb and ra
+# s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
+# 
+# s2flm_s2c_filter<-read_csv("six4m_zone_b2thresh.csv") %>%
+#   filter(SCL == "6")%>% 
+#   filter(!system=="waco")
+# 
+# s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
+#   filter(!system=="waco") %>% filter(dwl<=583 & dwl>=475)
+#   #filter(B2>300) 
+# 
+# s2flm_iv<-s2flm_allfilter %>% filter(system=="ivie") %>% filter(dwl<584)
+# 
+# ggplot(s2flm_iv,aes(turb, ndti)) + 
+#   geom_point()
+# 
+# 
+# 
+# ggplot(s2flm_s2c_filter,aes(log10(turb), ndti)) + 
+#   geom_point() + 
+#   geom_smooth(method = "lm", se=FALSE) +
+#   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+# 
+# ggplot(s2flm_allfilter,aes(turb, ndti)) + 
+#   geom_point() + 
+#   geom_smooth(method = "lm", se=FALSE) +
+#   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+# 
+# s2flame_znpts %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+# s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 # reading in the Sentinel-2 Cloud Probability masked sen2cor data along boat paths. n = 27620
-s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv")
+s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv") 
 
 s2flm_ncfilter<-s2flm_nc  %>%
   filter(!system=="waco")
@@ -68,6 +111,10 @@ s2flm_nc %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 # Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
 s2flm_l2w<-read_csv("l2w6lakes.csv")
+
+s2flm_l2_scale<-s2flm_l2w %>% mutate(B2=rrs_blue*100000,
+                                     B3=rrs_green*100000,
+                                     B4=rrs_red*100000)
 
 s2flm_l2w_nona<-s2flm_l2w %>% drop_na() # n = 14727
 
@@ -150,6 +197,25 @@ ggplotly(sysndti)
 
 s2flm_nfunq %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
+
+# First we have log10(turb) ~ NDTI plotted along the boat path for all lakes using sen2cor
+s2c_turb_ndti_plot<-ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+
+# plotting log10(turb) ~ NDTI along boat path for all lakes using ACOLITE L2W
+l2w_turb_ndti_plot<-s2flm_l2w %>%  ggplot(aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+
+boatpath_turbndti_combo<- s2c_turb_ndti_plot + l2w_turb_ndti_plot +
+  plot_annotation(tag_levels = 'A') 
+ggsave("boatpath_ndt_turb_combo.png", boatpath_turbndti_combo, width=14, height = 8)
+
 # plotting NDTI x norm DFD
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
   xlab("Normalized Distance from Dam") + ylab("Normalized Difference Turbidity Index") +  
@@ -207,12 +273,33 @@ dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
                  color = "black", bins = 21) +  # Normalize bin heights within each facet
   scale_fill_gradientn(colors = fui_palette,
                        values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583))) +  # Apply the palette to the fill aesthetic
-  scale_x_continuous(breaks = c(475, 500, 525, 550, 575)) +  # Custom x-axis tick labels
+  scale_x_continuous(breaks = c(475, 500, 525, 550, 575)) + # Custom x-axis tick labels
+  coord_cartesian(xlim = c(520, 583))+
   facet_wrap(~system) + 
   ylab("Proportion of surface area") + 
   xlab("Dominant wavelength (nm)") +
   theme_bw() +
   theme(legend.position = "none")
+
+ggsave("dwl_histo_xlim.png", dwl_hist)
+
+dwl_hist_att2<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
+  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..),
+                 color = "black") +  # Normalize bin heights within each facet , bins = 21 
+  scale_fill_gradientn(colors = fui_palette,
+                       values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583)))+ # Custom x-axis tick labels
+  coord_cartesian(xlim = c(520, 583))+
+  facet_wrap(~system) + 
+  ylab("Proportion of surface area") + 
+  xlab("Dominant wavelength (nm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+ggsave("dwl_histo_nobin_outline.png",dwl_hist_att2)
+
+ggplotly(dwl_hist)
+
+# trying to make histo without the bars
+
 
 all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(shape=15, size=0.35)+
   scale_color_manual(values = c(fui_palette)) +guides(color = guide_legend(override.aes = list(size = 6))) +
@@ -429,7 +516,7 @@ syststats_tsi<- s2flame_znpts %>% group_by(system) %>%
 s2flame_znpts$system<- str_to_title(s2flame_znpts$system)
 s2flm_allfilter$system<- str_to_title(s2flm_allfilter$system)
 
-dwl_system_boxplot<-s2flm_allfilter %>% filter(dwl>469 & dwl<584) %>% 
+dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Dominant Wavelength (nm)") +
@@ -437,10 +524,53 @@ dwl_system_boxplot<-s2flm_allfilter %>% filter(dwl>469 & dwl<584) %>%
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
-ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
+#ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
+
+dwl_system_boxplot_nc<-s2flm_nc %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+
+s2flm_nc %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() + geom_boxen() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+
+ggboxplot(s2flm_nc , x = "system", y = "dwl", fill = "zone",
+          palette = c("#E7B800", "#00AFBB"))
 
 s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
+
+# 4... run AOV on avg data
+avg_aov_turb <- aov(mean_turb~zone*system,s2f_avg_zn)
+summary(avg_aov_turb)
+aovt_posthoc <- TukeyHSD(avg_aov_turb)
+aovt_posthoc
+
+avg_aov_secchi <- aov(mean_secchi~zone*system,s2f_avg_zn)
+summary(avg_aov_secchi)
+aovsecchi_posthoc <- TukeyHSD(avg_aov_secchi)
+aovsecchi_posthoc
+
+avg_aov_dwl <- aov(mean_dwl~zone*system,s2f_avg_zn)
+summary(avg_aov_dwl)
+aovdwl_posthoc <- TukeyHSD(avg_aov_dwl)
+aovdwl_posthoc
+
+avg_aov_ndti <- aov(mean_ndti~zone*system,s2f_avg_zn)
+summary(avg_aov_ndti)
+aovt_posthoc <- TukeyHSD(avg_aov_ndti)
+aovt_posthoc
+
 
 # 4b. AOV and Tukeys HSD post-hoc
 
@@ -762,6 +892,16 @@ R <-df$B4
 G <-df$B3
 B <-df$B2
 
+# assigning bands to R,G,B
+R <-s2flm_l2_scale$B4
+G <-s2flm_l2_scale$B3
+B <-s2flm_l2_scale$B2
+
+s2flm_l2w_dwl <- s2flm_l2_scale %>% 
+  dplyr::mutate(dwl = fui.hue(unlist(R), unlist(G), unlist(B)))
+
+s2flm_l2w_dwl<- s2flm_l2_scale %>% dplyr::mutate(dwl = fui.hue(R, G, B))
+
 # 3. defining zones using bounding boxes, these include entire system
 # separating lake data between river arm and main body  
 s2_df<-read_csv("s2flm_6lakes_datause.csv")
@@ -901,5 +1041,4 @@ plot_ndtibn<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map_b
     legend.position = c(0.5, 0.03))+
   guides(col=guide_colorbar(title.position = "top"))+ 
   theme(plot.title = element_text(hjust = 0.5))
-=======
->>>>>>> 98b081e1963515582a17c6dc946fbd558747b6a1
+
