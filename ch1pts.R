@@ -44,6 +44,7 @@ s2flame_znpts<-read_csv("znspcf_s2flm.csv")%>%
   mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ 
                           "arm",group == "body" ~ "body"))
 
+
 s2f_znspc_filter<- s2flame_znpts%>%
   filter(SCL == "6")%>% 
   filter(!system=="waco")%>% filter(dwl<=583 & dwl>=475)
@@ -99,10 +100,14 @@ ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) +
 # reading in the Sentinel-2 Cloud Probability masked sen2cor data along boat paths. n = 27620
 s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv") 
 
+s2flm_nc_bt<-read_csv("allbutwaco_s2flm.csv")
+
 s2flm_ncfilter<-s2flm_nc  %>%
   filter(!system=="waco")
 
-ggplot(s2flm_ncfilter,aes(turb, ndti)) + 
+s2f_nc_bon<-s2flm_nc_bt %>% filter(system=="bonham") %>% filter(B2>1259)
+
+ggplot(s2flm_nc_bt,aes(turb, ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -152,6 +157,9 @@ dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
 # reading in full system sen2cor using the ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY") approach
 # this is MUCH more effective cloud mask than the previous approach "masks2clouds". dwlgroup is factored to viz
 dwl_cloudmask<-read_csv("dwl6lake_truecloudmask.csv")
+dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
+
+dwl_cloudmask<-read_csv("dwl6lake_truecloudmask_bonthresh.csv")
 dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
 
 # reading in 2022 NLA water chem data
@@ -217,6 +225,10 @@ boatpath_turbndti_combo<- s2c_turb_ndti_plot + l2w_turb_ndti_plot +
 ggsave("boatpath_ndt_turb_combo.png", boatpath_turbndti_combo, width=14, height = 8)
 
 # plotting NDTI x norm DFD
+dfd_transect$system<- factor(dfd_transect$system, levels = 
+         c("redbluff","ohivie","brownwood","arrowhead","waco","bonham"))
+
+
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
   xlab("Normalized Distance from Dam") + ylab("Normalized Difference Turbidity Index") +  
   theme_bw()+scale_color_manual(values = viridis::viridis(6, option = "C"),
@@ -239,6 +251,11 @@ line_dwl_p<- dfd_transect %>% ggplot(aes(norm_dist, dwl, color = system)) + geom
         axis.title.y = element_text(size = 15),
         legend.text = element_text(size = 10),
         legend.title = element_text(size = 12))
+
+#combining the two plots
+comb_linedfd_plot<-  line_dwl_p + line_ndti + plot_layout(guides = "collect") & theme(legend.position = "right")+
+  plot_annotation(tag_levels = 'A') 
+
 
 # plotting relationship between grab sample data and mean sensor values
 lmt_valmeans<-lm(turb_ysi_m~turb_lab,data=sample_ysi) 
@@ -307,7 +324,11 @@ all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(sh
   ylab("Latitude") + 
   xlab("Longitude") +
   labs(color = "Forel-Ule Scale") +
-  theme_classic() +facet_wrap(~system, scales = "free")
+  theme_classic() +facet_wrap(~system, scales = "free")#+
+  # theme(strip.text = element_text(size = 16),
+  #       axis.title.x = element_text(size = 20),    # X-axis label
+  #       axis.title.y = element_text(size = 20) )
+ggsave("dwl_allmaps_newcloudmask_bonthresh.png", all_map_facet, width = 20, height = 15)
 
 
 # verifying ndti pts
@@ -470,6 +491,9 @@ alpha <- 1-confidence_level
 
 # calculating means, CI, and range for variables by zone, can also specify group_by(system)
 
+quantile(s2flame_znpts$speed, c(.05, 0.5, .95))
+
+
 syststats_turb<- s2flame_znpts %>% group_by(system) %>% 
   dplyr::summarise(n=n(),mean=mean(turb),sd=sd(turb),se=sd/sqrt(n),
                    lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
@@ -511,11 +535,31 @@ syststats_tsi<- s2flame_znpts %>% group_by(system) %>%
                    margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
+syststats_tsi<- s2flame_znpts %>% #group_by(system) %>% 
+  dplyr::summarise(n=n(),mean=mean(speed),sd=sd(speed),se=sd/sqrt(n),
+                   lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
+                   upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
+                   min=min(speed), max=max(speed),
+                   margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
+  mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
+
+
 # note that results for DWL along boat path are not consistent with full system analysis
 # same summary stats were calculated for the zone designated water pixel data from GEE output
 ## see "dwl5lakes.R" for processing of GEE output - histogram creation, zone designation, and stats ##
+# scale_color_manual(values = viridis::viridis(6, option = "C"),
+# labels=c("bonham" = "Bonham", "waco"="Waco","brownwood"="Brownwood",
+#          "ohivie"="O.H. Ivie","redbluff"="Red Bluff","arrowhead"="Arrowhead"),
+# name = "System")
 s2flame_znpts$system<- str_to_title(s2flame_znpts$system)
+s2flame_znpts$system <- factor(s2flame_znpts$system, levels = 
+                                 c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"))
 s2flm_allfilter$system<- str_to_title(s2flm_allfilter$system)
+s2flm_nc_bt$system<- str_to_title(s2flm_nc_bt$system)
+s2flm_nc_bt$system <- factor(s2flm_nc_bt$system, 
+                             levels = c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"),
+                             labels = c("Red Bluff", "O.H. Ivie", "Brownwood", "Arrowhead", "Waco", "Bonham"))
+
 
 dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
@@ -527,7 +571,7 @@ dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>%
   theme_classic()
 #ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
 
-dwl_system_boxplot_nc<-s2flm_nc %>% filter(dwl>469 & dwl<584) %>% 
+dwl_system_boxplot_nc<-s2flm_nc_bt %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Dominant Wavelength (nm)") +
@@ -536,11 +580,13 @@ dwl_system_boxplot_nc<-s2flm_nc %>% filter(dwl>469 & dwl<584) %>%
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
 
-s2flm_nc %>% filter(dwl>469 & dwl<584) %>% 
+ggsave("dwl_boxplot_nocloud.png", dwl_system_boxplot_nc, width = 10, height = 7)
+
+s2flm_ncfilter %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Dominant Wavelength (nm)") +
-  geom_boxplot() + geom_boxen() +
+  geom_boxplot() + 
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
@@ -550,6 +596,19 @@ ggboxplot(s2flm_nc , x = "system", y = "dwl", fill = "zone",
 
 s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
+
+#boxplot for sdd
+predsdd_system_boxplot<-s2flame_znpts %>% 
+  ggplot(aes(x=system, y=secchi, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Secchi Disk Depth (m)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+
+ggsave("predsdd_system_boxplot.png",predsdd_system_boxplot)
+
 
 # 4... run AOV on avg data
 avg_aov_turb <- aov(mean_turb~zone*system,s2f_avg_zn)
@@ -889,9 +948,9 @@ fui.hue <- function(R, G, B) {
 }
 
 # assigning bands to R,G,B
-R <-df$B4
-G <-df$B3
-B <-df$B2
+R <-s2flm_l2w_nona$B4
+G <-s2flm_l2w_nona$B3
+B <-s2flm_l2w_nona$B2
 
 # assigning bands to R,G,B
 R <-s2flm_l2_scale$B4
@@ -901,7 +960,16 @@ B <-s2flm_l2_scale$B2
 s2flm_l2w_dwl <- s2flm_l2_scale %>% 
   dplyr::mutate(dwl = fui.hue(unlist(R), unlist(G), unlist(B)))
 
-s2flm_l2w_dwl<- s2flm_l2_scale %>% dplyr::mutate(dwl = fui.hue(R, G, B))
+s2flm_l2w_dwl<- s2flm_l2w_nona %>% dplyr::mutate(dwl = fui.hue(R, G, B))
+
+s2flm_l2w_dwl %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() + 
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
 
 # 3. defining zones using bounding boxes, these include entire system
 # separating lake data between river arm and main body  
