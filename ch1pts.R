@@ -65,6 +65,7 @@ ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) +
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 
+write_csv(s2f_znspc_filter, "s2c_boatpath_pts.csv")
 
 # # reading in boat path points with only 2 zones - mb and ra
 # s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
@@ -139,7 +140,10 @@ small_sf <- st_as_sf(small_data, coords = c("lon", "lat"), crs = 4326)
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
-dfd_transect<- read_csv("dfd_transect.csv")
+dfd_transect<- read_csv("dfd_transect_update.csv") %>% 
+  dplyr::select(lat, lon, distkm,norm_dist,B2,B3,B4,ndti,dwl,system)
+
+write_csv(dfd_transect, "longitudinal_transects_sentinel2.csv")
 
 # Reading in sample to sensor validation data (using method from AH paper) 
 # refer to "station_YSI.R" for making of sausage
@@ -211,14 +215,14 @@ s2c_turb_ndti_plot<-ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) +
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw(base_size = 20)
 
 # plotting log10(turb) ~ NDTI along boat path for all lakes using ACOLITE L2W
 l2w_turb_ndti_plot<-s2flm_l2w %>%  ggplot(aes(log10(turb), ndti)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw(base_size = 20)
 
 boatpath_turbndti_combo<- s2c_turb_ndti_plot + l2w_turb_ndti_plot +
   plot_annotation(tag_levels = 'A') 
@@ -254,7 +258,9 @@ line_dwl_p<- dfd_transect %>% ggplot(aes(norm_dist, dwl, color = system)) + geom
 
 #combining the two plots
 comb_linedfd_plot<-  line_dwl_p + line_ndti + plot_layout(guides = "collect") & theme(legend.position = "right")+
-  plot_annotation(tag_levels = 'A') 
+  plot_annotation(tag_levels = 'A') + theme_minimal(base_size = 22)
+
+ggsave("combo_dfd_update.jpg", comb_linedfd_plot, width = 18, height = 7.5)
 
 
 # plotting relationship between grab sample data and mean sensor values
@@ -303,16 +309,17 @@ dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
 ggsave("dwl_histo_xlim.png", dwl_hist)
 
 dwl_hist_att2<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
-  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..)) +  # Normalize bin heights within each facet                  color = "black", bins = 21 
+  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..), 
+                 color = "black") +  # Normalize bin heights within each facet                  color = "black", bins = 21 
   scale_fill_gradientn(colors = fui_palette,
                        values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583)))+ # Custom x-axis tick labels
   coord_cartesian(xlim = c(520, 583))+
   facet_wrap(~system) + 
   ylab("Proportion of surface area") + 
   xlab("Dominant wavelength (nm)") +
-  theme_bw() +
+  theme_bw(base_size = 20) +
   theme(legend.position = "none")
-ggsave("dwl_histo_nobin.png",dwl_hist_att2)
+ggsave("dwl_histo_nobin.png",dwl_hist_att2, width = 12, height = 10)
 
 ggplotly(dwl_hist)
 
@@ -402,13 +409,16 @@ turb_ndti_plot<-ggplot(s2flame_znpts,aes(x=turb,y=ndti)) +
 turb_stations <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) + 
   geom_point(aes(color = system)) + 
   geom_smooth(method = "lm", formula = y ~ x, color = "black") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label = paste(after_stat(rr.label))), 
-               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
+  # stat_poly_eq(formula = y ~ x, 
+  #              aes(label = paste(after_stat(rr.label))), 
+  #              parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") + 
   ylab("Sensor Turbidity (NTU)")+
   xlab("Sample Turbidity (NTU)")+
-  labs(color = "System") + theme_bw()
+  labs(color = "System") + theme_bw(base_size = 20) + 
+  theme(legend.text = element_text(size=12),
+        legend.title = element_text(size=14))
+ggsave("sampsens_turb.jpg", turb_stations)
 
 
 # Now it's predicted Secchi to in situ Secchi
@@ -416,13 +426,15 @@ sdd_stations<-sample_ysi %>% #filter(!system =="Lake Waco") %>%
   ggplot(aes(y=pred_sdd_m,x=secchi)) + 
   geom_point(aes(color = system)) + 
   geom_smooth(method = "lm", formula = y ~ x, color = "black") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label = paste(after_stat(rr.label))), 
-               parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
+  # stat_poly_eq(formula = y ~ x, 
+  #              aes(label = paste(after_stat(rr.label))), 
+  #              parse = TRUE, label.x.npc = "left", size = 5, rr.digits = 3) + 
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
   ylab("Predicted Secchi (m)")+
   xlab("Secchi (m)")+
-  labs(color = "System")+ theme_bw()
+  labs(color = "System")+ theme_bw(base_size = 20)+ 
+  theme(legend.text = element_text(size=12),
+        legend.title = element_text(size=14))
 
 comb_sampsens_plot<- turb_stations + sdd_stations + plot_layout(guides = "collect") +
   plot_annotation(tag_levels = 'A') & theme(legend.position = "right")
@@ -519,7 +531,7 @@ syststats_ndti<- s2flame_znpts %>% group_by(system) %>%
                    margin_of_error = qt(1 - alpha / 2, df = n - 1) * se)%>%
   mutate(mean_ci = paste0(round(mean, 2), " ± ", round(margin_of_error, 2)))
 
-syststats_dwl<- s2flame_znpts %>% group_by(system) %>% 
+syststats_dwl<- s2flm_nc_bt %>% group_by(system) %>% 
   dplyr::summarise(n=n(),mean=mean(dwl),sd=sd(dwl),se=sd/sqrt(n),
                    lower_ci=mean-qt(1-alpha/2, df = n-1)* se,
                    upper_ci=mean+qt(1-alpha/2, df=n-1)*se,
@@ -560,6 +572,11 @@ s2flm_nc_bt$system <- factor(s2flm_nc_bt$system,
                              levels = c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"),
                              labels = c("Red Bluff", "O.H. Ivie", "Brownwood", "Arrowhead", "Waco", "Bonham"))
 
+s2flm_nc$system<- str_to_title(s2flm_nc$system)
+s2flm_nc$system <- factor(s2flm_nc$system, 
+                             levels = c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"),
+                             labels = c("Red Bluff", "O.H. Ivie", "Brownwood", "Arrowhead", "Waco", "Bonham"))
+
 
 dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
@@ -578,7 +595,7 @@ dwl_system_boxplot_nc<-s2flm_nc_bt %>% filter(dwl>469 & dwl<584) %>%
   geom_boxplot() +
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
-  theme_classic()
+  theme_classic(base_size = 20)
 
 ggsave("dwl_boxplot_nocloud.png", dwl_system_boxplot_nc, width = 10, height = 7)
 
@@ -598,7 +615,7 @@ s2flame_znpts %>% filter(dwl>469 & dwl<584) %>%
   ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
 
 #boxplot for sdd
-predsdd_system_boxplot<-s2flame_znpts %>% 
+predsdd_system_boxplot<-s2flm_nc %>% 
   ggplot(aes(x=system, y=secchi, fill =zone)) + 
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Secchi Disk Depth (m)") +
@@ -607,7 +624,7 @@ predsdd_system_boxplot<-s2flame_znpts %>%
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
 
-ggsave("predsdd_system_boxplot.png",predsdd_system_boxplot)
+ggsave("predsdd_system_boxplot_nc.png",predsdd_system_boxplot, width = 12, height = 8)
 
 
 # 4... run AOV on avg data
@@ -745,7 +762,7 @@ secchi_posthoc
 resid <- as.numeric(aov_secchi$residuals)
 resid_st <- as.numeric(rstudent(aov_secchi)) #
 fitted <-as.numeric(aov_secchi$fitted.values)
-value <-as.numeric(aov_secchi$model$secchi)
+value <-as.numeric(aov_secchi$model$secchi)f
 aov_secchi_df<- data.frame(zone=aov_secchi$model$zone,
                            system=aov_secchi$model$system,
                            value,

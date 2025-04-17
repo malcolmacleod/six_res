@@ -25,10 +25,12 @@ library(ggspatial)
 library(ggpmisc)
 library(cowplot)
 library(gridExtra)
-
+library(ggmap)
 library(sf)
 library(viridis)
 library(raster)
+library(patchwork)
+
 
 # 2. CRASR data - read in for all lakes --------------------------------------------
 crasr_all <- read_csv("CRASR_summer2022.csv") %>% clean_names()
@@ -176,30 +178,41 @@ waco<-waco %>% filter(hour_dec<11.16 | hour_dec>11.18) %>%
   filter(hour_dec<11.25 | hour_dec>11.27)
 
 # 6c predicting secchi from turb values ------------------------------------------------
-ah$pred_sdd <- exp(predict(tsdlm, ah))
-bon1$pred_sdd <- exp(predict(tsdlm, bon1))
-bon2$pred_sdd <- exp(predict(tsdlm, bon2))
-waco$pred_sdd <- exp(predict(tsdlm, waco))
-bw$pred_sdd <- exp(predict(tsdlm, bw))
-iv$pred_sdd <- exp(predict(tsdlm, iv))
-rb$pred_sdd <- exp(predict(tsdlm, rb))
+# ah$pred_sdd <- exp(predict(tsdlm, ah))
+# bon1$pred_sdd <- exp(predict(tsdlm, bon1))
+# bon2$pred_sdd <- exp(predict(tsdlm, bon2))
+# waco$pred_sdd <- exp(predict(tsdlm, waco))
+# bw$pred_sdd <- exp(predict(tsdlm, bw))
+# iv$pred_sdd <- exp(predict(tsdlm, iv))
+# rb$pred_sdd <- exp(predict(tsdlm, rb))
+# 
+# # calculating TSI from secchi
+# ah$tsi_sd <- 10 * (6-log(ah$pred_sdd)/log(2))
+# bon1$tsi_sd <- 10 * (6-log(bon1$pred_sdd)/log(2))
+# bon2$tsi_sd <- 10 * (6-log(bon2$pred_sdd)/log(2))
+# bw$tsi_sd <- 10 * (6-log(bw$pred_sdd)/log(2))
+# iv$tsi_sd <- 10 * (6-log(iv$pred_sdd)/log(2))
+# rb$tsi_sd <- 10 * (6-log(rb$pred_sdd)/log(2))
+# waco$tsi_sd <- 10 * (6-log(waco$pred_sdd)/log(2))
+# 
+# # also adding secchi from Sherjah paper
+# ah$sherjah<-(244.13 * ah$turb^-0.662) /100
+# bon2$sherjah<-(244.13 * bon2$turb^-0.662) /100
+# bw$sherjah<-(244.13 * bw$turb^-0.662) /100
+# iv$sherjah<-(244.13 * iv$turb^-0.662) /100
+# rb$sherjah<-(244.13 * rb$turb^-0.662) /100
+# waco$sherjah<-(244.13 * waco$turb^-0.662) /100
 
-# calculating TSI from secchi
-ah$tsi_sd <- 10 * (6-log(ah$pred_sdd)/log(2))
-bon1$tsi_sd <- 10 * (6-log(bon1$pred_sdd)/log(2))
-bon2$tsi_sd <- 10 * (6-log(bon2$pred_sdd)/log(2))
-bw$tsi_sd <- 10 * (6-log(bw$pred_sdd)/log(2))
-iv$tsi_sd <- 10 * (6-log(iv$pred_sdd)/log(2))
-rb$tsi_sd <- 10 * (6-log(rb$pred_sdd)/log(2))
-waco$tsi_sd <- 10 * (6-log(waco$pred_sdd)/log(2))
+flame_dwl<-read_csv("s2cp_boatpaths_zone.csv") 
+flame_dwl$dwlgroup<-as.factor(flame_dwl$dwlgroup)
 
-# also adding secchi from Sherjah paper
-ah$sherjah<-(244.13 * ah$turb^-0.662) /100
-bon2$sherjah<-(244.13 * bon2$turb^-0.662) /100
-bw$sherjah<-(244.13 * bw$turb^-0.662) /100
-iv$sherjah<-(244.13 * iv$turb^-0.662) /100
-rb$sherjah<-(244.13 * rb$turb^-0.662) /100
-waco$sherjah<-(244.13 * waco$turb^-0.662) /100
+bon1<-flame_dwl %>% filter(system=="bonham")
+bon2<-flame_dwl %>% filter(system=="bonham")
+waco<-flame_dwl %>% filter(system=="waco")
+bw<-flame_dwl %>% filter(system=="brownwood")
+iv<-flame_dwl %>% filter(system=="ivie")
+rb<-flame_dwl %>% filter(system=="redbluff")
+ah<-flame_dwl %>%filter(system=="arrowhead")
 
 ###################################################################
 
@@ -221,49 +234,107 @@ bbox_width_iv <- 0.25
 bbox_height_iv <- 0.25
 #bbox_width_bw <- 0.2
 
+# create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, add_scalebar = FALSE) {
+#   require(OpenStreetMap)
+#   require(ggplot2)
+#   require(viridis)
+#   
+#   # Define bounding box
+#   upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
+#   lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
+#   
+#   message("Attempting to download map for: ", title)
+#   message("UpperLeft: ", paste(upperLeft, collapse = ", "), " | LowerRight: ", paste(lowerRight, collapse = ", "))
+#   
+#   # Safe tile download
+#   map <- tryCatch({
+#     openmap(upperLeft, lowerRight, type = "apple-iphoto")
+#   }, error = function(e) {
+#     message("Tile download failed for ", title, ": ", e$message)
+#     return(NULL)
+#   })
+#   
+#   if (is.null(map)) {
+#     return(ggplot() + ggtitle(paste("Map unavailable for", title)))
+#   }
+#   
+#   map_projected <- openproj(map)
+#   
+#   plot <- autoplot.OpenStreetMap(map_projected) +
+#     geom_jitter(
+#       data = df,
+#       size = ptsize,
+#       alpha = ptalpha,
+#       aes(x = lon_dec, y = lat_dec, color = turb),
+#       inherit.aes = FALSE
+#     ) +
+#     scale_color_gradientn(
+#       colors = viridis(100, option = "plasma"),
+#       name = "Turbidity (NTU)",
+#       limits = c(0, max(df$turb, na.rm = TRUE)),
+#       breaks = pretty(range(df$turb, na.rm = TRUE), n = 5)
+#     ) +
+#     ggtitle(label = title) +
+#     xlab("") + ylab("") +
+#     theme(
+#       axis.text = element_blank(),
+#       axis.ticks = element_blank(),
+#       legend.direction = "horizontal",
+#       legend.text = element_text(size = 13),
+#       legend.title = element_text(size = 13, hjust = 0.5),
+#       legend.key.width = unit(1.5, "cm"),
+#       legend.position = c(0.5, -0.17),
+#       plot.title = element_text(hjust = 0.5),
+#       plot.margin = ggplot2::margin(0, 0, 0, 0)
+#     ) +
+#     guides(col = guide_colorbar(title.position = "top"))
+#   
+#   return(plot)
+# }
+
 create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, add_scalebar=FALSE) {
   # Define the bounding box
   upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
   lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
-  
+
   # Fetch the map
-  map <- openmap(upperLeft, lowerRight, type = "bing")
+  map <- openmap(upperLeft, lowerRight, type = "apple-iphoto")
   map_projected <- OpenStreetMap::openproj(map)
-#  map_projected <- OpenStreetMap::openproj(map, projection = "+init=epsg:4326")
-#  map_projected <- OpenStreetMap::openproj(map, projection = "EPSG:4326")
-  
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "+init=epsg:4326")
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "EPSG:4326")
+
   # Create the plot
   plot <- OpenStreetMap::autoplot.OpenStreetMap(map_projected) +
-    geom_jitter(data = df, 
+    geom_jitter(data = df,
                 size = ptsize,
                 alpha = ptalpha,
-                aes(x = lon_dec, y = lat_dec, color = pred_sdd)) +
+                aes(x = lon_dec, y = lat_dec, color = turb)) +
     # set the same color limits for every map
-#    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
-    scale_color_gradientn(colors = rev(viridis(100,option="D")), name = "Secchi Depth (m)",limits=c(0.1,1.5),breaks=c(0.2,0.4,0.6,0.8,1,1.2,1.4)) +
-#    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
-    
+    #    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
+    scale_color_gradientn(colors = rev(viridis(100,option="plasma")), name = "Turbidity (NTU)") + #,limits=c(0.1,1.5),breaks=c(0.2,0.4,0.6,0.8,1,1.2,1.4)) +
+    #    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
+
     ggtitle(label = title) +
     xlab("") + ylab("") +
     theme(
-#      plot.margin = unit(c(-1, 0, -1, 0), "lines"),
+      #      plot.margin = unit(c(-1, 0, -1, 0), "lines"),
       axis.text = element_blank(),
       axis.ticks = element_blank(),
       legend.direction = "horizontal",
       legend.title.align = 0.5,
       legend.text = element_text(size = 13),     # Set the legend text size
       legend.title = element_text(size = 13),     # Set the legend title size
-#      legend.key.width = unit(0.75, "cm"),
+      #      legend.key.width = unit(0.75, "cm"),
       legend.key.width = unit(1.8, "cm"),
-#      legend.position = c(0.5, 0.02),
+      #      legend.position = c(0.5, 0.02),
       legend.position = c(0.5, -0.17),
-#        legend.position = "bottom",              # Position the legend at the bottom
-#        legend.justification = "center"
+      #        legend.position = "bottom",              # Position the legend at the bottom
+      #        legend.justification = "center"
     ) +
     guides(col = guide_colorbar(title.position = "top")) +
     theme(plot.title = element_text(hjust = 0.5),
           plot.margin = margin(0, 0, 0, 0)) # reduce margins of individual plots
-  
+
   return(plot)
 }
 
@@ -286,6 +357,198 @@ df_list <- list(
   df_rb = rb,
   df_ah = ah
 )
+
+
+map1 <- create_plot(centers[[1]][1], centers[[1]][2], bbox_width_zoomed_in, bbox_height_zoomed_in, df_list$df_bon, "Bonham",add_scalebar=TRUE)
+map2 <- create_plot(centers[[2]][1], centers[[2]][2], bbox_width, bbox_height, df_list$df_waco, "Waco") 
+map3 <- create_plot(centers[[3]][1], centers[[3]][2], bbox_width, bbox_height, df_list$df_bw, "Brownwood") 
+map4 <- create_plot(centers[[4]][1], centers[[4]][2], bbox_width_iv, bbox_height_iv,df_list$df_iv, "OH Ivie") 
+map5 <- create_plot(centers[[5]][1], centers[[5]][2], bbox_width, bbox_height, df_list$df_rb, "Red Bluff") 
+map6 <- create_plot(centers[[6]][1], centers[[6]][2], bbox_width, bbox_height, df_list$df_ah, "Arrowhead",add_scalebar=TRUE) 
+
+# prepare dimensions for scale bars - doing it the manual way, a bit verbose
+barheight<-0.92
+baredge<-0.98
+textheight<-0.95
+map1_scalexcoords<-c(map1$layers[[1]]$data$x[1] + ((map1$layers[[1]]$data$x[2] - map1$layers[[1]]$data$x[1])*(baredge-0.898)), # left edge of scale bar
+                     map1$layers[[1]]$data$x[1] + ((map1$layers[[1]]$data$x[2] - map1$layers[[1]]$data$x[1])*baredge))  # right edge of scale bat
+map1_scaleycoords<-c(map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*barheight), # top of scale bar (left)
+                     map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*barheight), # top of scale bar (right)
+                     map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*textheight)) # label height
+
+map2_scalexcoords<-c(map2$layers[[1]]$data$x[1] + ((map2$layers[[1]]$data$x[2] - map2$layers[[1]]$data$x[1])*(baredge-0.3746)),
+                     map2$layers[[1]]$data$x[1] + ((map2$layers[[1]]$data$x[2] - map2$layers[[1]]$data$x[1])*baredge))
+map2_scaleycoords<-c(map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*barheight),
+                     map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*barheight),
+                     map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*textheight))
+map3_scalexcoords<-c(map3$layers[[1]]$data$x[1] + ((map3$layers[[1]]$data$x[2] - map3$layers[[1]]$data$x[1])*(baredge-0.3757)),
+                     map3$layers[[1]]$data$x[1] + ((map3$layers[[1]]$data$x[2] - map3$layers[[1]]$data$x[1])*baredge))
+map3_scaleycoords<-c(map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*barheight),
+                     map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*barheight),
+                     map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*textheight))
+map4_scalexcoords<-c(map4$layers[[1]]$data$x[1] + ((map4$layers[[1]]$data$x[2] - map4$layers[[1]]$data$x[1])*(baredge-0.2663)),
+                     map4$layers[[1]]$data$x[1] + ((map4$layers[[1]]$data$x[2] - map4$layers[[1]]$data$x[1])*baredge))
+map4_scaleycoords<-c(map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*barheight),
+                     map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*barheight),
+                     map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*textheight))
+map5_scalexcoords<-c(map5$layers[[1]]$data$x[1] + ((map5$layers[[1]]$data$x[2] - map5$layers[[1]]$data$x[1])*(baredge-0.3757)),
+                     map5$layers[[1]]$data$x[1] + ((map5$layers[[1]]$data$x[2] - map5$layers[[1]]$data$x[1])*baredge))
+map5_scaleycoords<-c(map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*barheight),
+                     map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*barheight),
+                     map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*textheight))
+map6_scalexcoords<-c(map6$layers[[1]]$data$x[1] + ((map6$layers[[1]]$data$x[2] - map6$layers[[1]]$data$x[1])*(baredge-0.3812)),
+                     map6$layers[[1]]$data$x[1] + ((map6$layers[[1]]$data$x[2] - map6$layers[[1]]$data$x[1])*baredge))
+map6_scaleycoords<-c(map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*barheight),
+                     map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*barheight),
+                     map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*textheight))
+
+# check lengths of each scale bar before adding to map
+pointDistance(p1=c(map1_scalexcoords[1],map1_scaleycoords[1]),
+              p2=c(map1_scalexcoords[2],map1_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map2_scalexcoords[1],map2_scaleycoords[1]),
+              p2=c(map2_scalexcoords[2],map2_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map3_scalexcoords[1],map3_scaleycoords[1]),
+              p2=c(map3_scalexcoords[2],map3_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map4_scalexcoords[1],map4_scaleycoords[1]),
+              p2=c(map4_scalexcoords[2],map4_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map5_scalexcoords[1],map5_scaleycoords[1]),
+              p2=c(map5_scalexcoords[2],map5_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map6_scalexcoords[1],map6_scaleycoords[1]),
+              p2=c(map6_scalexcoords[2],map6_scaleycoords[2]),
+              lonlat=TRUE)
+
+# add scale bar and dam location to each map, use one legend
+map1<- map1 + theme(legend.position = "none") +
+  geom_segment(x = -96.135058, y = 33.646397, xend = -96.135981, yend = 33.655287,lwd=2,color=gray(0.6))+ # dam location
+  geom_segment(x = map1_scalexcoords[1],y=map1_scaleycoords[2],xend=map1_scalexcoords[2],yend=map1_scaleycoords[2],lwd=1.5,color=gray(1)) #+ # scale bar part
+#  annotate("text",x = mean(map1_scalexcoords), y = map1_scaleycoords[3],color=gray(1),label = "4 km") # label for scale bar
+map2<- map2 + theme(legend.position = "none") +
+  geom_segment(x = -97.1910, y = 31.576152, xend = -97.2136, yend = 31.594505,lwd=2,color=gray(0.6))+
+  geom_segment(x = map2_scalexcoords[1],y=map2_scaleycoords[2],xend=map2_scalexcoords[2],yend=map2_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map2_scalexcoords), y = map2_scaleycoords[3],color=gray(1),label = "4 km")
+map3<- map3 + theme(legend.position = "none") +
+  geom_segment(x = -99.0031, y = 31.8352, xend = -99.0002, yend = 31.8421,lwd=2,color=gray(0.6))+
+  geom_segment(x = map3_scalexcoords[1],y=map3_scaleycoords[2],xend=map3_scalexcoords[2],yend=map3_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map3_scalexcoords), y = map3_scaleycoords[3],color=gray(1),label = "4 km")
+map4<- map4 + theme(legend.position = "none") +
+  geom_segment(x = -99.6684, y = 31.4970, xend = -99.6640, yend = 31.5025,lwd=2,color=gray(0.6))+
+  geom_segment(x = map4_scalexcoords[1],y=map4_scaleycoords[2],xend=map4_scalexcoords[2],yend=map4_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map4_scalexcoords), y = map4_scaleycoords[3],color=gray(1),label = "4 km")
+map5<- map5 + theme(legend.position = "none") +
+  geom_segment(x = -103.9121, y = 31.8962, xend = -103.9080, yend = 31.9069,lwd=2,color=gray(0.6))+
+  geom_segment(x = map5_scalexcoords[1],y=map5_scaleycoords[2],xend=map5_scalexcoords[2],yend=map5_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map5_scalexcoords), y = map5_scaleycoords[3],color=gray(1),label = "4 km")
+map6<- map6 + theme(legend.position = "none") +
+  geom_segment(x = -98.3539, y = 33.7653, xend = -98.3753, yend = 33.7657,lwd=2,color=gray(0.6))+
+  geom_segment(x = map6_scalexcoords[1],y=map6_scaleycoords[2],xend=map6_scalexcoords[2],yend=map6_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map6_scalexcoords), y = map6_scaleycoords[3],color=gray(1),label = "4 km")
+
+
+# Combine plots into a single layout with grid.arrange
+# Does this panel order make sense? 
+combo_sdd_lomarg<-grid.arrange(map5, map4, map3, map6, map2, map1, ncol = 3)#, padding = unit(c(-1, -1, -1, -1), "cm"))
+ggsave("combo_turb.png", combo_sdd_lomarg,width=9,height=8)
+
+
+
+ggplot(ah, aes(x = lon_dec, y = lat_dec, color = turb)) +
+  geom_jitter(size = 3) +
+  scale_color_gradientn(
+    colors = viridis::viridis(100, option = "plasma"),
+    name = "Turbidity (NTU)",
+    limits = c(0, max(ah$turb, na.rm = TRUE)),
+    breaks = pretty(range(ah$turb, na.rm = TRUE), n = 5)
+  ) +
+  theme_minimal()
+
+##################################################################################################
+# set some parameters to pass into ggplot 
+ptsize<-0.4 #0.25
+ptalpha<-0.5
+ptalpha<-1
+
+# attempts to have a common scale bar and similar area covered in bounding box
+
+# Define the bounding box size (latitude and longitude degrees)
+bbox_width_zoomed_in <- 0.05
+bbox_height_zoomed_in <- 0.05
+bbox_width <- 0.15
+bbox_height <- 0.15
+bbox_width_iv <- 0.25
+bbox_height_iv <- 0.25
+#bbox_width_bw <- 0.2
+
+create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, add_scalebar=FALSE) {
+  # Define the bounding box
+  upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
+  lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
+  
+  # Fetch the map
+  map <- openmap(upperLeft, lowerRight, type = "esri-imagery")
+  map_projected <- OpenStreetMap::openproj(map)
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "+init=epsg:4326")
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "EPSG:4326")
+  
+  # Create the plot
+  plot <- OpenStreetMap::autoplot.OpenStreetMap(map_projected) +
+    geom_jitter(data = df, 
+                size = ptsize,
+                alpha = ptalpha,
+                aes(x = lon_dec, y = lat_dec, color = turb)) +
+    # set the same color limits for every map
+    #    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
+    scale_color_gradientn(colors = rev(viridis(100,option="D")), name = "Turbidity (NTU)") +
+    #    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
+    
+    ggtitle(label = title) +
+    xlab("") + ylab("") +
+    theme(
+      plot.margin = unit(c(-1, 0, -1, 0), "lines"),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      legend.direction = "horizontal",
+      legend.title.align = 0.5,
+      legend.text = element_text(size = 13),     # Set the legend text size
+      legend.title = element_text(size = 13),     # Set the legend title size
+      # legend.key.width = unit(0.75, "cm"),
+      legend.key.width = unit(1.5, "cm"),
+      legend.position = c(0.5, 1.3),
+      #legend.position = c(0.5, -0.17),
+      #        legend.position = "bottom",              # Position the legend at the bottom
+      #  legend.justification = "center"
+    ) +
+    guides(col = guide_colorbar(title.position = "top")) +
+    theme(plot.title = element_text(hjust = 0.5),
+          plot.margin = margin(0, 0, 0, 0)) # reduce margins of individual plots
+  
+  return(plot)
+}
+
+# Define the center coordinates for each map
+centers <- list(
+  c(-96.15, 33.65), # Center for bon
+  c(-97.25, 31.56), # Center for waco
+  c(-99.07, 31.86),  # Center for bw
+  #  c(-99.06, 31.86),  # Center for bw
+  c(-99.71, 31.55),  # Center for iv
+  c(-103.94, 31.95),  # Center for rb
+  c(-98.37,33.71)  # Center for ah
+)
+
+df_list <- list(
+  df_bon = bon2,
+  df_waco = waco,
+  df_bw = bw,
+  df_iv = iv,
+  df_rb = rb,
+  df_ah = ah
+)
+
 
 
 map1 <- create_plot(centers[[1]][1], centers[[1]][2], bbox_width_zoomed_in, bbox_height_zoomed_in, df_list$df_bon, "Bonham",add_scalebar=TRUE)
@@ -380,8 +643,200 @@ map6<- map6 + theme(legend.position = "none") +
 
 # Combine plots into a single layout with grid.arrange
 # Does this panel order make sense? 
-combo_sdd_lomarg<-grid.arrange(map1, map2, map3, map4, map5, map6, ncol = 3) #padding = unit(c(-1, -1, -1, -1), "cm"))
-ggsave("combo_sdd_sp.png", combo_sdd_lomarg,width=9,height=8)
+combo_turb_lomarg<-grid.arrange(map5, map4, map3, map6, map2, map1, ncol = 3)#, padding = unit(c(-1, -1, -1, -1), "cm"))
+ggsave("combo_turb_update.png", combo_turb_lomarg,width=9,height=8)
+
+###############################################################################
+
+fui_palette<-c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0",
+               "5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
+               "9" = "#7ba654","10" = "#7dae38","11" = "#94b660","12" = "#94b660", 
+               "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
+               "17" = "#ae9f5c","18" = "#b3a053"
+               ,"19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")
+
+
+
+
+
+# set some parameters to pass into ggplot 
+ptsize<-0.4 #0.25
+ptalpha<-0.5
+ptalpha<-1
+
+# attempts to have a common scale bar and similar area covered in bounding box
+
+# Define the bounding box size (latitude and longitude degrees)
+bbox_width_zoomed_in <- 0.05
+bbox_height_zoomed_in <- 0.05
+bbox_width <- 0.15
+bbox_height <- 0.15
+bbox_width_iv <- 0.25
+bbox_height_iv <- 0.25
+#bbox_width_bw <- 0.2
+
+create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, add_scalebar=FALSE) {
+  # Define the bounding box
+  upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
+  lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
+  
+  # Fetch the map
+  map <- openmap(upperLeft, lowerRight, type = "osm")
+  map_projected <- OpenStreetMap::openproj(map)
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "+init=epsg:4326")
+  #  map_projected <- OpenStreetMap::openproj(map, projection = "EPSG:4326")
+  
+  # Create the plot
+  plot <- OpenStreetMap::autoplot.OpenStreetMap(map_projected) +
+    geom_jitter(data = df, 
+                size = ptsize,
+                alpha = ptalpha,
+                aes(x = lon_dec, y = lat_dec, color = dwlgroup)) +
+    # set the same color limits for every map
+    #    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
+    scale_color_manual(values = fui_palette, name = "Dominant Wavelength (nm)") +
+    #    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
+    
+    ggtitle(label = title) +
+    xlab("") + ylab("") +
+    theme(
+      plot.margin = unit(c(-1, 0, -1, 0), "lines"),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      legend.direction = "horizontal",
+      legend.title.align = 0.5,
+      legend.text = element_text(size = 13),     # Set the legend text size
+      legend.title = element_text(size = 13),     # Set the legend title size
+      # legend.key.width = unit(0.75, "cm"),
+      legend.key.width = unit(1.5, "cm"),
+      legend.position = c(0.5, 1.3),
+      #legend.position = c(0.5, -0.17),
+      #        legend.position = "bottom",              # Position the legend at the bottom
+      #  legend.justification = "center"
+    ) +
+    guides(color = guide_legend(title.position = "top")) +
+    theme(plot.title = element_text(hjust = 0.5),
+          plot.margin = margin(0, 0, 0, 0)) # reduce margins of individual plots
+  
+  return(plot)
+}
+
+# Define the center coordinates for each map
+centers <- list(
+  c(-96.15, 33.65), # Center for bon
+  c(-97.25, 31.56), # Center for waco
+  c(-99.07, 31.86),  # Center for bw
+  #  c(-99.06, 31.86),  # Center for bw
+  c(-99.71, 31.55),  # Center for iv
+  c(-103.94, 31.95),  # Center for rb
+  c(-98.37,33.71)  # Center for ah
+)
+
+df_list <- list(
+  df_bon = bon2,
+  df_waco = waco,
+  df_bw = bw,
+  df_iv = iv,
+  df_rb = rb,
+  df_ah = ah
+)
+
+
+
+map1 <- create_plot(centers[[1]][1], centers[[1]][2], bbox_width_zoomed_in, bbox_height_zoomed_in, df_list$df_bon, "Bonham",add_scalebar=TRUE)
+map2 <- create_plot(centers[[2]][1], centers[[2]][2], bbox_width, bbox_height, df_list$df_waco, "Waco") 
+map3 <- create_plot(centers[[3]][1], centers[[3]][2], bbox_width, bbox_height, df_list$df_bw, "Brownwood") 
+map4 <- create_plot(centers[[4]][1], centers[[4]][2], bbox_width_iv, bbox_height_iv,df_list$df_iv, "OH Ivie") 
+map5 <- create_plot(centers[[5]][1], centers[[5]][2], bbox_width, bbox_height, df_list$df_rb, "Red Bluff") 
+map6 <- create_plot(centers[[6]][1], centers[[6]][2], bbox_width, bbox_height, df_list$df_ah, "Arrowhead",add_scalebar=TRUE) 
+
+# prepare dimensions for scale bars - doing it the manual way, a bit verbose
+barheight<-0.92
+baredge<-0.98
+textheight<-0.95
+map1_scalexcoords<-c(map1$layers[[1]]$data$x[1] + ((map1$layers[[1]]$data$x[2] - map1$layers[[1]]$data$x[1])*(baredge-0.898)), # left edge of scale bar
+                     map1$layers[[1]]$data$x[1] + ((map1$layers[[1]]$data$x[2] - map1$layers[[1]]$data$x[1])*baredge))  # right edge of scale bat
+map1_scaleycoords<-c(map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*barheight), # top of scale bar (left)
+                     map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*barheight), # top of scale bar (right)
+                     map1$layers[[1]]$data$y[1] + ((map1$layers[[1]]$data$y[2] - map1$layers[[1]]$data$y[1])*textheight)) # label height
+
+map2_scalexcoords<-c(map2$layers[[1]]$data$x[1] + ((map2$layers[[1]]$data$x[2] - map2$layers[[1]]$data$x[1])*(baredge-0.3746)),
+                     map2$layers[[1]]$data$x[1] + ((map2$layers[[1]]$data$x[2] - map2$layers[[1]]$data$x[1])*baredge))
+map2_scaleycoords<-c(map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*barheight),
+                     map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*barheight),
+                     map2$layers[[1]]$data$y[1] + ((map2$layers[[1]]$data$y[2] - map2$layers[[1]]$data$y[1])*textheight))
+map3_scalexcoords<-c(map3$layers[[1]]$data$x[1] + ((map3$layers[[1]]$data$x[2] - map3$layers[[1]]$data$x[1])*(baredge-0.3757)),
+                     map3$layers[[1]]$data$x[1] + ((map3$layers[[1]]$data$x[2] - map3$layers[[1]]$data$x[1])*baredge))
+map3_scaleycoords<-c(map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*barheight),
+                     map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*barheight),
+                     map3$layers[[1]]$data$y[1] + ((map3$layers[[1]]$data$y[2] - map3$layers[[1]]$data$y[1])*textheight))
+map4_scalexcoords<-c(map4$layers[[1]]$data$x[1] + ((map4$layers[[1]]$data$x[2] - map4$layers[[1]]$data$x[1])*(baredge-0.2663)),
+                     map4$layers[[1]]$data$x[1] + ((map4$layers[[1]]$data$x[2] - map4$layers[[1]]$data$x[1])*baredge))
+map4_scaleycoords<-c(map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*barheight),
+                     map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*barheight),
+                     map4$layers[[1]]$data$y[1] + ((map4$layers[[1]]$data$y[2] - map4$layers[[1]]$data$y[1])*textheight))
+map5_scalexcoords<-c(map5$layers[[1]]$data$x[1] + ((map5$layers[[1]]$data$x[2] - map5$layers[[1]]$data$x[1])*(baredge-0.3757)),
+                     map5$layers[[1]]$data$x[1] + ((map5$layers[[1]]$data$x[2] - map5$layers[[1]]$data$x[1])*baredge))
+map5_scaleycoords<-c(map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*barheight),
+                     map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*barheight),
+                     map5$layers[[1]]$data$y[1] + ((map5$layers[[1]]$data$y[2] - map5$layers[[1]]$data$y[1])*textheight))
+map6_scalexcoords<-c(map6$layers[[1]]$data$x[1] + ((map6$layers[[1]]$data$x[2] - map6$layers[[1]]$data$x[1])*(baredge-0.3812)),
+                     map6$layers[[1]]$data$x[1] + ((map6$layers[[1]]$data$x[2] - map6$layers[[1]]$data$x[1])*baredge))
+map6_scaleycoords<-c(map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*barheight),
+                     map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*barheight),
+                     map6$layers[[1]]$data$y[1] + ((map6$layers[[1]]$data$y[2] - map6$layers[[1]]$data$y[1])*textheight))
+
+# check lengths of each scale bar before adding to map
+pointDistance(p1=c(map1_scalexcoords[1],map1_scaleycoords[1]),
+              p2=c(map1_scalexcoords[2],map1_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map2_scalexcoords[1],map2_scaleycoords[1]),
+              p2=c(map2_scalexcoords[2],map2_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map3_scalexcoords[1],map3_scaleycoords[1]),
+              p2=c(map3_scalexcoords[2],map3_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map4_scalexcoords[1],map4_scaleycoords[1]),
+              p2=c(map4_scalexcoords[2],map4_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map5_scalexcoords[1],map5_scaleycoords[1]),
+              p2=c(map5_scalexcoords[2],map5_scaleycoords[2]),
+              lonlat=TRUE)
+pointDistance(p1=c(map6_scalexcoords[1],map6_scaleycoords[1]),
+              p2=c(map6_scalexcoords[2],map6_scaleycoords[2]),
+              lonlat=TRUE)
+
+# add scale bar and dam location to each map, use one legend
+map1<- map1 + theme(legend.position = "none") +
+  geom_segment(x = -96.135058, y = 33.646397, xend = -96.135981, yend = 33.655287,lwd=2,color=gray(0.6))+ # dam location
+  geom_segment(x = map1_scalexcoords[1],y=map1_scaleycoords[2],xend=map1_scalexcoords[2],yend=map1_scaleycoords[2],lwd=1.5,color=gray(1)) #+ # scale bar part
+#  annotate("text",x = mean(map1_scalexcoords), y = map1_scaleycoords[3],color=gray(1),label = "4 km") # label for scale bar
+map2<- map2 + #theme(legend.position = "none") +
+  geom_segment(x = -97.1910, y = 31.576152, xend = -97.2136, yend = 31.594505,lwd=2,color=gray(0.6))+
+  geom_segment(x = map2_scalexcoords[1],y=map2_scaleycoords[2],xend=map2_scalexcoords[2],yend=map2_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map2_scalexcoords), y = map2_scaleycoords[3],color=gray(1),label = "4 km")
+map3<- map3 + theme(legend.position = "none") +
+  geom_segment(x = -99.0031, y = 31.8352, xend = -99.0002, yend = 31.8421,lwd=2,color=gray(0.6))+
+  geom_segment(x = map3_scalexcoords[1],y=map3_scaleycoords[2],xend=map3_scalexcoords[2],yend=map3_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map3_scalexcoords), y = map3_scaleycoords[3],color=gray(1),label = "4 km")
+map4<- map4 + theme(legend.position = "none") +
+  geom_segment(x = -99.6684, y = 31.4970, xend = -99.6640, yend = 31.5025,lwd=2,color=gray(0.6))+
+  geom_segment(x = map4_scalexcoords[1],y=map4_scaleycoords[2],xend=map4_scalexcoords[2],yend=map4_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map4_scalexcoords), y = map4_scaleycoords[3],color=gray(1),label = "4 km")
+map5<- map5 + theme(legend.position = "none") +
+  geom_segment(x = -103.9121, y = 31.8962, xend = -103.9080, yend = 31.9069,lwd=2,color=gray(0.6))+
+  geom_segment(x = map5_scalexcoords[1],y=map5_scaleycoords[2],xend=map5_scalexcoords[2],yend=map5_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map5_scalexcoords), y = map5_scaleycoords[3],color=gray(1),label = "4 km")
+map6<- map6 + theme(legend.position = "none") +
+  geom_segment(x = -98.3539, y = 33.7653, xend = -98.3753, yend = 33.7657,lwd=2,color=gray(0.6))+
+  geom_segment(x = map6_scalexcoords[1],y=map6_scaleycoords[2],xend=map6_scalexcoords[2],yend=map6_scaleycoords[2],lwd=1.5,color=gray(1)) #+
+#  annotate("text",x = mean(map6_scalexcoords), y = map6_scaleycoords[3],color=gray(1),label = "4 km")
+
+
+# Combine plots into a single layout with grid.arrange
+# Does this panel order make sense? 
+combo_turb_lomarg<-grid.arrange(map5, map4, map3, map6, map2, map1, ncol = 3)#, padding = unit(c(-1, -1, -1, -1), "cm"))
+ggsave("combo_turb_update.png", combo_turb_lomarg,width=9,height=8)
 
 
 
