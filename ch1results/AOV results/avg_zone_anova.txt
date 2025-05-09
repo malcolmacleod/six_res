@@ -1,0 +1,432 @@
+> avg_aov_turb <- aov(mean_turb~zone*system,s2f_avg_zn)
+> summary(avg_aov_turb)
+            Df Sum Sq Mean Sq F value Pr(>F)  
+zone         1  142.4   142.4  15.249 0.0598 .
+system       5 1783.2   356.6  38.196 0.0257 *
+zone:system  5  196.4    39.3   4.208 0.2031  
+Residuals    2   18.7     9.3                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> aovt_posthoc <- TukeyHSD(avg_aov_turb)
+> aovt_posthoc
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = mean_turb ~ zone * system, data = s2f_avg_zn)
+
+$zone
+              diff       lwr       upr     p adj
+body-arm -6.444197 -13.53852 0.6501282 0.0596878
+
+$system
+                           diff       lwr        upr     p adj
+bonham-arrowhead    -34.5268393 -59.87938  -9.174295 0.0273756
+brownwood-arrowhead -29.1014733 -52.24507  -5.957872 0.0320244
+ivie-arrowhead      -35.6938299 -61.04637 -10.341285 0.0256393
+redbluff-arrowhead  -31.2183244 -56.57087  -5.865780 0.0333660
+waco-arrowhead      -28.8859044 -52.02951  -5.742304 0.0324946
+brownwood-bonham      5.4253660 -17.71823  28.568967 0.5471252
+ivie-bonham          -1.1669906 -26.51954  24.185554 0.9971056
+redbluff-bonham       3.3085149 -22.04403  28.661059 0.8586123
+waco-bonham           5.6409349 -17.50267  28.784536 0.5234488
+ivie-brownwood       -6.5923566 -29.73596  16.551244 0.4313733
+redbluff-brownwood   -2.1168511 -25.26045  21.026750 0.9529464
+waco-brownwood        0.2155689 -20.48470  20.915835 0.9999978
+redbluff-ivie         4.4755055 -20.87704  29.828050 0.7155413
+waco-ivie             6.8079255 -16.33568  29.951526 0.4131975
+waco-redbluff         2.3324200 -20.81118  25.476021 0.9346486
+
+$`zone:system`
+                                     diff       lwr        upr     p adj
+body:arrowhead-arm:arrowhead  -24.0921611 -69.19028 21.0059593 0.1621486
+arm:bonham-arm:arrowhead      -46.2786891 -91.37681 -1.1805687 0.0475804
+body:bonham-arm:arrowhead     -46.8671507 -91.96527 -1.7690303 0.0464396
+arm:brownwood-arm:arrowhead   -37.2396372 -76.29576  1.8164807 0.0547852
+body:brownwood-arm:arrowhead  -45.7412888 -90.83941 -0.6431684 0.0486593
+arm:ivie-arm:arrowhead        -47.2600899 -92.35821 -2.1619695 0.0457004
+body:ivie-arm:arrowhead       -48.2197310 -93.31785 -3.1216106 0.0439668
+arm:redbluff-arm:arrowhead    -40.3630336 -85.46115  4.7350868 0.0618603
+body:redbluff-arm:arrowhead   -46.1657763 -91.26390 -1.0676559 0.0478040
+arm:waco-arm:arrowhead        -38.7739911 -77.83011  0.2821268 0.0507005
+body:waco-arm:arrowhead       -42.0258743 -87.12399  3.0722461 0.0572498
+arm:bonham-body:arrowhead     -22.1865279 -67.28465 22.9115925 0.1876884
+body:bonham-body:arrowhead    -22.7749896 -67.87311 22.3231308 0.1792221
+arm:brownwood-body:arrowhead  -13.1474761 -52.20359 25.9086418 0.3512353
+body:brownwood-body:arrowhead -21.6491277 -66.74725 23.4489927 0.1959263
+arm:ivie-body:arrowhead       -23.1679287 -68.26605 21.9301917 0.1738694
+body:ivie-body:arrowhead      -24.1275699 -69.22569 20.9705505 0.1617224
+arm:redbluff-body:arrowhead   -16.2708725 -61.36899 28.8272479 0.3154548
+body:redbluff-body:arrowhead  -22.0736152 -67.17174 23.0245052 0.1893778
+arm:waco-body:arrowhead       -14.6818300 -53.73795 24.3742879 0.2954951
+body:waco-body:arrowhead      -17.9337132 -63.03183 27.1644072 0.2696962
+body:bonham-arm:bonham         -0.5884616 -45.68658 44.5096588 1.0000000
+arm:brownwood-arm:bonham        9.0390518 -30.01707 48.0951698 0.5813824
+body:brownwood-arm:bonham       0.5374003 -44.56072 45.6355207 1.0000000
+arm:ivie-arm:bonham            -0.9814008 -46.07952 44.1167196 0.9999999
+body:ivie-arm:bonham           -1.9410420 -47.03916 43.1570784 0.9999188
+arm:redbluff-arm:bonham         5.9156554 -39.18246 51.0137758 0.9002056
+body:redbluff-arm:bonham        0.1129127 -44.98521 45.2110331 1.0000000
+arm:waco-arm:bonham             7.5046979 -31.55142 46.5608159 0.7032480
+body:waco-arm:bonham            4.2528148 -40.84531 49.3509352 0.9770942
+arm:brownwood-body:bonham       9.6275134 -29.42860 48.6836314 0.5397251
+body:brownwood-body:bonham      1.1258619 -43.97226 46.2239823 0.9999996
+arm:ivie-body:bonham           -0.3929392 -45.49106 44.7051812 1.0000000
+body:ivie-body:bonham          -1.3525803 -46.45070 43.7455400 0.9999972
+arm:redbluff-body:bonham        6.5041170 -38.59400 51.6022374 0.8616670
+body:redbluff-body:bonham       0.7013744 -44.39675 45.7994948 1.0000000
+arm:waco-body:bonham            8.0931595 -30.96296 47.1492775 0.6545117
+body:waco-body:bonham           4.8412764 -40.25684 49.9393968 0.9564423
+body:brownwood-arm:brownwood   -8.5016516 -47.55777 30.5544664 0.6220502
+arm:ivie-arm:brownwood        -10.0204526 -49.07657 29.0356653 0.5136288
+body:ivie-arm:brownwood       -10.9800938 -50.03621 28.0760241 0.4555950
+arm:redbluff-arm:brownwood     -3.1233964 -42.17951 35.9327215 0.9910722
+body:redbluff-arm:brownwood    -8.9261391 -47.98226 30.1299788 0.5897241
+arm:waco-arm:brownwood         -1.5343539 -33.42354 30.3548328 0.9997871
+body:waco-arm:brownwood        -4.7862371 -43.84235 34.2698809 0.9230222
+arm:ivie-body:brownwood        -1.5188011 -46.61692 43.5793193 0.9999915
+body:ivie-body:brownwood       -2.4784422 -47.57656 42.6196782 0.9993675
+arm:redbluff-body:brownwood     5.3782552 -39.71987 50.4763756 0.9310444
+body:redbluff-body:brownwood   -0.4244875 -45.52261 44.6736329 1.0000000
+arm:waco-body:brownwood         6.9672977 -32.08882 46.0234156 0.7491504
+body:waco-body:brownwood        3.7154145 -41.38271 48.8135349 0.9893085
+body:ivie-arm:ivie             -0.9596412 -46.05776 44.1384792 0.9999999
+arm:redbluff-arm:ivie           6.8970562 -38.20106 51.9951766 0.8339959
+body:redbluff-arm:ivie          1.0943135 -44.00381 46.1924339 0.9999997
+arm:waco-arm:ivie               8.4860987 -30.57002 47.5422167 0.6232627
+body:waco-arm:ivie              5.2342156 -39.86390 50.3323360 0.9384326
+arm:redbluff-body:ivie          7.8566974 -37.24142 52.9548178 0.7632124
+body:redbluff-body:ivie         2.0539547 -43.04417 47.1520751 0.9998669
+arm:waco-body:ivie              9.4457399 -29.61038 48.5018578 0.5522642
+body:waco-body:ivie             6.1938567 -38.90426 51.2919771 0.8825065
+body:redbluff-arm:redbluff     -5.8027427 -50.90086 39.2953777 0.9070779
+arm:waco-arm:redbluff           1.5890425 -37.46708 40.6451604 0.9999509
+body:waco-arm:redbluff         -1.6628407 -46.76096 43.4352797 0.9999801
+arm:waco-body:redbluff          7.3917852 -31.66433 46.4479031 0.7128108
+body:waco-body:redbluff         4.1399020 -40.95822 49.2380224 0.9801713
+body:waco-arm:waco             -3.2518832 -42.30800 35.8042348 0.9886122
+
+------------------------------------------------------------------------------------
+
+> avg_aov_secchi <- aov(mean_secchi~zone*system,s2f_avg_zn)
+> summary(avg_aov_secchi)
+            Df  Sum Sq Mean Sq F value Pr(>F)  
+zone         1 0.06405 0.06405  24.645 0.0383 *
+system       5 0.29368 0.05874  22.600 0.0429 *
+zone:system  5 0.01487 0.00297   1.144 0.5273  
+Residuals    2 0.00520 0.00260                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> aovsecchi_posthoc <- TukeyHSD(avg_aov_secchi)
+> aovsecchi_posthoc
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = mean_secchi ~ zone * system, data = s2f_avg_zn)
+
+$zone
+              diff        lwr       upr     p adj
+body-arm 0.1366817 0.01832128 0.2550422 0.0381698
+
+$system
+                           diff          lwr       upr     p adj
+bonham-arrowhead     0.41826285 -0.004714557 0.8412403 0.0510921
+brownwood-arrowhead  0.27490524 -0.111218541 0.6610290 0.0952774
+ivie-arrowhead       0.49809353  0.075116128 0.9210709 0.0364099
+redbluff-arrowhead   0.31169778 -0.111279624 0.7346752 0.0893482
+waco-arrowhead       0.25258727 -0.133536502 0.6387111 0.1114244
+brownwood-bonham    -0.14335761 -0.529481389 0.2427662 0.2943245
+ivie-bonham          0.07983069 -0.343146720 0.5028081 0.6775323
+redbluff-bonham     -0.10656507 -0.529542472 0.3164123 0.5034680
+waco-bonham         -0.16567557 -0.551799350 0.2204482 0.2334225
+ivie-brownwood       0.22318830 -0.162935479 0.6093121 0.1395034
+redbluff-brownwood   0.03679254 -0.349331232 0.4229163 0.9458174
+waco-brownwood      -0.02231796 -0.367677567 0.3230416 0.9874906
+redbluff-ivie       -0.18639575 -0.609373158 0.2365817 0.2233263
+waco-ivie           -0.24550626 -0.631630036 0.1406175 0.1173832
+waco-redbluff       -0.05911051 -0.445234283 0.3270133 0.7897440
+
+$`zone:system`
+                                      diff        lwr       upr     p adj
+body:arrowhead-arm:arrowhead   0.114338525 -0.6380706 0.8667477 0.8371371
+arm:bonham-arm:arrowhead       0.459946862 -0.2924623 1.2123560 0.1269398
+body:bonham-arm:arrowhead      0.490917360 -0.2614918 1.2433265 0.1125352
+arm:brownwood-arm:arrowhead    0.232660165 -0.4189453 0.8842656 0.3206550
+body:brownwood-arm:arrowhead   0.462562291 -0.2898468 1.2149714 0.1256226
+arm:ivie-arm:arrowhead         0.523152267 -0.2292569 1.2755614 0.0999419
+body:ivie-arm:arrowhead        0.587373325 -0.1650358 1.3397825 0.0803207
+arm:redbluff-arm:arrowhead     0.281207578 -0.4712016 1.0336167 0.2982558
+body:redbluff-arm:arrowhead    0.456526509 -0.2958826 1.2089356 0.1286929
+arm:waco-arm:arrowhead         0.244381705 -0.4072237 0.8959871 0.2965970
+body:waco-arm:arrowhead        0.372165326 -0.3802438 1.1245745 0.1859101
+arm:bonham-body:arrowhead      0.345608337 -0.4068008 1.0980175 0.2115111
+body:bonham-body:arrowhead     0.376578834 -0.3758303 1.1289880 0.1820871
+arm:brownwood-body:arrowhead   0.118321640 -0.5332838 0.7699271 0.7384272
+body:brownwood-body:arrowhead  0.348223765 -0.4041854 1.1006329 0.2087756
+arm:ivie-body:arrowhead        0.408813741 -0.3435954 1.1612229 0.1572937
+body:ivie-body:arrowhead       0.473034800 -0.2793743 1.2254439 0.1205427
+arm:redbluff-body:arrowhead    0.166869053 -0.5855401 0.9192782 0.6096745
+body:redbluff-body:arrowhead   0.342187983 -0.4102211 1.0945971 0.2151654
+arm:waco-body:arrowhead        0.130043180 -0.5215622 0.7816486 0.6789848
+body:waco-body:arrowhead       0.257826800 -0.4945823 1.0102359 0.3418092
+body:bonham-arm:bonham         0.030970497 -0.7214386 0.7833796 0.9999455
+arm:brownwood-arm:bonham      -0.227286697 -0.8788921 0.4243187 0.3325595
+body:brownwood-arm:bonham      0.002615429 -0.7497937 0.7550246 1.0000000
+arm:ivie-arm:bonham            0.063205405 -0.6892037 0.8156145 0.9879988
+body:ivie-arm:bonham           0.127426463 -0.6249827 0.8798356 0.7795511
+arm:redbluff-arm:bonham       -0.178739284 -0.9311484 0.5736698 0.5640958
+body:redbluff-arm:bonham      -0.003420353 -0.7558295 0.7489888 1.0000000
+arm:waco-arm:bonham           -0.215565157 -0.8671706 0.4360403 0.3606270
+body:waco-arm:bonham          -0.087781536 -0.8401907 0.6646276 0.9370654
+arm:brownwood-body:bonham     -0.258257194 -0.9098626 0.3933482 0.2711727
+body:brownwood-body:bonham    -0.028355069 -0.7807642 0.7240541 0.9999756
+arm:ivie-body:bonham           0.032234907 -0.7201742 0.7846440 0.9999221
+body:ivie-body:bonham          0.096455966 -0.6559532 0.8488651 0.9083546
+arm:redbluff-body:bonham      -0.209709781 -0.9621189 0.5426993 0.4609582
+body:redbluff-body:bonham     -0.034390851 -0.7868000 0.7180183 0.9998627
+arm:waco-body:bonham          -0.246535654 -0.8981411 0.4050698 0.2924432
+body:waco-body:bonham         -0.118752034 -0.8711612 0.6336571 0.8179953
+body:brownwood-arm:brownwood   0.229902126 -0.4217033 0.8815075 0.3266931
+arm:ivie-arm:brownwood         0.290492102 -0.3611133 0.9420975 0.2226499
+body:ivie-arm:brownwood        0.354713160 -0.2968923 1.0063186 0.1567596
+arm:redbluff-arm:brownwood     0.048547413 -0.6030580 0.7001528 0.9942937
+body:redbluff-arm:brownwood    0.223866343 -0.4277391 0.8754718 0.3404437
+arm:waco-arm:brownwood         0.011721540 -0.5203121 0.5437551 0.9999999
+body:waco-arm:brownwood        0.139505160 -0.5121003 0.7911106 0.6330292
+arm:ivie-body:brownwood        0.060589976 -0.6918192 0.8129991 0.9906854
+body:ivie-body:brownwood       0.124811034 -0.6275981 0.8772202 0.7912165
+arm:redbluff-body:brownwood   -0.181354712 -0.9337638 0.5710544 0.5544997
+body:redbluff-body:brownwood  -0.006035782 -0.7584449 0.7463733 1.0000000
+arm:waco-body:brownwood       -0.218180585 -0.8697860 0.4334248 0.3541030
+body:waco-body:brownwood      -0.090396965 -0.8428061 0.6620122 0.9289231
+body:ivie-arm:ivie             0.064221059 -0.6881881 0.8166302 0.9868263
+arm:redbluff-arm:ivie         -0.241944688 -0.9943538 0.5104644 0.3762859
+body:redbluff-arm:ivie        -0.066625758 -0.8190349 0.6857834 0.9837487
+arm:waco-arm:ivie             -0.278770561 -0.9303760 0.3728349 0.2387808
+body:waco-arm:ivie            -0.150986941 -0.9033961 0.6014222 0.6754357
+arm:redbluff-body:ivie        -0.306165747 -1.0585749 0.4462434 0.2596497
+body:redbluff-body:ivie       -0.130846817 -0.8832559 0.6215623 0.7642548
+arm:waco-body:ivie            -0.342991620 -0.9945970 0.3086138 0.1664931
+body:waco-body:ivie           -0.215208000 -0.9676171 0.5372011 0.4449785
+body:redbluff-arm:redbluff     0.175318930 -0.5770902 0.9277281 0.5768915
+arm:waco-arm:redbluff         -0.036825873 -0.6884313 0.6147795 0.9992121
+body:waco-arm:redbluff         0.090957747 -0.6614514 0.8433669 0.9271168
+arm:waco-body:redbluff        -0.212144803 -0.8637502 0.4394606 0.3693962
+body:waco-body:redbluff       -0.084361183 -0.8367703 0.6680479 0.9469801
+body:waco-arm:waco             0.127783620 -0.5238218 0.7793890 0.6902655
+
+-----------------------------------------------------------------------------------
+
+> avg_aov_dwl <- aov(mean_dwl~zone*system,s2f_avg_zn)
+> summary(avg_aov_dwl)
+            Df Sum Sq Mean Sq F value Pr(>F)  
+zone         1    730   730.1  49.286 0.0197 *
+system       5   6846  1369.1  92.418 0.0107 *
+zone:system  5    143    28.6   1.929 0.3756  
+Residuals    2     30    14.8                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> aovdwl_posthoc <- TukeyHSD(avg_aov_dwl)
+> aovdwl_posthoc
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = mean_dwl ~ zone * system, data = s2f_avg_zn)
+
+$zone
+              diff       lwr       upr     p adj
+body-arm -14.59306 -23.52914 -5.656967 0.0195601
+
+$system
+                          diff        lwr        upr     p adj
+bonham-arrowhead    -59.788432 -91.722771 -27.854093 0.0148142
+brownwood-arrowhead -24.045336 -53.197266   5.106593 0.0722659
+ivie-arrowhead      -55.524162 -87.458501 -23.589823 0.0169884
+redbluff-arrowhead  -12.049924 -43.984263  19.884415 0.2869924
+waco-arrowhead       -7.224341 -36.376270  21.927589 0.5134084
+brownwood-bonham     35.743096   6.591166  64.895026 0.0336474
+ivie-bonham           4.264271 -27.670068  36.198610 0.8497319
+redbluff-bonham      47.738508  15.804169  79.672847 0.0227805
+waco-bonham          52.564092  23.412162  81.716021 0.0158695
+ivie-brownwood      -31.478825 -60.630755  -2.326896 0.0430986
+redbluff-brownwood   11.995412 -17.156518  41.147342 0.2499761
+waco-brownwood       16.820996  -9.253283  42.895274 0.1143064
+redbluff-ivie        43.474237  11.539898  75.408576 0.0273957
+waco-ivie            48.299821  19.147891  77.451751 0.0186305
+waco-redbluff         4.825584 -24.326346  33.977513 0.7503385
+
+$`zone:system`
+                                    diff           lwr        upr     p adj
+body:arrowhead-arm:arrowhead  -17.435930  -74.24200962  39.370150 0.4028250
+arm:bonham-arm:arrowhead      -61.430693 -118.23677299  -4.624614 0.0430166
+body:bonham-arm:arrowhead     -75.582101 -132.38818104 -18.776022 0.0283921
+arm:brownwood-arm:arrowhead   -23.669960  -72.86546829  25.525548 0.1951476
+body:brownwood-arm:arrowhead  -43.653456 -100.45953531  13.152624 0.0827571
+arm:ivie-arm:arrowhead        -62.604945 -119.41102515  -5.798866 0.0414719
+body:ivie-arm:arrowhead       -65.879308 -122.68538732  -9.073228 0.0375524
+arm:redbluff-arm:arrowhead    -14.639268  -71.44534752  42.166812 0.5107573
+body:redbluff-arm:arrowhead   -26.896511  -83.70259048  29.909569 0.2006860
+arm:waco-arm:arrowhead        -12.259497  -61.45500550  36.936011 0.5325996
+body:waco-arm:arrowhead       -16.011394  -72.81747412  40.794685 0.4540033
+arm:bonham-body:arrowhead     -43.994763 -100.80084305  12.811316 0.0815431
+body:bonham-body:arrowhead    -58.146171 -114.95225110  -1.340092 0.0478115
+arm:brownwood-body:arrowhead   -6.234030  -55.42953835  42.961478 0.9122932
+body:brownwood-body:arrowhead -26.217526  -83.02360537  30.588554 0.2097809
+arm:ivie-body:arrowhead       -45.169016 -101.97509520  11.637064 0.0775606
+body:ivie-body:arrowhead      -48.443378 -105.24945738   8.362702 0.0678611
+arm:redbluff-body:arrowhead     2.796662  -54.00941758  59.602742 0.9997418
+body:redbluff-body:arrowhead   -9.460581  -66.26666054  47.345499 0.7890055
+arm:waco-body:arrowhead         5.176433  -44.01907556  54.371941 0.9603387
+body:waco-body:arrowhead        1.424536  -55.38154417  58.230615 0.9999995
+body:bonham-arm:bonham        -14.151408  -70.95748773  42.654672 0.5328141
+arm:brownwood-arm:bonham       37.760733  -11.43477498  86.956241 0.0829412
+body:brownwood-arm:bonham      17.777238  -39.02884200  74.583317 0.3916416
+arm:ivie-arm:bonham            -1.174252  -57.98033184  55.631828 0.9999999
+body:ivie-arm:bonham           -4.448614  -61.25469401  52.357465 0.9921598
+arm:redbluff-arm:bonham        46.791425  -10.01465421 103.597505 0.0725145
+body:redbluff-arm:bonham       34.534183  -22.27189717  91.340262 0.1282352
+arm:waco-arm:bonham            49.171196   -0.02431219  98.366704 0.0500475
+body:waco-arm:bonham           45.419299  -11.38678081 102.225379 0.0767489
+arm:brownwood-body:bonham      51.912141    2.71663307 101.107649 0.0450960
+body:brownwood-body:bonham     31.928646  -24.87743395  88.734725 0.1479641
+arm:ivie-body:bonham           12.977156  -43.82892379  69.783236 0.5900143
+body:ivie-body:bonham           9.702794  -47.10328596  66.508873 0.7746832
+arm:redbluff-body:bonham       60.942834    4.13675384 117.748913 0.0436828
+body:redbluff-body:bonham      48.685591   -8.12048913 105.491670 0.0672164
+arm:waco-body:bonham           63.322604   14.12709586 112.518112 0.0304368
+body:waco-body:bonham          59.570707    2.76462724 116.376787 0.0456394
+body:brownwood-arm:brownwood  -19.983495  -69.17900352  29.212013 0.2604002
+arm:ivie-arm:brownwood        -38.934985  -88.13049336  10.260523 0.0782540
+body:ivie-arm:brownwood       -42.209347  -91.40485553   6.986161 0.0670751
+arm:redbluff-arm:brownwood      9.030692  -40.16481574  58.226200 0.7317848
+body:redbluff-arm:brownwood    -3.226551  -52.42205870  45.968957 0.9976060
+arm:waco-arm:brownwood         11.410463  -28.75750136  51.578427 0.4491913
+body:waco-arm:brownwood         7.658566  -41.53694233  56.854074 0.8250657
+arm:ivie-body:brownwood       -18.951490  -75.75756952  37.854590 0.3560666
+body:ivie-body:brownwood      -22.225852  -79.03193169  34.580228 0.2769610
+arm:redbluff-body:brownwood    29.014188  -27.79189190  85.820267 0.1756645
+body:redbluff-body:brownwood   16.756945  -40.04913486  73.563025 0.4262852
+arm:waco-body:brownwood        31.393958  -17.80154987  80.589466 0.1172613
+body:waco-body:brownwood       27.642061  -29.16401849  84.448141 0.1913299
+body:ivie-arm:ivie             -3.274362  -60.08044186  53.531718 0.9990818
+arm:redbluff-arm:ivie          47.965678   -8.84040206 104.771757 0.0691600
+body:redbluff-arm:ivie         35.708435  -21.09764502  92.514514 0.1205750
+arm:waco-arm:ivie              50.345448    1.14993997  99.540956 0.0478309
+body:waco-arm:ivie             46.593551  -10.21252865 103.399631 0.0731035
+arm:redbluff-body:ivie         51.240040   -5.56603988 108.046119 0.0609413
+body:redbluff-body:ivie        38.982797  -17.82328285  95.788877 0.1024269
+arm:waco-body:ivie             53.619810    4.42430214 102.815318 0.0423699
+body:waco-body:ivie            49.867913   -6.93816648 106.673993 0.0641970
+body:redbluff-arm:redbluff    -12.257243  -69.06332264  44.548837 0.6278661
+arm:waco-arm:redbluff           2.379770  -46.81573766  51.575279 0.9997772
+body:waco-arm:redbluff         -1.372127  -58.17820628  55.433953 0.9999997
+arm:waco-body:redbluff         14.637013  -34.55849470  63.832521 0.4211564
+body:waco-body:redbluff        10.885116  -45.92096331  67.691196 0.7050061
+body:waco-arm:waco             -3.751897  -52.94740512  45.443611 0.9933674
+------------------------------------------------------------------------------------
+
+> avg_aov_ndti <- aov(mean_ndti~zone*system,s2f_avg_zn)
+> summary(avg_aov_ndti)
+            Df  Sum Sq  Mean Sq F value Pr(>F)  
+zone         1 0.00624 0.006240   8.416 0.1011  
+system       5 0.07874 0.015749  21.240 0.0456 *
+zone:system  5 0.00848 0.001695   2.286 0.3317  
+Residuals    2 0.00148 0.000741                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> aovt_posthoc <- TukeyHSD(avg_aov_ndti)
+> aovt_posthoc
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = mean_ndti ~ zone * system, data = s2f_avg_zn)
+
+$zone
+                diff        lwr        upr     p adj
+body-arm -0.04266252 -0.1058825 0.02055749 0.1010644
+
+$system
+                            diff          lwr        upr     p adj
+bonham-arrowhead    -0.155157319 -0.381082701 0.07076806 0.1018669
+brownwood-arrowhead -0.131172237 -0.337412950 0.07506848 0.1173183
+ivie-arrowhead      -0.205172215 -0.431097597 0.02075317 0.0601665
+redbluff-arrowhead  -0.133032890 -0.358958272 0.09289249 0.1349317
+waco-arrowhead      -0.008419324 -0.214660038 0.19782139 0.9983231
+brownwood-bonham     0.023985082 -0.182255631 0.23022580 0.8978211
+ivie-bonham         -0.050014896 -0.275940278 0.17591049 0.5820335
+redbluff-bonham      0.022124429 -0.203800953 0.24804981 0.9405802
+waco-bonham          0.146737995 -0.059502719 0.35297871 0.0953951
+ivie-brownwood      -0.073999978 -0.280240692 0.13224074 0.3102154
+redbluff-brownwood  -0.001860653 -0.208101367 0.20438006 0.9999989
+waco-brownwood       0.122752912 -0.061714390 0.30722021 0.1079741
+redbluff-ivie        0.072139325 -0.153786058 0.29806471 0.3686123
+waco-ivie            0.196752891 -0.009487823 0.40299360 0.0547445
+waco-redbluff        0.124613566 -0.081627148 0.33085428 0.1287933
+
+$`zone:system`
+                                      diff        lwr       upr     p adj
+body:arrowhead-arm:arrowhead  -0.133839347 -0.5357245 0.2680458 0.3570201
+arm:bonham-arm:arrowhead      -0.225187347 -0.6270725 0.1766978 0.1487951
+body:bonham-arm:arrowhead     -0.218966638 -0.6208517 0.1829185 0.1565107
+arm:brownwood-arm:arrowhead   -0.168564317 -0.5166070 0.1794784 0.1929123
+body:brownwood-arm:arrowhead  -0.235815834 -0.6377009 0.1660693 0.1368295
+arm:ivie-arm:arrowhead        -0.262642292 -0.6645274 0.1392428 0.1121947
+body:ivie-arm:arrowhead       -0.281541484 -0.6834266 0.1203436 0.0985423
+arm:redbluff-arm:arrowhead    -0.201278577 -0.6031637 0.2006065 0.1818698
+body:redbluff-arm:arrowhead   -0.198626550 -0.6005117 0.2032586 0.1861712
+arm:waco-arm:arrowhead        -0.070806521 -0.4188492 0.2772362 0.6665290
+body:waco-arm:arrowhead       -0.063072691 -0.4649578 0.3388124 0.8209138
+arm:bonham-body:arrowhead     -0.091348000 -0.4932331 0.3105371 0.5933581
+body:bonham-body:arrowhead    -0.085127291 -0.4870124 0.3167578 0.6400768
+arm:brownwood-body:arrowhead  -0.034724971 -0.3827677 0.3133177 0.9693813
+body:brownwood-body:arrowhead -0.101976488 -0.5038616 0.2999086 0.5208047
+arm:ivie-body:arrowhead       -0.128802946 -0.5306881 0.2730822 0.3781389
+body:ivie-body:arrowhead      -0.147702137 -0.5495872 0.2541830 0.3063513
+arm:redbluff-body:arrowhead   -0.067439230 -0.4693243 0.3344459 0.7847601
+body:redbluff-body:arrowhead  -0.064787203 -0.4666723 0.3370979 0.8068128
+arm:waco-body:arrowhead        0.063032826 -0.2850099 0.4110755 0.7400314
+body:waco-body:arrowhead       0.070766656 -0.3311185 0.4726518 0.7569058
+body:bonham-arm:bonham         0.006220709 -0.3956644 0.4081058 1.0000000
+arm:brownwood-arm:bonham       0.056623029 -0.2914197 0.4046657 0.8018825
+body:brownwood-arm:bonham     -0.010628487 -0.4125136 0.3912566 0.9999992
+arm:ivie-arm:bonham           -0.037454945 -0.4393401 0.3644302 0.9784848
+body:ivie-arm:bonham          -0.056354137 -0.4582392 0.3455310 0.8739018
+arm:redbluff-arm:bonham        0.023908770 -0.3779763 0.4257939 0.9988310
+body:redbluff-arm:bonham       0.026560797 -0.3753243 0.4284459 0.9974722
+arm:waco-arm:bonham            0.154380826 -0.1936619 0.5024235 0.2245748
+body:waco-arm:bonham           0.162114656 -0.2397705 0.5639998 0.2634184
+arm:brownwood-body:bonham      0.050402320 -0.2976404 0.3984450 0.8598181
+body:brownwood-body:bonham    -0.016849197 -0.4187343 0.3850359 0.9999357
+arm:ivie-body:bonham          -0.043675655 -0.4455608 0.3582095 0.9539105
+body:ivie-body:bonham         -0.062574846 -0.4644600 0.3393103 0.8249766
+arm:redbluff-body:bonham       0.017688061 -0.3841970 0.4195732 0.9999012
+body:redbluff-body:bonham      0.020340088 -0.3815450 0.4222252 0.9996751
+arm:waco-body:bonham           0.148160117 -0.1998826 0.4962028 0.2407940
+body:waco-body:bonham          0.155893947 -0.2459912 0.5577791 0.2808717
+body:brownwood-arm:brownwood  -0.067251517 -0.4152942 0.2807912 0.6997031
+arm:ivie-arm:brownwood        -0.094077975 -0.4421207 0.2539647 0.4801970
+body:ivie-arm:brownwood       -0.112977166 -0.4610199 0.2350655 0.3710388
+arm:redbluff-arm:brownwood    -0.032714259 -0.3807570 0.3153285 0.9774860
+body:redbluff-arm:brownwood   -0.030062232 -0.3781049 0.3179805 0.9858896
+arm:waco-arm:brownwood         0.097757797 -0.1864179 0.3819335 0.3397680
+body:waco-arm:brownwood        0.105491627 -0.2425511 0.4535343 0.4101793
+arm:ivie-body:brownwood       -0.026826458 -0.4287116 0.3750587 0.9972881
+body:ivie-body:brownwood      -0.045725650 -0.4476108 0.3561595 0.9434664
+arm:redbluff-body:brownwood    0.034537257 -0.3673479 0.4364224 0.9862958
+body:redbluff-body:brownwood   0.037189285 -0.3646958 0.4390744 0.9792918
+arm:waco-body:brownwood        0.165009314 -0.1830334 0.5130520 0.2002244
+body:waco-body:brownwood       0.172743144 -0.2291420 0.5746283 0.2368978
+body:ivie-arm:ivie            -0.018899192 -0.4207843 0.3829859 0.9998247
+arm:redbluff-arm:ivie          0.061363715 -0.3405214 0.4632488 0.8347886
+body:redbluff-arm:ivie         0.064015743 -0.3378694 0.4659009 0.8131768
+arm:waco-arm:ivie              0.191835772 -0.1562069 0.5398785 0.1532845
+body:waco-arm:ivie             0.199569602 -0.2023155 0.6014547 0.1846252
+arm:redbluff-body:ivie         0.080262907 -0.3216222 0.4821480 0.6785234
+body:redbluff-body:ivie        0.082914934 -0.3189702 0.4848000 0.6573739
+arm:waco-body:ivie             0.210734963 -0.1373077 0.5587777 0.1291878
+body:waco-body:ivie            0.218468793 -0.1834163 0.6203539 0.1571530
+body:redbluff-arm:redbluff     0.002652027 -0.3992331 0.4045371 1.0000000
+arm:waco-arm:redbluff          0.130472056 -0.2175707 0.4785148 0.2968151
+body:waco-arm:redbluff         0.138205886 -0.2636792 0.5400910 0.3399365
+arm:waco-body:redbluff         0.127820029 -0.2202227 0.4758627 0.3067086
+body:waco-body:redbluff        0.135553859 -0.2663312 0.5374390 0.3501811
+body:waco-arm:waco             0.007733830 -0.3403089 0.3557765 0.9999999

@@ -1,4 +1,4 @@
-# A script for with working code for chapter 1 data analysis
+# A script with working code for chapter 1 data analysis
 # This combines from scripts to include working with FLAMe data, CRASR samples and ee.points transect queries 
 
 # Note that everything with GEE TIF output is in its own script "dwl6lakes.R"
@@ -27,6 +27,7 @@ require(terra)
 library(nlme)
 library(anytime)
 library(patchwork)
+library(ggforce)
 
 # 2. Reading in data
 
@@ -37,14 +38,33 @@ library(patchwork)
 # filtering to within visible range (r2=0.7, n=26593 or r2 = 0.72 not log10 transformed)
 # applied the band2 threshold > 300 (r2 = 0.75, n=18677)
 
-s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
+# first reading in no flag unique data with zones specified (narm etc)
+s2flame_znpts<-read_csv("znspcf_s2flm.csv")%>% 
+  dplyr::rename(group=zone)%>%
+  mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ 
+                          "arm",group == "body" ~ "body"))
 
 s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
-  filter(dwl<=583 & dwl>=475) %>%
-  filter(!system=="waco")
+  filter(dwl<=583 & dwl>=475) #%>%
+  #filter(!system=="waco")
   #%>% 
   #filter(B2>300) 
+# writing out the data table for sen2cor flame path
 
+s2flm_allfilter<-s2flm_allfilter %>% dplyr::select(lat, lon, system, boatspeed_kmh = speed, 
+                                                   datetime_utc, turbidity = turb, B2, B3, B4, 
+                                                   ndti, dwl, secchi, tsi_sd,zone)
+
+write_csv(s2flm_allfilter, "sen2cor_flame_points.csv")
+
+s2f_znspc_filter<- s2flame_znpts%>% filter(SCL == "6")%>% 
+  filter(dwl<=583 & dwl>=475) %>%filter(!system=="waco")
+
+s2f_avg<-s2flame_znpts%>% group_by(system, group) %>% dplyr::summarise(mean_turb = mean(turb),
+                                                                   mean_secchi = mean(secchi),
+                                                                   mean_dwl = mean(dwl),
+                                                                   mean_ndti = mean(ndti),
+                                                                   mean_tsi=mean(tsi_sd))
 
 ggplot(s2flm_allfilter,aes(log10(turb), ndti, color)) + 
   geom_point() + 
@@ -52,13 +72,102 @@ ggplot(s2flm_allfilter,aes(log10(turb), ndti, color)) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
+s2f_avg_zn<- s2f_avg %>% mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ "arm",
+                                               group == "body" ~ "body")) %>% 
+  dplyr::select(system,mean_turb,mean_secchi,mean_dwl,mean_ndti,
+                mean_ndti, zone)
+
+# writing out table used for anova
+write_csv(s2f_avg_zn, "sentinel2flame_meanvalues.csv")
+
+ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+
+# # reading in boat path points with only 2 zones - mb and ra
+# s2flame_znpts<-read_csv("s2flm6lakes_nfu_4mzone.csv")  
+# 
+# s2flm_s2c_filter<-read_csv("six4m_zone_b2thresh.csv") %>%
+#   filter(SCL == "6")%>% 
+#   filter(!system=="waco")
+# 
+# s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
+#   filter(!system=="waco") %>% filter(dwl<=583 & dwl>=475)
+#   #filter(B2>300) 
+# 
+# s2flm_iv<-s2flm_allfilter %>% filter(system=="ivie") %>% filter(dwl<584)
+# 
+# ggplot(s2flm_iv,aes(turb, ndti)) + 
+#   geom_point()
+# 
+# 
+# 
+# ggplot(s2flm_s2c_filter,aes(log10(turb), ndti)) + 
+#   geom_point() + 
+#   geom_smooth(method = "lm", se=FALSE) +
+#   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+# 
+# ggplot(s2flm_allfilter,aes(turb, ndti)) + 
+#   geom_point() + 
+#   geom_smooth(method = "lm", se=FALSE) +
+#   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+# 
+# s2flame_znpts %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+# s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+
+# reading in the Sentinel-2 Cloud Probability masked sen2cor data along boat paths. n = 27620
+s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv") 
+
+s2flm_ncfilter<-s2flm_nc  %>%
+  filter(SCL == "6")%>% 
+  filter(!system=="waco")%>% filter(dwl<=583 & dwl>=475)
+
+ggplot(s2flm_ncfilter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+s2flm_nc %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 # Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
 s2flm_l2w<-read_csv("l2w6lakes.csv")
 
+
+s2flm_l2_scale<-s2flm_l2w %>% mutate(B2=rrs_blue*100000,
+                                     B3=rrs_green*100000,
+                                     B4=rrs_red*100000)
+
+s2flm_l2w_nona<-s2flm_l2_scale %>% drop_na() # n = 14727
+
+s2flm_l2w_export<-s2flm_l2w_nona %>% 
+  dplyr::select(latitude,longitude,system,
+                turbidity=turb,B2,B3,B4,ndti)
+
+write_csv(s2flm_l2w_export, "flame_points_acolite.csv")
+
+excluded_na <- s2flm_l2w %>%
+  filter(is.na(ndti))
+
+ggplot(s2flm_l2w_nona,aes(turb, ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+s2flm_l2w %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+s2flm_l2w_nona %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+
+# excluding the 10647 pts from 
+small_sf <- st_as_sf(small_data, coords = c("lon", "lat"), crs = 4326)
+
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
-dfd_transect<- read_csv("dfd_transect.csv")
+dfd_transect<- read_csv("dfd_transect.csv") %>% 
+  dplyr::select(lat, lon, distkm, norm_dist, B2, B3, B4,
+                ndti, system, dwl)
+
+write_csv(dfd_transect, "longitudinal_transects.csv")
 
 # Reading in sample to sensor validation data (using method from AH paper) 
 # refer to "station_YSI.R" for making of sausage
@@ -72,6 +181,8 @@ s2crasr<-read_csv("s2crasr_merge.csv")
 dwl6lake_all_nozone<-read_csv("dwl6lake.csv")
 
 dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
+
+write_csv(dwl6lake_zone, "systemwide_sentinel2.csv")
 
 # reading in full system sen2cor using the ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY") approach
 # this is MUCH more effective cloud mask than the previous approach "masks2clouds". dwlgroup is factored to viz
@@ -109,6 +220,25 @@ sysndti<-ggplot(s2flm_nfunq,aes(turb, ndti, color=system)) +
 ggplotly(sysndti)
 
 s2flm_nfunq %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
+
+
+# First we have log10(turb) ~ NDTI plotted along the boat path for all lakes using sen2cor
+s2c_turb_ndti_plot<-ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+
+# plotting log10(turb) ~ NDTI along boat path for all lakes using ACOLITE L2W
+l2w_turb_ndti_plot<-s2flm_l2w %>%  ggplot(aes(log10(turb), ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  xlab("log10(Turbidity)") + ylab("Normalized Difference Turbidity Index") + theme_bw()
+
+boatpath_turbndti_combo<- s2c_turb_ndti_plot + l2w_turb_ndti_plot +
+  plot_annotation(tag_levels = 'A') 
+ggsave("boatpath_ndt_turb_combo.png", boatpath_turbndti_combo, width=14, height = 8)
 
 # plotting NDTI x norm DFD
 line_ndti<- dfd_transect %>% ggplot(aes(norm_dist, ndti, color = system)) + geom_line(size=1.25) + 
@@ -149,6 +279,8 @@ all6t_r2 <-ggplot(sample_ysi,aes(y=turb_ysi_m,x=turb_lab)) +
 # code for plots of individual lakes and their stations + all combined are found in "station_ysi.R" 
 
 # plotting DWL histograms and maps
+dwl_cloudmask$system <- factor(dwl_cloudmask$system, levels = 
+                           c("Red Bluff","OH Ivie","Brownwood","Arrowhead","Waco","Bonham"))
 # making a FUI palette
 fui_palette<-c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0",
                "5" = "#568f96","6" = "#6d9298", "7" = "#698c86","8" = "#759e72",
@@ -167,12 +299,33 @@ dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
                  color = "black", bins = 21) +  # Normalize bin heights within each facet
   scale_fill_gradientn(colors = fui_palette,
                        values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583))) +  # Apply the palette to the fill aesthetic
-  scale_x_continuous(breaks = c(475, 500, 525, 550, 575)) +  # Custom x-axis tick labels
+  scale_x_continuous(breaks = c(475, 500, 525, 550, 575)) + # Custom x-axis tick labels
+  coord_cartesian(xlim = c(520, 583))+
   facet_wrap(~system) + 
   ylab("Proportion of surface area") + 
   xlab("Dominant wavelength (nm)") +
   theme_bw() +
   theme(legend.position = "none")
+
+ggsave("dwl_histo_xlim.png", dwl_hist)
+
+dwl_hist_att2<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
+  geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..)) +  # Normalize bin heights within each facet                  color = "black", bins = 21 
+  scale_fill_gradientn(colors = fui_palette,
+                       values = scales::rescale(c(475, 480, 485,489,495,509,530,549,559,564,567,568,569,570,571,573,575,577,579,581,583)))+ # Custom x-axis tick labels
+  coord_cartesian(xlim = c(520, 583))+
+  facet_wrap(~system) + 
+  ylab("Proportion of surface area") + 
+  xlab("Dominant wavelength (nm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+ggsave("dwl_histo_nobin.png",dwl_hist_att2)
+
+ggplotly(dwl_hist)
+
+
+# trying to make histo without the bars
+
 
 all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(shape=15, size=0.35)+
   scale_color_manual(values = c(fui_palette)) +guides(color = guide_legend(override.aes = list(size = 6))) +
@@ -180,6 +333,16 @@ all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(sh
   xlab("Longitude") +
   labs(color = "Forel-Ule Scale") +
   theme_classic() +facet_wrap(~system, scales = "free")
+
+# trying boxplot with the cloudmask all pixel approach
+dwl_cloudmask%>% 
+  ggplot(aes(x=system, y=dwLehmann, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
 
 
 # verifying ndti pts
@@ -397,9 +560,53 @@ dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>%
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
 ggsave("dwl_system_boxplot.png",dwl_system_boxplot, width = 10, height = 7)
+#ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
+
+dwl_system_boxplot_nc<-s2flm_nc %>% filter(dwl>469 & dwl<584) %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+
+s2flm_ncfilter %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
+
+ggboxplot(s2flm_nc , x = "system", y = "dwl", fill = "zone",
+          palette = c("#E7B800", "#00AFBB"))
 
 s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(system, dwl, color = zone)) + geom_boxplot()
+
+# 4... run AOV on avg data
+avg_aov_turb <- aov(mean_turb~zone*system,s2f_avg_zn)
+summary(avg_aov_turb)
+aovt_posthoc <- TukeyHSD(avg_aov_turb)
+aovt_posthoc
+
+avg_aov_secchi <- aov(mean_secchi~zone*system,s2f_avg_zn)
+summary(avg_aov_secchi)
+aovsecchi_posthoc <- TukeyHSD(avg_aov_secchi)
+aovsecchi_posthoc
+
+avg_aov_dwl <- aov(mean_dwl~zone*system,s2f_avg_zn)
+summary(avg_aov_dwl)
+aovdwl_posthoc <- TukeyHSD(avg_aov_dwl)
+aovdwl_posthoc
+
+avg_aov_ndti <- aov(mean_ndti~zone*system,s2f_avg_zn)
+summary(avg_aov_ndti)
+aovt_posthoc <- TukeyHSD(avg_aov_ndti)
+aovt_posthoc
+
 
 # 4b. AOV and Tukeys HSD post-hoc
 
@@ -699,6 +906,16 @@ R <-df$B4
 G <-df$B3
 B <-df$B2
 
+# assigning bands to R,G,B
+R <-s2flm_l2_scale$B4
+G <-s2flm_l2_scale$B3
+B <-s2flm_l2_scale$B2
+
+s2flm_l2w_dwl <- s2flm_l2_scale %>% 
+  dplyr::mutate(dwl = fui.hue(unlist(R), unlist(G), unlist(B)))
+
+s2flm_l2w_dwl<- s2flm_l2_scale %>% dplyr::mutate(dwl = fui.hue(R, G, B))
+
 # 3. defining zones using bounding boxes, these include entire system
 # separating lake data between river arm and main body  
 s2_df<-read_csv("s2flm_6lakes_datause.csv")
@@ -838,5 +1055,4 @@ plot_ndtibn<-OpenStreetMap::autoplot.OpenStreetMap(OpenStreetMap::openproj(map_b
     legend.position = c(0.5, 0.03))+
   guides(col=guide_colorbar(title.position = "top"))+ 
   theme(plot.title = element_text(hjust = 0.5))
-=======
->>>>>>> 98b081e1963515582a17c6dc946fbd558747b6a1
+
