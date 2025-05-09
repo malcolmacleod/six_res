@@ -1,4 +1,4 @@
-# A script for with working code for chapter 1 data analysis
+# A script with working code for chapter 1 data analysis
 # This combines from scripts to include working with FLAMe data, CRASR samples and ee.points transect queries 
 
 # Note that everything with GEE TIF output is in its own script "dwl6lakes.R"
@@ -44,21 +44,48 @@ s2flame_znpts<-read_csv("znspcf_s2flm.csv")%>%
   mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ 
                           "arm",group == "body" ~ "body"))
 
+<<<<<<< HEAD
+s2flm_allfilter<-s2flame_znpts  %>% filter(SCL == "6")%>% 
+  filter(dwl<=583 & dwl>=475) #%>%
+  #filter(!system=="waco")
+  #%>% 
+  #filter(B2>300) 
+# writing out the data table for sen2cor flame path
+
+s2flm_allfilter<-s2flm_allfilter %>% dplyr::select(lat, lon, system, boatspeed_kmh = speed, 
+                                                   datetime_utc, turbidity = turb, B2, B3, B4, 
+                                                   ndti, dwl, secchi, tsi_sd,zone)
+
+write_csv(s2flm_allfilter, "sen2cor_flame_points.csv")
+
+s2f_znspc_filter<- s2flame_znpts%>% filter(SCL == "6")%>% 
+  filter(dwl<=583 & dwl>=475) %>%filter(!system=="waco")
+=======
 
 s2f_znspc_filter<- s2flame_znpts%>%
   filter(SCL == "6")%>% 
   filter(!system=="waco")%>% filter(dwl<=583 & dwl>=475)
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 
 s2f_avg<-s2flame_znpts%>% group_by(system, group) %>% dplyr::summarise(mean_turb = mean(turb),
                                                                    mean_secchi = mean(secchi),
                                                                    mean_dwl = mean(dwl),
                                                                    mean_ndti = mean(ndti),
-                                                                   mean_tsi=mean(tsi_sd),
-                                                                   mean_fdom = mean(fdom),
-                                                                   mean_chla = mean(chl_rfu))
+                                                                   mean_tsi=mean(tsi_sd))
+
+ggplot(s2flm_allfilter,aes(log10(turb), ndti, color)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+s2flm_allfilter %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 s2f_avg_zn<- s2f_avg %>% mutate(zone=case_when(group %in% c("north_arm","south_arm","arm") ~ "arm",
-                                               group == "body" ~ "body"))
+                                               group == "body" ~ "body")) %>% 
+  dplyr::select(system,mean_turb,mean_secchi,mean_dwl,mean_ndti,
+                mean_ndti, zone)
+
+# writing out table used for anova
+write_csv(s2f_avg_zn, "sentinel2flame_meanvalues.csv")
 
 ggplot(s2f_znspc_filter,aes(log10(turb), ndti)) + 
   geom_point() + 
@@ -104,11 +131,16 @@ s2flm_nc<-read_csv("s2cloudprob_flame_pts.csv")
 s2flm_nc_bt<-read_csv("allbutwaco_s2flm.csv")
 
 s2flm_ncfilter<-s2flm_nc  %>%
-  filter(!system=="waco")
+  filter(SCL == "6")%>% 
+  filter(!system=="waco")%>% filter(dwl<=583 & dwl>=475)
 
+<<<<<<< HEAD
+ggplot(s2flm_ncfilter,aes(log10(turb), ndti)) + 
+=======
 s2f_nc_bon<-s2flm_nc_bt %>% filter(system=="bonham") %>% filter(B2>1259)
 
 ggplot(s2flm_nc_bt,aes(turb, ndti)) + 
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
@@ -118,11 +150,18 @@ s2flm_nc %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 # Reading in the ACOLITE L2 Water Product data along the boat paths. n=25374
 s2flm_l2w<-read_csv("l2w6lakes.csv")
 
+
 s2flm_l2_scale<-s2flm_l2w %>% mutate(B2=rrs_blue*100000,
                                      B3=rrs_green*100000,
                                      B4=rrs_red*100000)
 
-s2flm_l2w_nona<-s2flm_l2w %>% drop_na() # n = 14727
+s2flm_l2w_nona<-s2flm_l2_scale %>% drop_na() # n = 14727
+
+s2flm_l2w_export<-s2flm_l2w_nona %>% 
+  dplyr::select(latitude,longitude,system,
+                turbidity=turb,B2,B3,B4,ndti)
+
+write_csv(s2flm_l2w_export, "flame_points_acolite.csv")
 
 excluded_na <- s2flm_l2w %>%
   filter(is.na(ndti))
@@ -140,10 +179,18 @@ small_sf <- st_as_sf(small_data, coords = c("lon", "lat"), crs = 4326)
 
 # Reading in data for distance from dam transects queried in ee.points Shiny
 # inlcudes all output data plus NDTI and normalized DFD
+<<<<<<< HEAD
+dfd_transect<- read_csv("dfd_transect.csv") %>% 
+  dplyr::select(lat, lon, distkm, norm_dist, B2, B3, B4,
+                ndti, system, dwl)
+
+write_csv(dfd_transect, "longitudinal_transects.csv")
+=======
 dfd_transect<- read_csv("dfd_transect_update.csv") %>% 
   dplyr::select(lat, lon, distkm,norm_dist,B2,B3,B4,ndti,dwl,system)
 
 write_csv(dfd_transect, "longitudinal_transects_sentinel2.csv")
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 
 # Reading in sample to sensor validation data (using method from AH paper) 
 # refer to "station_YSI.R" for making of sausage
@@ -158,11 +205,15 @@ dwl6lake_all_nozone<-read_csv("dwl6lake.csv")
 
 dwl6lake_zone<-read_csv("dwl6lake_zn_nona.csv")
 
+write_csv(dwl6lake_zone, "systemwide_sentinel2.csv")
+
 # reading in full system sen2cor using the ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY") approach
 # this is MUCH more effective cloud mask than the previous approach "masks2clouds". dwlgroup is factored to viz
 dwl_cloudmask<-read_csv("dwl6lake_truecloudmask.csv")
 dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
 
+<<<<<<< HEAD
+=======
 dwl_cloudmask<-read_csv("dwl6lake_truecloudmask_bonthresh.csv")
 dwl_cloudmask$dwlgroup<-factor(dwl_cloudmask$dwlgroup)
 
@@ -177,6 +228,7 @@ nla_ourlakes<-nla2022 %>% filter(site_id %in% c("NLA22_TX-10002","NLA22_TX-10038
 # Red Bluff: site_id = NLA22_TX-10001, unique_id = NLA_TX-10215, gnis_name = 'Red Bluff Reservoir'
 # O.H. Ivie: not listed by name but by process of elimination from county I think it is site_id = NLA22_TX-10054, unique_id=NLA_TX-10243
 # Brownwood: not found
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 
 # 4. Plotting data
 
@@ -287,11 +339,11 @@ fui_palette<-c("1" = "#2158bc","2" = "#316dc5","3" = "#327cbb","4" = "#4b80a0",
                "13" = "#a5bc76", "14" = "#aab86d","15" = "#adb55f","16" = "#a8a965",
                "17" = "#ae9f5c","18" = "#b3a053","19" = "#af8a44","20" = "#a46905","21" = "#9f4d04")
 
-fui_palette_cont<-c("#2158bc","#316dc5","#327cbb", "#4b80a0",
-                    "#568f96", "#6d9298", "#698c86","#759e72",
-                    "#7ba654", "#7dae38", "#94b660", "#94b660", 
-                    "#a5bc76", "#aab86d","#adb55f", "#a8a965",
-                    "#ae9f5c","#b3a053", "#af8a44","#a46905", "#9f4d04")
+# fui_palette_cont<-c("#2158bc","#316dc5","#327cbb", "#4b80a0",
+#                     "#568f96", "#6d9298", "#698c86","#759e72",
+#                     "#7ba654", "#7dae38", "#94b660", "#94b660", 
+#                     "#a5bc76", "#aab86d","#adb55f", "#a8a965",
+#                     "#ae9f5c","#b3a053", "#af8a44","#a46905", "#9f4d04")
 
 dwl_hist<-ggplot(dwl_cloudmask, aes(x = dwLehmann, fill = dwlgroup)) +
   geom_histogram(aes(y = after_stat(count / tapply(count, PANEL, sum)[PANEL]), fill = ..x..), 
@@ -323,6 +375,7 @@ ggsave("dwl_histo_nobin.png",dwl_hist_att2, width = 12, height = 10)
 
 ggplotly(dwl_hist)
 
+
 # trying to make histo without the bars
 
 
@@ -336,6 +389,16 @@ all_map_facet<-dwl_cloudmask %>% ggplot(aes(x,y,color=dwlgroup)) + geom_point(sh
   #       axis.title.x = element_text(size = 20),    # X-axis label
   #       axis.title.y = element_text(size = 20) )
 ggsave("dwl_allmaps_newcloudmask_bonthresh.png", all_map_facet, width = 20, height = 15)
+
+# trying boxplot with the cloudmask all pixel approach
+dwl_cloudmask%>% 
+  ggplot(aes(x=system, y=dwLehmann, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#E7B800","#00AFBB"),
+                    labels=c("arm" = "Arm", "body"="Body"))+
+  theme_classic()
 
 
 # verifying ndti pts
@@ -564,6 +627,8 @@ syststats_tsi<- s2flame_znpts %>% #group_by(system) %>%
 #          "ohivie"="O.H. Ivie","redbluff"="Red Bluff","arrowhead"="Arrowhead"),
 # name = "System")
 s2flame_znpts$system<- str_to_title(s2flame_znpts$system)
+<<<<<<< HEAD
+=======
 s2flame_znpts$system <- factor(s2flame_znpts$system, levels = 
                                  c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"))
 s2flm_allfilter$system<- str_to_title(s2flm_allfilter$system)
@@ -577,6 +642,7 @@ s2flm_nc$system <- factor(s2flm_nc$system,
                              levels = c("Redbluff","Ivie","Brownwood","Arrowhead","Waco","Bonham"),
                              labels = c("Red Bluff", "O.H. Ivie", "Brownwood", "Arrowhead", "Waco", "Bonham"))
 
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 
 dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>% 
   ggplot(aes(x=system, y=dwl, fill =zone)) + 
@@ -586,6 +652,7 @@ dwl_system_boxplot<-s2flame_znpts %>% filter(dwl>469 & dwl<584) %>%
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
+ggsave("dwl_system_boxplot.png",dwl_system_boxplot, width = 10, height = 7)
 #ggsave("dwl_system_boxplot_filter.png",dwl_system_boxplot, width = 10, height = 7)
 
 dwl_system_boxplot_nc<-s2flm_nc_bt %>% filter(dwl>469 & dwl<584) %>% 
@@ -597,6 +664,13 @@ dwl_system_boxplot_nc<-s2flm_nc_bt %>% filter(dwl>469 & dwl<584) %>%
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic(base_size = 20)
 
+<<<<<<< HEAD
+s2flm_ncfilter %>% 
+  ggplot(aes(x=system, y=dwl, fill =zone)) + 
+  labs(fill = "Zone", labels = c("Arm", "Body")) + 
+  xlab("System") + ylab("Dominant Wavelength (nm)") +
+  geom_boxplot() +
+=======
 ggsave("dwl_boxplot_nocloud.png", dwl_system_boxplot_nc, width = 10, height = 7)
 
 s2flm_ncfilter %>% filter(dwl>469 & dwl<584) %>% 
@@ -604,6 +678,7 @@ s2flm_ncfilter %>% filter(dwl>469 & dwl<584) %>%
   labs(fill = "Zone", labels = c("Arm", "Body")) + 
   xlab("System") + ylab("Dominant Wavelength (nm)") +
   geom_boxplot() + 
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
   scale_fill_manual(values = c("#E7B800","#00AFBB"),
                     labels=c("arm" = "Arm", "body"="Body"))+
   theme_classic()
@@ -662,22 +737,8 @@ s2flame_znpts$index<-1:length(s2flame_znpts[,1])
 # use a random subset of data to avoid autocorrelation and speed up processing
 # see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
 set.seed(1) # makes the subsetting reproducible
-sampled <- sample(1:length(s2flame_znpts[,1]),size=2537) #2528) #200) # adjust subset size as needed #total is 28728
+sampled <- sample(1:length(s2flame_znpts[,1]),size=1984) #2528) #200) # adjust subset size as needed #total is 28728
 data_sampled<-s2flame_znpts[sampled,]
-
-# repeating for s2flmnc
-# concatenate lat/lon and remove duplicated lat/lon pairs
-s2flm_nc$latlon<-paste(s2flm_nc$latitude,s2flm_nc$longitude)
-s2flm_nc<-s2flm_nc[-which(duplicated(s2flm_nc$latlon)==TRUE),]
-s2flm_nc<-data.frame(s2flm_nc)
-s2flm_nc$index<-1:length(s2flm_nc[,1])
-
-# use a random subset of data to avoid autocorrelation and speed up processing
-# see Loken et al. 2019 https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019JG005186
-set.seed(1) # makes the subsetting reproducible
-sampled <- sample(1:length(s2flm_nc[,1]),size=2537) #2528) #200) # adjust subset size as needed #total is 28728
-data_sampled_nc<-s2flm_nc[sampled,]
-
 
 noivorbon_aov<-s2flame_znpts %>% filter(!system=="bonham") 
 noivorbon_aov<-noivorbon_aov %>% filter(!system=="ivie") 
@@ -686,8 +747,8 @@ summary(baov)
 bonaov_posthoc <- TukeyHSD(baov)
 
 # fit new anova on random subset for turb
-aov_turb <- aov(turb~zone*system,data_sampled_nc)
-summary(aov_turb)
+aov_turb <- aov(turb~zone*system,data_sampled)
+saovt<-summary(aov_turb)
 aovt_posthoc <- TukeyHSD(aov_turb)
 aovt_posthoc
 
@@ -796,7 +857,7 @@ data_sampled725<-s2flm_withwaco725[sampled,]
 
 
 # fit anova on random subset for predicted DWL
-aov_dwl <- aov(dwl~zone*system,data_sampled)
+aov_dwl <- aov(dwl~zone*system,data_sampled725)
 summary(aov_dwl)
 dwl_posthoc <- TukeyHSD(aov_dwl)
 dwl_posthoc
@@ -826,7 +887,7 @@ acf_resid<-acf(aov_dwl_df$resid)
 pacf_resid<-pacf(aov_dwl_df$resid)
 
 
-aov_ndti <- aov(ndti~zone*system,data_sampled)
+aov_ndti <- aov(ndti~zone*system,data_sampled725)
 summary(aov_ndti)
 ndti_posthoc <- TukeyHSD(aov_ndti)
 ndti_posthoc
@@ -907,14 +968,6 @@ aov_dwl_zn<-aov(dwl~zone*system,bb_nona)
 
 summary(aov_dwl_zn)
 TukeyHSD(aov_dwl_zn)
-
-# # checking quantiles for each lake
-# quantile(ah_df_fui$dwLehmann, c(.05, .1, 0.2, .25, 0.3, 0.5, .75, .95))
-# quantile(bn_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .75, .98))
-# quantile(bw_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .8, 0.85, 0.9, .95), na.rm=TRUE)
-# quantile(iv_df_fui$dwLehmann, c(.05, .1, .25, 0.29,0.5, .78, 0.89, .95), na.rm=TRUE)
-# quantile(lw_df_fui$dwLehmann, c(.02, .1, .25, 0.5, .75, 0.9, .975), na.rm=TRUE)
-# quantile(rb_df_fui$dwLehmann, c(.05, .1, .25, 0.5, .8, 0.84, 0.9, .95), na.rm=TRUE)
 
 
 

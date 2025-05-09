@@ -25,7 +25,11 @@ library(ggspatial)
 library(ggpmisc)
 library(cowplot)
 library(gridExtra)
+<<<<<<< HEAD
+library(viridis)
+=======
 library(ggmap)
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 library(sf)
 library(viridis)
 library(raster)
@@ -169,6 +173,8 @@ iv<-data_merged %>% filter(date=="2022-08-07", hour_dec>10.67, hour_dec<13.68)%>
 rb<-data_merged %>% filter(date=="2022-08-08", hour_dec>10.7, hour_dec<15.967)%>% filter(speed>0)
 ah<-data_merged %>% filter(date=="2022-08-12", hour_dec>9.8, hour_dec<12.8)%>% filter(speed>0)
 
+bon2_sf<-
+
 # removing anamolous boat times for AH, IV, and LW
 ah<- ah %>% filter(hour_dec<12.56 | hour_dec>12.59)
 iv<-iv %>% filter(hour_dec<10.8 | hour_dec>10.83) %>% 
@@ -234,6 +240,8 @@ bbox_width_iv <- 0.25
 bbox_height_iv <- 0.25
 #bbox_width_bw <- 0.2
 
+<<<<<<< HEAD
+=======
 # create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, add_scalebar = FALSE) {
 #   require(OpenStreetMap)
 #   require(ggplot2)
@@ -338,12 +346,13 @@ create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, tit
   return(plot)
 }
 
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 # Define the center coordinates for each map
 centers <- list(
   c(-96.15, 33.65), # Center for bon
   c(-97.25, 31.56), # Center for waco
   c(-99.07, 31.86),  # Center for bw
-#  c(-99.06, 31.86),  # Center for bw
+  #  c(-99.06, 31.86),  # Center for bw
   c(-99.71, 31.55),  # Center for iv
   c(-103.94, 31.95),  # Center for rb
   c(-98.37,33.71)  # Center for ah
@@ -358,13 +367,73 @@ df_list <- list(
   df_ah = ah
 )
 
+turb_range <- range(unlist(lapply(df_list, function(df) df$turb)), na.rm = TRUE)
+log_turb_range <- range(unlist(lapply(df_list, function(df) log10(df$turb))), na.rm = TRUE)
 
-map1 <- create_plot(centers[[1]][1], centers[[1]][2], bbox_width_zoomed_in, bbox_height_zoomed_in, df_list$df_bon, "Bonham",add_scalebar=TRUE)
-map2 <- create_plot(centers[[2]][1], centers[[2]][2], bbox_width, bbox_height, df_list$df_waco, "Waco") 
-map3 <- create_plot(centers[[3]][1], centers[[3]][2], bbox_width, bbox_height, df_list$df_bw, "Brownwood") 
-map4 <- create_plot(centers[[4]][1], centers[[4]][2], bbox_width_iv, bbox_height_iv,df_list$df_iv, "OH Ivie") 
-map5 <- create_plot(centers[[5]][1], centers[[5]][2], bbox_width, bbox_height, df_list$df_rb, "Red Bluff") 
-map6 <- create_plot(centers[[6]][1], centers[[6]][2], bbox_width, bbox_height, df_list$df_ah, "Arrowhead",add_scalebar=TRUE) 
+df_list <- lapply(df_list, function(df) {
+  df$log_turb <- log10(df$turb)
+  df
+})
+
+names(df_list) <- c("df_bon", "df_waco", "df_bw", "df_iv", "df_rb", "df_ah")
+
+
+
+create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, title, color_limits = NULL,add_scalebar=FALSE) {
+  # Define the bounding box
+  upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
+  lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
+  
+  # Fetch the map
+  map <- openmap(upperLeft, lowerRight, type = "apple-iphoto")
+  map_projected <- OpenStreetMap::openproj(map)
+#  map_projected <- OpenStreetMap::openproj(map, projection = "+init=epsg:4326")
+#  map_projected <- OpenStreetMap::openproj(map, projection = "EPSG:4326")
+  
+  # Create the plot
+  plot <- OpenStreetMap::autoplot.OpenStreetMap(map_projected) +
+    geom_jitter(data = df, 
+                size = ptsize,
+                alpha = ptalpha,
+                aes(x = lon_dec, y = lat_dec, color = log_turb)) +
+    # set the same color limits for every map
+#    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
+    scale_color_gradientn(colors = (viridis(100,option="viridis")), 
+                          name = "log10 Turbidity (NTU)",
+                          limits = log_turb_range) +
+#    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
+    
+    ggtitle(label = title) +
+    xlab("") + ylab("") +
+    theme(
+#      plot.margin = unit(c(-1, 0, -1, 0), "lines"),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      legend.direction = "horizontal",
+      legend.text = element_text(size = 13),
+      legend.text.align = 0.5,# Set the legend text size
+      legend.title = element_text(size = 13),     # Set the legend title size
+#      legend.key.width = unit(0.75, "cm"),
+      legend.key.width = unit(1.8, "cm"),
+#      legend.position = c(0.5, 0.02),
+      legend.position = c(0.5, -0.17),
+#        legend.position = "bottom",              # Position the legend at the bottom
+#        legend.justification = "center"
+    ) +
+    guides(col = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+    theme(plot.title = element_text(hjust = 0.5)) # reduce margins of individual plots
+  
+  return(plot)
+}
+
+
+
+map1 <- create_plot(centers[[1]][1], centers[[1]][2], bbox_width_zoomed_in, bbox_height_zoomed_in, df_list$df_bon, "Bonham", color_limits = log_turb_range)
+map2 <- create_plot(centers[[2]][1], centers[[2]][2], bbox_width, bbox_height, df_list$df_waco, "Waco", color_limits = log_turb_range) 
+map3 <- create_plot(centers[[3]][1], centers[[3]][2], bbox_width, bbox_height, df_list$df_bw, "Brownwood", color_limits = log_turb_range) 
+map4 <- create_plot(centers[[4]][1], centers[[4]][2], bbox_width_iv, bbox_height_iv,df_list$df_iv, "OH Ivie", color_limits = log_turb_range) 
+map5 <- create_plot(centers[[5]][1], centers[[5]][2], bbox_width, bbox_height, df_list$df_rb, "Red Bluff", color_limits = log_turb_range) 
+map6 <- create_plot(centers[[6]][1], centers[[6]][2], bbox_width, bbox_height, df_list$df_ah, "Arrowhead", color_limits = log_turb_range,add_scalebar=TRUE) 
 
 # prepare dimensions for scale bars - doing it the manual way, a bit verbose
 barheight<-0.92
@@ -643,6 +712,10 @@ map6<- map6 + theme(legend.position = "none") +
 
 # Combine plots into a single layout with grid.arrange
 # Does this panel order make sense? 
+<<<<<<< HEAD
+combo_sdd_lomarg<-grid.arrange(map1, map2, map3, map4, map5, map6, ncol = 3) #padding = unit(c(-1, -1, -1, -1), "cm"))
+ggsave("combo_logturbmap_viridis.png", combo_sdd_lomarg,width=9,height=8)
+=======
 combo_turb_lomarg<-grid.arrange(map5, map4, map3, map6, map2, map1, ncol = 3)#, padding = unit(c(-1, -1, -1, -1), "cm"))
 ggsave("combo_turb_update.png", combo_turb_lomarg,width=9,height=8)
 
@@ -838,5 +911,8 @@ map6<- map6 + theme(legend.position = "none") +
 combo_turb_lomarg<-grid.arrange(map5, map4, map3, map6, map2, map1, ncol = 3)#, padding = unit(c(-1, -1, -1, -1), "cm"))
 ggsave("combo_turb_update.png", combo_turb_lomarg,width=9,height=8)
 
+>>>>>>> 71b3b4dc9155ec184b8bf5446d62ce7912103ae8
 
 
+#,plot.margin = margin(0, 0, 0, 0)
+#,limits=c(0.1,1.5),breaks=c(0.2,0.4,0.6,0.8,1,1.2,1.4)

@@ -57,6 +57,11 @@ ggplot(s2flm_allfilter,aes(turb, ndti)) +
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 
+ggplot(s2flm_allfilter,aes(turb, ndti, color=system)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
 ```
 
 When we exclude the 1588 Waco points from the total of 28328 the r2 goes from 0.57 to 0.7 for the sen2cor data downloaded from ee.points app and similar flagging approach to Arrowhead paper.
@@ -73,6 +78,11 @@ ggplot(s2flm_ncfilter,aes(turb, ndti)) +
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+ggplot(s2flm_ncfilter,aes(turb, ndti, color =system)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
 ```
 
 Next up you can see that when plotting the ACOLITE L2W data, it automatically excludes 10647 points because the NDTI comes up as NA. The summarise(count = n()) below shows how many of those points are excluded for each lake, this includes all from Waco.
@@ -81,6 +91,11 @@ Next up you can see that when plotting the ACOLITE L2W data, it automatically ex
 s2flm_l2w %>% dplyr::group_by(system) %>% dplyr::summarise(count = n())
 
 ggplot(s2flm_l2w,aes(turb, ndti)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se=FALSE) +
+  stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
+
+ggplot(s2flm_l2w,aes(turb, ndti, color =system)) + 
   geom_point() + 
   geom_smooth(method = "lm", se=FALSE) +
   stat_regline_equation(aes(label = ..rr.label..)) + theme_bw()
