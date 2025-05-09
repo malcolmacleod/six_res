@@ -238,14 +238,14 @@ bbox_height_iv <- 0.25
 #   require(OpenStreetMap)
 #   require(ggplot2)
 #   require(viridis)
-#   
+# 
 #   # Define bounding box
 #   upperLeft <- c(center_lat + bbox_height / 2, center_lon - bbox_width / 2)
 #   lowerRight <- c(center_lat - bbox_height / 2, center_lon + bbox_width / 2)
-#   
+# 
 #   message("Attempting to download map for: ", title)
 #   message("UpperLeft: ", paste(upperLeft, collapse = ", "), " | LowerRight: ", paste(lowerRight, collapse = ", "))
-#   
+# 
 #   # Safe tile download
 #   map <- tryCatch({
 #     openmap(upperLeft, lowerRight, type = "apple-iphoto")
@@ -253,13 +253,13 @@ bbox_height_iv <- 0.25
 #     message("Tile download failed for ", title, ": ", e$message)
 #     return(NULL)
 #   })
-#   
+# 
 #   if (is.null(map)) {
 #     return(ggplot() + ggtitle(paste("Map unavailable for", title)))
 #   }
-#   
+# 
 #   map_projected <- openproj(map)
-#   
+# 
 #   plot <- autoplot.OpenStreetMap(map_projected) +
 #     geom_jitter(
 #       data = df,
@@ -288,7 +288,7 @@ bbox_height_iv <- 0.25
 #       plot.margin = ggplot2::margin(0, 0, 0, 0)
 #     ) +
 #     guides(col = guide_colorbar(title.position = "top"))
-#   
+# 
 #   return(plot)
 # }
 
@@ -311,7 +311,7 @@ create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, tit
                 aes(x = lon_dec, y = lat_dec, color = turb)) +
     # set the same color limits for every map
     #    scale_color_gradientn(colors = my_palette(100), name = "Secchi Depth (m)",limits=c(0,1.5)) +
-    scale_color_gradientn(colors = rev(viridis(100,option="plasma")), name = "Turbidity (NTU)") + #,limits=c(0.1,1.5),breaks=c(0.2,0.4,0.6,0.8,1,1.2,1.4)) +
+    scale_color_gradientn(colors = (viridis(100,option="plasma")), name = "Turbidity (NTU)") + #,limits=c(0.1,1.5),breaks=c(0.2,0.4,0.6,0.8,1,1.2,1.4)) +
     #    scale_color_gradientn(colors = rev(viridis(256)), name = "Secchi Depth (m)",limits=c(0.0,1.5)) +
 
     ggtitle(label = title) +
@@ -327,13 +327,13 @@ create_plot <- function(center_lon, center_lat, bbox_width, bbox_height, df, tit
       #      legend.key.width = unit(0.75, "cm"),
       legend.key.width = unit(1.8, "cm"),
       #      legend.position = c(0.5, 0.02),
-      legend.position = c(0.5, -0.17),
+      legend.position = c(0.5, 1.3),
       #        legend.position = "bottom",              # Position the legend at the bottom
       #        legend.justification = "center"
     ) +
-    guides(col = guide_colorbar(title.position = "top")) +
+    guides(color = guide_colorbar(title.position = "top")) +
     theme(plot.title = element_text(hjust = 0.5),
-          plot.margin = margin(0, 0, 0, 0)) # reduce margins of individual plots
+          plot.margin = unit(c(0, 0, 0, 0), "pt")) # reduce margins of individual plots
 
   return(plot)
 }
